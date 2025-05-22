@@ -8,6 +8,8 @@
 		<th>ID</th>
 		<th>Name</th>
 		<th>Email</th>
+		<th>User ID</th>
+		<th>Password</th>
 	</tr>
 
 	<c:forEach var="userList" items="${userList}">
@@ -15,6 +17,8 @@
 			<td>${userList.id}</td>
 			<td>${userList.name}</td>
 			<td>${userList.email}</td>
+			<td>${userList.userid}</td>
+			<td>${userList.password}</td>
 		</tr>
 	</c:forEach>
 

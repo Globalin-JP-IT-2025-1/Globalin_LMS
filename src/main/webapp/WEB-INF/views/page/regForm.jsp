@@ -1,8 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<fmt:requestEncoding value="utf-8" />
 
 <form action="/user/register" method="POST" onsubmit="return checkBlank(this)">
 	<table id="regForm">
@@ -23,7 +21,7 @@
 		
 		<tr>
 			<td>ID : </td>
-			<td><input type="text" name="userid" max="30"></td>
+			<td><input type="text" name="userid" max="30">&nbsp;&nbsp;<a href="">중복확인</a></td>
 		</tr>
 
 		<tr>
