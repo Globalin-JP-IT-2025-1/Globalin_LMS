@@ -1,0 +1,54 @@
+@charset "UTF-8";
+
+body {
+	
+	font-family: consolas, noto sans kr, meiryo;
+
+}
+
+#userList, #regForm, #loginForm {
+	border-collapse: collapse;
+}
+
+#regForm, #loginForm {
+	border: none;
+	padding: 10px;
+}
+
+#userList th, td {
+	border: 1px solid black;
+	padding: 10px;
+	text-align: left;
+}
+
+#userList th {
+	background-color: rgb(255, 255, 215);
+}
+
+/* style.css에 추가 또는 수정 */
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* 화면 전체 높이 */
+}
+
+header {
+    /* header 스타일 유지 */
+}
+
+main {
+    flex: 1; /* main 영역이 남은 공간을 모두 차지 */
+    /* 필요시 padding 등 추가 */
+}
+
+footer {
+    background-color: rgb(255, 255, 215);
+    /* footer는 기본적으로 하단에 위치 */
+}
