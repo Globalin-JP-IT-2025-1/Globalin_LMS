@@ -8,7 +8,8 @@
 	<!-- Spring -->
 	<servlet>
 		<servlet-name>dispatcher</servlet-name> <!-- 에러나면 네임스페이스 로케이션 중 네임스페이스의 java를 Java로 변경하기! -->
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/config/dispatcher-servlet.xml</param-value>
@@ -26,22 +27,30 @@
 		<param-value>/WEB-INF/config/spring/context-root.xml</param-value>
 	</context-param>
 
+	<!-- 리스너 -->
 	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+		<listener-class>org.springframework.web.context.ContextLoaderListener
+		</listener-class>
 	</listener>
 
+	<!-- 인코딩 필터 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 	<!-- Error Page 설정 -->
-	<!-- <error-page>
-		<error-code>404</error-code>
-		<location>/WEB-INF/views/error/error404.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/WEB-INF/views/error/error500.jsp</location>
-	</error-page>
-	<error-page>
-		<exception-type>java.lang.NullPointerException</exception-type>
-		<location>/WEB-INF/views/error/errorNullPointer.jsp</location>
-	</error-page> -->
 
 </web-app>

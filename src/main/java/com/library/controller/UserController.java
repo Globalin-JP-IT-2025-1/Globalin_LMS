@@ -64,6 +64,8 @@ public class UserController {
 	// 회원가입 폼으로부터
 	@PostMapping("/register")
 	public String registerUser(@ModelAttribute User user, Model model) {
+		System.out.println("@ModelAttribute : " + user.getName()); // 한글깨짐 확인용1
+		
 		userService.registerUser(user);
 		System.out.println("✅ UserController - /user/register - POST 요청 정상 처리!");
 
