@@ -1,0 +1,26 @@
+@charset "UTF-8";
+
+body {
+	
+	font-family: consolas, noto sans kr, meiryo;
+
+}
+
+#userList, #regForm, #loginForm {
+	border-collapse: collapse;
+}
+
+#regForm, #loginForm {
+	border: none;
+	padding: 10px;
+}
+
+#userList th, td {
+	border: 1px solid black;
+	padding: 10px;
+	text-align: center;
+}
+
+#userList th {
+	background-color: rgb(255, 255, 215);
+}
