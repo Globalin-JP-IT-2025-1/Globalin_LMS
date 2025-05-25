@@ -7,23 +7,31 @@
 	<meta charset="UTF-8">
 	<title>Globalin Library : ${pageTitle}</title>
 	
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/static/css/style.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/static/css/layout.css">
+
 </head>
 <body>
+	<div class="layout">
+		<header>
+			<div class="header">
+				<jsp:include page="common/header.jsp" />
+			</div>
+		</header>
 	
-	<header style="background-color: rgb(255, 255, 215);">
-		<jsp:include page="common/header.jsp" />
-	</header>
-
-	<main>
-		<h2>${pageTitle}</h2>
-		<jsp:include page="${pagePath}" />
-	</main>
-
-	<footer style="background-color: rgb(255, 255, 215);">
-		<jsp:include page="common/footer.jsp" />
-	</footer>
+		<main>
+			<div class="main">
+				<jsp:include page="${pagePath}" />
+			</div>
+		</main>
 	
+		<footer>
+			<div class="footer">
+				<jsp:include page="common/footer.jsp" />
+			</div>
+		</footer>
+	</div>
+
 	<script src="${pageContext.request.contextPath}/resources/static/js/script.js"></script>
+	
 </body>
 </html>

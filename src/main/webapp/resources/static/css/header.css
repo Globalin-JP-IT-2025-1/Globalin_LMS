@@ -1,0 +1,165 @@
+@charset "UTF-8";
+
+.header {
+	font-weight: bold;
+}
+
+.header ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.header a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.header_1 {
+	display: flex;
+	flex-direction: row; /* h1_1, h1_2, h1_3 */
+	align-content: space-between;
+	height: 200px;
+	
+	position: relative;
+}
+
+.header_2 {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	height: 60px;
+	text-align: center;
+	border: 1px solid #c0c0c0;
+	background-color: white;
+	position: relative;
+	z-index: 1000;
+}
+
+/* header_1(로고 등) 설정 */
+.h1_item {
+	display: grid;
+	place-items: center;
+}
+
+#h1_1 {
+	width: 50%;
+}
+
+#h1_2 {
+	width: 20%;
+	
+}
+
+#h1_3 {
+	width: 30%;
+	
+}
+
+#h1_3 a:hover {
+	background-color: #c0c0c0;
+}
+
+/* header_2(메뉴) 설정 */
+.header_menu {
+	display: flex;
+	flex-direction: row;
+		
+	height: 100%;
+	
+	font-size: 1.2em;
+}
+
+.menu_container {
+	height: 100%;
+	
+	background-color: white;
+	
+	display: flex;
+	flex-direction: row;
+}
+
+.menu_all {
+	width: 50px;
+	height: 100%;
+	
+	background-color: white;
+}
+
+.hidden {
+	display: none;
+}
+
+.header_submenu {
+	display: flex;
+	flex-direction: row; /* 자식: menu_submenu */
+	
+	height: 200px;
+	position: absolute;
+	
+	top: 100%;
+	left: 0;
+	
+	font-size: 1.2em;
+	border: 1px solid #c0c0c0;
+}
+
+.menu_submenu {
+	background-color: white;
+	width: 200px;
+}
+
+.menu_submenu ul {
+	display: flex;
+	flex-direction: column; /* 자식: menu_submenu_item */
+}
+
+.menu_submenu a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.menu_toggleBtn {
+	all: unset;
+	cursor: pointer;
+	height: 100%;
+	width: 200px;
+}
+
+.menuAll_toggleBtn {
+	all: unset;
+	cursor: pointer;
+	height: 100%;
+	width: 50px;
+}
+
+.menu_toggleBtn:hover,
+.menuAll_toggleBtn:hover {
+	background-color: #004080;
+	color: white;
+}
+
+.menu_submenu_item {
+	padding: 5px;
+	height: 30px;
+	cursor: pointer; 
+}
+
+.menu_submenu_item:hover {
+	background-color: #004080;
+	color: white;
+}
+
+.menu_con_blank {
+	width: 5px;
+	background-color: white;
+	
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.menu_submenu_blank {
+	width: 5px;
+	background-color: white;
+}

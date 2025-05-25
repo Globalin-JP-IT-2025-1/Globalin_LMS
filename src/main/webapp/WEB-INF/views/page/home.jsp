@@ -1,21 +1,37 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<h1>${message}</h1>
-<br>
-<h2>~~ DB 연결 테스트 ~~</h2><br>
-<h3>관리자 전용 페이지</h3><br>
-<a href="/user/list" id="userList">회원 목록</a><br>
-<br>
-<h3>공통 페이지</h3>
-<a href="/user/loginForm/0" id="loginForm">로그인</a>
-<a href="/user/regForm" id="regForm">회원가입</a>
-<br>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/static/css/home.css">
 
-<c:if test="${not empty userid}">
-	<p>(로그인 성공!)</p>
-	<a href="/user/mypage/${userid}" id="mypage">마이페이지</a><br>
-</c:if>
 
-현재 사용자: <c:out value="${empty userid ? '게스트' : userid}" />
+<div class="home">
+
+	<div class="home_1">
+		<div class="home1_item1"><label id="searchType">통합검색</label></div>
+		<div class="home1_item2">
+			<input type="text" id="searchInput" placeholder="검색어를 입력하세요" maxlength="20">
+			<button id="searchBtn">검색</button>
+		</div>
+	</div>
+	
+	<div class="home_2">
+		<div class="home_2_1">로그인</div>
+		<div class="home_2_2">추천도서</div>
+		<div class="home_2_3">공지사항</div>
+	</div>
+	
+	<div class="home_3">
+		<button class="home_3_item">간편메뉴1</button>
+		<button class="home_3_item">간편메뉴2</button>
+		<button class="home_3_item">간편메뉴3</button>
+		<button class="home_3_item">간편메뉴4</button>
+		<button class="home_3_item">간편메뉴5</button>
+	</div>
+	
+	<div class="home_4">도서관간략소개</div>
+	
+	<div class="home_5">베너</div>
+	
+</div>
