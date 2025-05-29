@@ -1,0 +1,150 @@
+@charset "UTF-8";
+
+.main {
+	display: flex; /* item: main_1, main_2, main_3, main_4, main_5 */
+	flex-direction: column;
+	align-items: stretch;
+	/* border: 1px solid red; */
+}
+
+/* .main 아이템 */
+.main_1, .main_2, .main_3, .main_4, .main_5 {
+	border: 1px solid #c0c0c0;
+}
+
+.main_1 {
+	height: 400px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	/* background-color: rgba(255, 255, 255, 0.5); */
+	background-image: url("../images/bg.jpg");
+}
+
+.main_2 {
+	height: 500px;
+	display: flex; /* item: main_2_1, ... */
+	flex-direction: row;
+	justify-content: center;
+}
+
+.main_3 {
+	height: 200px;
+	display: flex; /* item: main_3_1, ... */
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	padding: 20px;
+	
+}
+
+.main_4 {
+	height: 500px;
+}
+
+.main_5 {
+	height: 150px;
+	background-color: #e6e6e6;
+}
+
+/* 각 아이템 설정 */
+.main1_item1 {
+	height: 50px;
+}
+
+.main1_item2 {
+	height: 50px;
+	position: relative;
+}
+
+#searchType {
+	width: 150px;
+	height: 100%;
+	font-weight: bold;
+	font-size: 1.5em;
+	text-align: right; display : flex;
+	align-items: center;
+	justify-content: center;
+	display: flex;
+}
+
+#searchInput {
+	width: 500px;
+	height: 90%;
+	font-size: 1.5em;
+	border: 1px solid #0059b3;
+	border-radius: 8px;
+	text-indent: 10px;
+	color: #0059b3; padding : 2px;
+	padding-right: 40px;
+	padding: 2px;
+}
+
+#searchBtn {
+	all: unset;
+	cursor: pointer;
+	width: 100px;
+	height: 90%;
+	text-align: center;
+	background-color: #004080;
+	color: white;
+	border: 1px solid #004080;
+	border-radius: 8px;
+	font-size: 1.5em;
+	transition: background 0.2s ease-in-out;
+	position: absolute;
+	right: 2px;
+	top: 2px;
+}
+
+#searchBtn:hover {
+	background: linear-gradient(45deg, #0059b3, #0073e6);
+}
+
+#searchBtn:active {
+	transform: scale(0.95);
+	background-color: #ff5733;
+}
+
+.main_2_1 {
+	width: 30%;
+	border: 1px solid #004080;
+}
+
+.main_2_2 {
+	width: 40%;
+	border: 1px solid #004080;
+}
+
+.main_2_3 {
+	width: 30%;
+	border: 1px solid #004080;
+}
+
+.main_3_item {
+	all: unset;
+	width: 150px;
+	height: 150px;
+	background-color: #004080;
+	color: white;
+	padding: 20px;
+	border: 1px solid #004080;
+	border-radius: 8px;
+	font-size: 1.5em;
+	transition: background 0.2s ease-in-out;
+	cursor: pointer;
+	text-align: center;
+	align-items: center;
+}
+
+.main_3_item:hover {
+	background: linear-gradient(45deg, #0059b3, #0073e6);
+}
+
+.main_3_item:active {
+	transform: scale(0.95);
+	background-color: #ff5733;
+}

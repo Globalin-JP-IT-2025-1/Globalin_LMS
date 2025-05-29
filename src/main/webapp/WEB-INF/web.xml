@@ -7,12 +7,12 @@
 
 	<!-- Spring -->
 	<servlet>
-		<servlet-name>dispatcher</servlet-name> <!-- 에러나면 네임스페이스 로케이션 중 네임스페이스의 java를 Java로 변경하기! -->
+		<servlet-name>dispatcher</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet
 		</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/config/dispatcher-servlet.xml</param-value>
+			<param-value>/WEB-INF/config/spring/dispatcher-servlet.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
