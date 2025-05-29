@@ -7,3 +7,5 @@ build/
 target/
 
 dbconfig.properties
+/.apt_generated/
+/.apt_generated_tests/

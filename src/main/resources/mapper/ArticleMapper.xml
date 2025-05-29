@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.library.mapper.ArticleMapper">
-	<select id="getAllArticles"
-		resultType="com.library.model.Article">
+	<select id="findAllArticles" resultType="com.library.model.Article">
 		SELECT * FROM articles
 	</select>
 
-	<select id="getArticleById" parameterType="int"
-		resultType="com.library.model.Article">
+	<!-- <select id="getArticleById" parameterType="int" resultType="com.library.model.Article">
 		SELECT * FROM articles WHERE articles_id = #{articles_id}
 	</select>
 
@@ -26,5 +25,5 @@
 
 	<delete id="deleteArticle" parameterType="int">
 		DELETE FROM articles WHERE id = #{id}
-	</delete>
+	</delete> -->
 </mapper>

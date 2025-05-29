@@ -19,7 +19,7 @@ public class MainController {
     	}
 //        model.addAttribute("message", "글로벌인 도서관에 오신 걸 환영합니다!");
         model.addAttribute("pageTitle", "main");
-        model.addAttribute("pagePath", "page/main.jsp");
+        model.addAttribute("pagePath", "page/test.jsp");
         
         return "layout";
     }
