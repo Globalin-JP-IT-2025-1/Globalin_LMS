@@ -13,3 +13,9 @@
 프레임워크: Spring Framework 4 (Maven 방식)<br>
 WAS: Apache Tomcat 9<br>
 데이터베이스: Oracle DB<br>
+
+
+
+### eclipse lombok 설치 방법
+eclipse → Help → Install New Software... → https://projectlombok.org/p2 → 
+Contact all update sites during install to find required software 체크 해제 → 완료

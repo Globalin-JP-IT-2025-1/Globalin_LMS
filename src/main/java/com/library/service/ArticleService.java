@@ -7,16 +7,12 @@ import org.springframework.stereotype.Service;
 import com.library.mapper.ArticleMapper;
 import com.library.model.Article;
 
-//import lombok.RequiredArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class ArticleService {
 	private final ArticleMapper articleMapper;
-	
-	public ArticleService(ArticleMapper articleMapper) {
-		this.articleMapper = articleMapper;
-	}
 	
 	public List<Article> findAllArticles() {
 		return articleMapper.findAllArticles();
