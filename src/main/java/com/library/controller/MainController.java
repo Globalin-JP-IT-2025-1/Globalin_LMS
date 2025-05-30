@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping({"/", "/home"})
-public class HomeController {
+public class MainController {
     
     @GetMapping
     public String showHome(@RequestParam(name = "userid", required = false) String userid, Model model) {
@@ -17,9 +17,8 @@ public class HomeController {
     	if (userid != null) {
     		model.addAttribute("userid", userid);
     	}
-        model.addAttribute("message", "글로벌인 도서관에 오신 걸 환영합니다!");
-        model.addAttribute("pageTitle", "home");
-        model.addAttribute("pagePath", "page/home.jsp");
+        model.addAttribute("pageTitle", "main");
+        model.addAttribute("pagePath", "page/main.jsp");
         
         return "layout";
     }

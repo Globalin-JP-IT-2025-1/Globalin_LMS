@@ -1,18 +1,18 @@
 @charset "UTF-8";
 
-.home {
-	display: flex; /* item: home_1, home_2, home_3, home_4, home_5 */
+.main {
+	display: flex; /* item: main_1, main_2, main_3, main_4, main_5 */
 	flex-direction: column;
 	align-items: stretch;
 	/* border: 1px solid red; */
 }
 
-/* .home 아이템 */
-.home_1, .home_2, .home_3, .home_4, .home_5 {
+/* .main 아이템 */
+.main_1, .main_2, .main_3, .main_4, .main_5 {
 	border: 1px solid #c0c0c0;
 }
 
-.home_1 {
+.main_1 {
 	height: 400px;
 	display: flex;
 	flex-direction: row;
@@ -23,16 +23,16 @@
 	background-image: url("../images/bg.jpg");
 }
 
-.home_2 {
+.main_2 {
 	height: 500px;
-	display: flex; /* item: home_2_1, ... */
+	display: flex; /* item: main_2_1, ... */
 	flex-direction: row;
 	justify-content: center;
 }
 
-.home_3 {
+.main_3 {
 	height: 200px;
-	display: flex; /* item: home_3_1, ... */
+	display: flex; /* item: main_3_1, ... */
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
@@ -41,21 +41,21 @@
 	
 }
 
-.home_4 {
+.main_4 {
 	height: 500px;
 }
 
-.home_5 {
+.main_5 {
 	height: 150px;
 	background-color: #e6e6e6;
 }
 
 /* 각 아이템 설정 */
-.home1_item1 {
+.main1_item1 {
 	height: 50px;
 }
 
-.home1_item2 {
+.main1_item2 {
 	height: 50px;
 	position: relative;
 }
@@ -109,22 +109,22 @@
 	background-color: #ff5733;
 }
 
-.home_2_1 {
+.main_2_1 {
 	width: 30%;
 	border: 1px solid #004080;
 }
 
-.home_2_2 {
+.main_2_2 {
 	width: 40%;
 	border: 1px solid #004080;
 }
 
-.home_2_3 {
+.main_2_3 {
 	width: 30%;
 	border: 1px solid #004080;
 }
 
-.home_3_item {
+.main_3_item {
 	all: unset;
 	width: 150px;
 	height: 150px;
@@ -140,11 +140,11 @@
 	align-items: center;
 }
 
-.home_3_item:hover {
+.main_3_item:hover {
 	background: linear-gradient(45deg, #0059b3, #0073e6);
 }
 
-.home_3_item:active {
+.main_3_item:active {
 	transform: scale(0.95);
 	background-color: #ff5733;
 }

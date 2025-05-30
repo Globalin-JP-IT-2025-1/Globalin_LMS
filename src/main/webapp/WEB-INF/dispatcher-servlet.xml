@@ -4,24 +4,23 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="
-           http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.springframework.org/schema/mvc
-           http://www.springframework.org/schema/mvc/spring-mvc.xsd
-           http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context.xsd">
-
-	<!-- Spring MVC 어노테이션 활성화 -->
-	<mvc:annotation-driven />
-
-	<!-- 컨트롤러 빈 자동 등록 -->
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+           
+	<mvc:annotation-driven/>
+	
+	<!-- 빈 자동 등록 -->
 	<context:component-scan base-package="com.library.controller" />
-
+	
 	<!-- favicon -->
 	<mvc:resources mapping="/favicon.ico" location="/resources/favicon.ico" />
 	<!-- 정적 파일 -->
 	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/i18n/**" location="/i18n/" />
 
 	<!-- 뷰 리졸버 설정 -->
 	<bean id="viewResolver"
@@ -35,6 +34,5 @@
 	    <property name="encoding" value="UTF-8"/>
 	    <property name="forceEncoding" value="true"/>
 	</bean>
-	
 
 </beans>
