@@ -25,9 +25,11 @@
 			<%@ include file="common/footer.jsp"%>
 		</footer>
 	</div>
+	
+	<button id="scrollUpBtn">⬆ 위로</button>
 
 	<script
-		src="${pageContext.request.contextPath}/resources/static/js/script.js"></script>
+		src="${pageContext.request.contextPath}/resources/static/js/layout.js"></script>
 
 </body>
 </html>

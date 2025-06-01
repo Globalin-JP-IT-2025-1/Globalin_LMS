@@ -1,22 +1,36 @@
 @charset "UTF-8";
 
-footer a {
+.footer {
+	height: 120px;
+	
+	margin: 0 auto;
+	margin-top: 10px;
+    
+    display: flex; /* item: f_1, f_2 */
+    flex-direction: column;
+}
+
+.footer a {
 	text-decoration: none;
 	color: var(--main-color);
 }
 
-footer a:hover {
-	background-color: var(--gray-color);
+.footer a:hover {
+	background-color: var(--sub-color);
 }
 
 .f_1 {
 	height: 70%;
+	width: 1200px;
+	margin: 0 auto;
 	
 	display: flex; /* item: f1_1, f1_2, f1_3 */
 }
 
 .f_2 {
 	height: 30%;
+	width: 1200px;
+	margin: 0 auto;
 	
 	display: flex; /* item: copyright */
 	justify-content: center;

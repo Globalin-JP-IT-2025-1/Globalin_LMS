@@ -1,79 +1,62 @@
 @charset "UTF-8";
 
 div { /* 테스트 */
-	/* border: 1px solid red; */
+	border: 0.5px solid red;
 }
 
 :root {
-    --main-color: #004080; /* 메인 색상 */
-    --sub-color: #dceaf7;
-    --gray-color: #e9e9e9;
+	--main-color: #004080; /* 메인 색상 */
+	--sub-color: #dceaf7;
+	--gray-color: #e9e9e9;
 }
 
 body {
 	font-family: consolas, noto sans kr, meiryo;
 	font-size: 12pt;
 	color: var(--main-color);
-    
-    width: 1200px;
-    min-height: 100vh;
-    
-    margin: 0 auto;
-    padding: 0;
+	
+	width: 100vw;
+	min-height: 100vh;
+	
+	margin: 0 auto;
+	padding: 0;
 }
 
 .layout {
 	flex: 1;
-    
-    width: 100%;
-    height: 100%;
-    min-height: 100vh;
-    
-    margin: 0;
-    padding: 0;
-
+	width: 100%;
+	height: 100%;
+	min-height: 100vh;
+	margin: 0;
+	padding: 0;
 	display: flex; /* item: header, main, footer */
-    flex-direction: column;
-    align-items: center;
-    
-    /* border: 1px solid yellow; */
+	flex-direction: column;
+	align-items: centergb(0, 255, 128) /* border: 1px solid yellow; */
 }
 
 header {
-    background-color: white;
-    /* border: 1px solid blue; */
-    
-	width: 1200px;
-	height: 200px;
-	
-	margin: 0;
-	
-    display: flex; /* item: h_1, h_2 */
-	flex-direction: column;
+	background-color: white;
 }
 
 main {
-	background-size: cover; 
-    /* border: 1px solid blue; */
-    
-    flex-grow: 1;
-    
-    width: 1200px;
-	margin: 0;
+	background-size: white;
+	flex-grow: 1;
 }
 
 footer {
-    background-color: white;
-    /* border: 1px solid blue; */
-	
-	width: 1200px;
-	height: 120px;
-	
-	margin: 0;
-	margin-top: 10px;
-	padding-left: 10px;
-	padding-right: 10px;
-    
-    display: flex; /* item: f_1, f_2 */
-    flex-direction: column;
+	background-color: var(--gray-color);
+}
+
+/* 스크롤 맨 위로 올리기 */
+#scrollUpBtn {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	background: var(--main-color);
+	color: white;
+	padding: 10px 15px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	display: none;
 }

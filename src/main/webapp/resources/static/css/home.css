@@ -1,27 +1,37 @@
 @charset "UTF-8";
 
 .home {
+	margin: 0 auto;
+	
 	display: flex; /* item: home_1, home_2, home_3, home_4, home_5 */
 	flex-direction: column;
 	align-items: stretch;
-	/* border: 1px solid red; */
 }
 
 /* .home 아이템 */
 .home_1, .home_2, .home_3, .home_4, .home_5 {
 	border: 1px solid var(--gray-color);
+	
+	width: 1200px;
+	margin: 0 auto;
 }
 
 .home_1 { /* 통합검색 */
 	height: 400px;
 	
-	display: flex; /* item:  */
+	display: flex; /* item: 통합검색, 입력창+검색버튼 */
 	align-items: center;
 	justify-content: center;
 	
 	gap: 5px;
-	/* background-color: rgba(255, 255, 255, 0.5); */
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.home_1_bg {
 	background-image: url("../images/bg.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 .home_2 { /* 로그인, 추천도서, 공지사항 */
@@ -39,7 +49,6 @@
 	justify-content: flex-start;
 	
 	gap: 20px;
-	padding: 20px;
 	
 }
 
@@ -49,7 +58,6 @@
 
 .home_5 {
 	height: 150px;
-	background-color: var(--gray-color);
 }
 
 /* 각 아이템 설정 */
@@ -100,8 +108,8 @@
 	color: white;
 	font-size: 1.5em;
 	
-	background-color: #004080;
-	border: 1px solid #004080;
+	background-color: var(--main-color);
+	border: 1px solid var(--main-color);
 	border-radius: 8px;
 	
 	position: absolute;
@@ -117,17 +125,14 @@
 
 #searchBtn:active {
 	transform: scale(0.95);
-	background-color: #ff5733;
 }
 
 .home_2_1 {
 	width: 25%;
-	/* border: 1px solid #004080; */
 }
 
 .home_2_2 {
 	width: 50%;
-	/* border: 1px solid #004080; */
 	background-color: var(--gray-color);
 }
 
@@ -138,18 +143,22 @@
 
 .home_3_item {
 	all: unset;
+	cursor: pointer;
+	
 	width: 120px;
 	height: 120px;
-	background-color: #004080;
-	color: white;
-	padding: 10px;
-	border: 1px solid #004080;
-	border-radius: 8px;
-	font-size: 1.5em;
-	transition: background 0.2s ease-in-out;
-	cursor: pointer;
+	
 	text-align: center;
-	align-items: center;
+	color: white;
+	font-size: 1.5em;
+	
+	background-color: var(--main-color);
+	border: 1px solid var(--main-color);
+	border-radius: 8px;
+	
+	padding: 10px;
+	
+	transition: background 0.2s ease-in-out;
 }
 
 .home_3_item:hover {
@@ -158,5 +167,4 @@
 
 .home_3_item:active {
 	transform: scale(0.95);
-	background-color: #ff5733;
 }

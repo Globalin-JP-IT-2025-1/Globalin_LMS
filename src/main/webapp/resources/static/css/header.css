@@ -1,18 +1,29 @@
 @charset "UTF-8";
 
-header ul {
+.header {
+	height: 200px;
+	
+	margin: 0px auto;
+	
+    display: flex; /* item: h_1, h_2 */
+	flex-direction: column;
+}
+
+.header ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-header a {
+.header a {
 	text-decoration: none;
 	color: inherit;
 }
 
 .h_1 { /* 다국어, 로고, 헤더간편메뉴/회원 마이페이지 */
-	height: 200px;
+	height: 140px;
+	width: 1200px;
+	margin: 0 auto;
 	
 	position: relative;
 	
@@ -22,23 +33,27 @@ header a {
 
 .h_2 { /* 메뉴 */
 	height: 60px;
+	width: 1200px;
+	margin: 0 auto;
 	
 	text-align: center;
-	border: 1px solid var(--gray-color);
-	background-color: white;
 	
 	position: relative;
 	z-index: 1000;
 	
 	display: flex; /* item: h2_1, h2_2 */
 	flex-direction: column;
-	align-items: flex-start;
 }
+
+.h_2_bg {
+	border: 1px solid var(--gray-color);
+}
+
 
 /* h_1(로고 등) 설정 */
 .h1_1 {
 	width: 30%;
-	
+
 	display: flex; /* item: select */
 	align-items: center;
 	justify-content: center;
@@ -63,18 +78,6 @@ header a {
 }
 
 /* h1_1 (다국어) 설정 */
-/* #lanSelector {
-	width: 200px;
-	height: 40px;
-	
-	color: var(--main-color);
-	
-	border: 1px solid var(--main-color);
-	border-radius: 15px;
-	
-	padding: 5px;
-} */
-
 .h1_1 table {
 	border: 1px solid var(--main-color);
 	border-radius: 20px;
@@ -128,8 +131,8 @@ header a {
 
 /* h_2 (메뉴) 설정 */
 .h2_1 {
-	height: 100%;
-	
+	height: 95%;
+
 	font-size: 1.2em;
 	font-weight: bold;
 	
@@ -160,10 +163,10 @@ header a {
 	
 	position: absolute;
 	top: 100%;
-	left: 0;
 	
 	font-size: 1.1em;
 	border: 1px solid var(--gray-color);
+	z-index: 999;
 	
 	display: flex; /* item: h_submenu, h_submenu_blank, ... */
 }
@@ -227,3 +230,29 @@ header a {
 	width: 5px;
 	background-color: white;
 }
+
+/* 메뉴 고정 */
+#h_2_placeholder {
+    height: 60px;
+    width: inherit;
+    
+    border: 1px solid var(--gray-color);
+    
+    display: none;
+}
+
+.menu-fixed + #h_2_placeholder {
+    display: block;
+}
+
+.menu-fixed {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    
+    margin: 0 auto;
+    
+    background-color: white;
+}
+
