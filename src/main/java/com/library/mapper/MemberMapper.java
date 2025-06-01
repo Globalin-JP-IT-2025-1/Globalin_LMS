@@ -2,7 +2,7 @@ package com.library.mapper;
 
 import java.util.List;
 
-import com.library.model.Member;
+import com.library.vo.Member;
 
 public interface MemberMapper {
 	

@@ -7,17 +7,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.library.model.Member;
+import com.library.dto.PageInfo;
 import com.library.service.MemberService;
+import com.library.vo.Member;
+
+import lombok.AllArgsConstructor;
 
 @Controller
 @RequestMapping("/Members")
+@AllArgsConstructor
 public class MemberController {
-
     private final MemberService memberService;
-
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
+    private PageInfo pageInfo;
+    
+    public void setPageInfo(Model model) {
+    	model.addAttribute("pageTitle", pageInfo.getPageTitle());
+    	model.addAttribute("pagePath", pageInfo.getPagePath());
     }
 
     @GetMapping
@@ -25,8 +30,13 @@ public class MemberController {
     	List<Member> memberList = memberService.findAllMembers();
         
     	model.addAttribute("memberList", memberList);
-    	model.addAttribute("pageTitle", "회원 목록 조회");
-    	model.addAttribute("pagePath", "page/memberList.jsp");
+
+    	pageInfo = PageInfo.builder()
+			.pageTitle("회원 목록 조회")
+			.pagePath("page/memberList.jsp")
+			.build();
+    	
+    	setPageInfo(model);
     	
         return "layout";
     }

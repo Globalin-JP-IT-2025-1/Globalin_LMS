@@ -1,82 +1,147 @@
 @charset "UTF-8";
 
-.header {
-	font-weight: bold;
-}
-
-.header ul {
+header ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-.header a {
+header a {
 	text-decoration: none;
 	color: inherit;
 }
 
-.header_1 {
-	display: flex;
-	flex-direction: row; /* h1_1, h1_2, h1_3 */
-	align-content: space-between;
+.h_1 { /* 다국어, 로고, 헤더간편메뉴/회원 마이페이지 */
 	height: 200px;
 	
 	position: relative;
+	
+	display: flex; /* item: h1_1, h1_2, h1_3 */
+	align-items: space-between;
 }
 
-.header_2 {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
+.h_2 { /* 메뉴 */
 	height: 60px;
+	
 	text-align: center;
-	border: 1px solid #c0c0c0;
+	border: 1px solid var(--gray-color);
 	background-color: white;
+	
 	position: relative;
 	z-index: 1000;
-}
-
-/* header_1(로고 등) 설정 */
-.h1_item {
-	display: grid;
-	place-items: center;
-}
-
-#h1_1 {
-	width: 50%;
-}
-
-#h1_2 {
-	width: 20%;
 	
+	display: flex; /* item: h2_1, h2_2 */
+	flex-direction: column;
+	align-items: flex-start;
 }
 
-#h1_3 {
+/* h_1(로고 등) 설정 */
+.h1_1 {
 	width: 30%;
 	
+	display: flex; /* item: select */
+	align-items: center;
+	justify-content: center;
 }
 
-#h1_3 a:hover {
-	background-color: #c0c0c0;
+.h1_2 {
+	width: 40%;
+	
+	display: flex; /* item: logo */
+	align-items: center;
+	justify-content: center;
 }
 
-/* header_2(메뉴) 설정 */
-.header_menu {
-	display: flex;
-	flex-direction: row;
-		
+.h1_3 {
+	width: 30%;
+	
+	display: flex; /* item: h_mini_menu, h_member_info */
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 5px;
+}
+
+/* h1_1 (다국어) 설정 */
+/* #lanSelector {
+	width: 200px;
+	height: 40px;
+	
+	color: var(--main-color);
+	
+	border: 1px solid var(--main-color);
+	border-radius: 15px;
+	
+	padding: 5px;
+} */
+
+.h1_1 table {
+	border: 1px solid var(--main-color);
+	border-radius: 20px;
+	
+	padding: 0px 5px;
+}
+
+.h1_1 td {
+	border: 0;
+	padding: 5px;
+}
+
+.h1_1 a:hover,
+.current_lang a {
+	background-color: var(--main-color);
+	color: white;
+	font-weight: bold;
+	
+	padding: 5px;
+	border-radius: 10px;
+}
+
+.current_lang a {
+	pointer-events: none; /* 클릭 이벤트 차단 */
+}
+
+/* h1_2 (로고) 설정 */
+.logo img {
+	width: 300px;
+}
+
+/* h1_3 (미니메뉴) 설정 */
+.h_mini_menu td {
+	border: 0;
+	padding: 5px;
+}
+
+.h_mini_menu a:hover,
+.h_member_info a:hover {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.h_member_info {
+	width: 200px;
+	
+	background-color: var(--sub-color);
+	border-radius: 10px;
+	text-align: center;
+}
+
+/* h_2 (메뉴) 설정 */
+.h2_1 {
 	height: 100%;
 	
 	font-size: 1.2em;
+	font-weight: bold;
+	
+	display: flex; /* item: menu_each, menu_all */
 }
 
-.menu_container {
+.menu_each {
 	height: 100%;
 	
 	background-color: white;
 	
-	display: flex;
-	flex-direction: row;
+	display: flex; /* item: menu_e_toggle, menu_e_blank, ... */
 }
 
 .menu_all {
@@ -90,76 +155,75 @@
 	display: none;
 }
 
-.header_submenu {
-	display: flex;
-	flex-direction: row; /* 자식: menu_submenu */
-	
+.h2_2 {
 	height: 200px;
-	position: absolute;
 	
+	position: absolute;
 	top: 100%;
 	left: 0;
 	
-	font-size: 1.2em;
-	border: 1px solid #c0c0c0;
+	font-size: 1.1em;
+	border: 1px solid var(--gray-color);
+	
+	display: flex; /* item: h_submenu, h_submenu_blank, ... */
 }
 
-.menu_submenu {
-	background-color: white;
+.h_submenu {
 	width: 200px;
+	
+	background-color: white;
 }
 
-.menu_submenu ul {
-	display: flex;
-	flex-direction: column; /* 자식: menu_submenu_item */
+.h_submenu ul {
+	display: flex; /* item: h_submenu_item */
+	flex-direction: column;
 }
 
-.menu_submenu a {
+.h_submenu a {
 	text-decoration: none;
 	color: inherit;
 }
 
-.menu_toggleBtn {
+.menu_e_toggle {
 	all: unset;
 	cursor: pointer;
 	height: 100%;
 	width: 200px;
 }
 
-.menuAll_toggleBtn {
+.menu_a_toggle {
 	all: unset;
 	cursor: pointer;
 	height: 100%;
 	width: 50px;
 }
 
-.menu_toggleBtn:hover,
-.menuAll_toggleBtn:hover {
-	background-color: #004080;
+.menu_e_toggle:hover, .menu_a_toggle:hover {
+	background-color: var(--main-color);
 	color: white;
 }
 
-.menu_submenu_item {
+.h_submenu_item {
 	padding: 5px;
 	height: 30px;
-	cursor: pointer; 
+	cursor: pointer;
 }
 
-.menu_submenu_item:hover {
-	background-color: #004080;
-	color: white;
+.h_submenu_item:hover {
+	background-color: var(--sub-color);
+	font-weight: bold;
 }
 
-.menu_con_blank {
+.menu_e_blank {
 	width: 5px;
 	background-color: white;
 	
-	display: flex;
+	display: flex; /* item: | */
 	justify-content: center;
 	align-items: center;
 }
 
-.menu_submenu_blank {
+.h_submenu_blank {
 	width: 5px;
 	background-color: white;
 }

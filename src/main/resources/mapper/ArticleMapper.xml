@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.library.mapper.ArticleMapper">
-	<select id="findAllArticles" resultType="com.library.model.Article">
+	<select id="findAllArticles" resultType="com.library.vo.Article">
 		SELECT * FROM articles
 	</select>
 
-	<!-- <select id="getArticleById" parameterType="int" resultType="com.library.model.Article">
+	<!-- <select id="getArticleById" parameterType="int" resultType="com.library.vo.Article">
 		SELECT * FROM articles WHERE articles_id = #{articles_id}
 	</select>
 
-	<insert id="save" parameterType="com.library.model.Article">
+	<insert id="save" parameterType="com.library.vo.Article">
 		<choose>
 			<when test="id != null">
 				UPDATE articles SET title = #{title}, content = #{content} WHERE articles_id =

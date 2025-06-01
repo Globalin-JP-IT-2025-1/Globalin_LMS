@@ -2,7 +2,7 @@ package com.library.mapper;
 
 import java.util.List;
 
-import com.library.model.Book;
+import com.library.vo.Book;
 
 public interface BookMapper {
 	

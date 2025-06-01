@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.library.mapper.BookMapper;
 import com.library.mapper.MemberMapper;
-import com.library.model.Member;
+import com.library.vo.Member;
 
 import lombok.RequiredArgsConstructor;
 

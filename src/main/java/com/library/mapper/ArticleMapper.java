@@ -2,7 +2,7 @@ package com.library.mapper;
 
 import java.util.List;
 
-import com.library.model.Article;
+import com.library.vo.Article;
 
 
 public interface ArticleMapper {

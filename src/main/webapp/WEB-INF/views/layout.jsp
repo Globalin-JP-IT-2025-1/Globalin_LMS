@@ -4,34 +4,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>Globalin Library : ${pageTitle}</title>
-	
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/static/css/layout.css">
+<meta charset="UTF-8">
+<title>Globalin Library : ${pageTitle}</title>
+
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/resources/static/css/layout.css">
 
 </head>
 <body>
 	<div class="layout">
 		<header>
-			<div class="header">
-				<jsp:include page="common/header.jsp" />
-			</div>
+			<%@ include file="common/header.jsp"%>
 		</header>
-	
+
 		<main>
-			<div class="main">
-				<jsp:include page="${pagePath}" />
-			</div>
+			<jsp:include page="${pagePath}" />
 		</main>
-	
+
 		<footer>
-			<div class="footer">
-				<jsp:include page="common/footer.jsp" />
-			</div>
+			<%@ include file="common/footer.jsp"%>
 		</footer>
 	</div>
 
-	<script src="${pageContext.request.contextPath}/resources/static/js/script.js"></script>
-	
+	<script
+		src="${pageContext.request.contextPath}/resources/static/js/script.js"></script>
+
 </body>
 </html>

@@ -1,0 +1,56 @@
+@charset "UTF-8";
+
+footer a {
+	text-decoration: none;
+	color: var(--main-color);
+}
+
+footer a:hover {
+	background-color: var(--gray-color);
+}
+
+.f_1 {
+	height: 70%;
+	
+	display: flex; /* item: f1_1, f1_2, f1_3 */
+}
+
+.f_2 {
+	height: 30%;
+	
+	display: flex; /* item: copyright */
+	justify-content: center;
+	align-items: center;
+}
+
+.f1_1 {
+	width: 20%;
+	
+	display: flex; /* item: f_title, f_title_en */
+	flex-direction: column;
+	justify-content: center;
+}
+
+.f1_2 {
+	width: 40%;
+	
+	display: flex; /* item: 주소, 연락처, 이메일 */
+	flex-direction: column;
+	justify-content: center;
+}
+
+.f1_3 {
+	width: 40%;
+	
+	display: flex; /* item: 개인정보처리방침, Admin Page */
+	align-items: center;
+	justify-content: flex-end;
+	
+	gap: 10px;
+}
+
+
+.f_title {
+	font-size: 1.5em; /* 18px */
+	font-weight: bold;
+}

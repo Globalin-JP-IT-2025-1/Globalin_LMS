@@ -7,17 +7,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.library.model.Article;
+import com.library.dto.PageInfo;
 import com.library.service.ArticleService;
+import com.library.vo.Article;
+
+import lombok.AllArgsConstructor;
 
 @Controller
 @RequestMapping("/Articles")
+@AllArgsConstructor
 public class ArticleController {
-
     private final ArticleService articleService;
-
-    public ArticleController(ArticleService articleService) {
-        this.articleService = articleService;
+    private PageInfo pageInfo;
+    
+    public void setPageInfo(Model model) {
+    	model.addAttribute("pageTitle", pageInfo.getPageTitle());
+    	model.addAttribute("pagePath", pageInfo.getPagePath());
     }
 
     @GetMapping
@@ -25,8 +30,13 @@ public class ArticleController {
     	List<Article> articleList = articleService.findAllArticles();
         
     	model.addAttribute("articleList", articleList);
-    	model.addAttribute("pageTitle", "글 목록 조회");
-    	model.addAttribute("pagePath", "page/articleList.jsp");
+    	
+    	pageInfo = PageInfo.builder()
+    			.pageTitle("글 목록 조회")
+    			.pagePath("page/articleList.jsp")
+    			.build();
+        	
+        setPageInfo(model);
     	
         return "layout";
     }

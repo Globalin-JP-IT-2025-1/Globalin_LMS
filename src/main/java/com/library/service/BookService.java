@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.library.mapper.BookMapper;
-import com.library.model.Book;
+import com.library.vo.Book;
 
 import lombok.RequiredArgsConstructor;
 
