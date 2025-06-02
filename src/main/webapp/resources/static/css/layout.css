@@ -49,10 +49,8 @@ header {
 }
 
 main {
-	background-size: white;
+	background-color: white;
 	flex-grow: 1;
-
-	/* min-height: 600px; */
 }
 
 footer {

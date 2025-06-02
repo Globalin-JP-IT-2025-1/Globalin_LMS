@@ -48,19 +48,19 @@
 	<!-- 404 (페이지를 찾을 수 없음) -->
     <error-page>
         <error-code>404</error-code>
-        <location>/error/404.jsp</location>
+        <location>/error/error404.jsp</location>
     </error-page>
 
     <!-- 500 (서버 내부 오류) -->
     <error-page>
         <error-code>500</error-code>
-        <location>/error/500.jsp</location>
+        <location>/error/error500.jsp</location>
     </error-page>
 
     <!-- NullPointerException (특정 예외 처리) -->
     <error-page>
         <exception-type>java.lang.NullPointerException</exception-type>
-        <location>/error/nullpointer.jsp</location>
+        <location>/error/errorNullpointer.jsp</location>
     </error-page>
 	
 

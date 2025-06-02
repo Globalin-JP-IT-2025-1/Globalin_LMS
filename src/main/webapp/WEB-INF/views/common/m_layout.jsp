@@ -19,10 +19,10 @@
 	<div class="m_content">
 		<div class="m_submenu_content">
 			<div class="m_submenu_content_tx">
-				<div class="m_submenu_item">로그인</div>
-				<div class="m_submenu_item">가입 여부 확인</div>
-				<div class="m_submenu_item">비밀번호 재발급</div>
-				<div class="m_submenu_item">회원가입</div>
+				<div class="m_submenu_item selected" id="mSubmenu1"><a href="#">로그인</a></div>
+				<div class="m_submenu_item" id="mSubmenu2"><a href="#">가입 여부 확인</a></div>
+				<div class="m_submenu_item" id="mSubmenu3"><a href="#">비밀번호 재발급</a></div>
+				<div class="m_submenu_item" id="mSubmenu4"><a href="#">회원가입</a></div>
 			</div>
 		</div>
 

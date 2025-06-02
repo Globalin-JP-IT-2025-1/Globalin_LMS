@@ -4,6 +4,8 @@
 	height: 200px;
 	
 	margin: 0px auto;
+
+	background-color: white;
 	
     display: flex; /* item: h_1, h_2 */
 	flex-direction: column;
@@ -131,7 +133,7 @@
 
 /* h_2 (메뉴) 설정 */
 .h2_1 {
-	height: 95%;
+	height: 100%;
 
 	font-size: 1.2em;
 	font-weight: bold;
@@ -140,7 +142,7 @@
 }
 
 .menu_each {
-	height: 100%;
+	height: 95%;
 	
 	background-color: white;
 	
@@ -149,7 +151,7 @@
 
 .menu_all {
 	width: 50px;
-	height: 100%;
+	height: 95%;
 	
 	background-color: white;
 }
