@@ -24,9 +24,9 @@
 					<jsp:include page="page/home.jsp" />
 				</c:when>
 				<c:otherwise>
-					<div class="m_submenu">
+					<%-- <div class="m_submenu">
 						<%@ include file="common/m_submenu.jsp" %>
-					</div>
+					</div> --%>
 	
 					<%@ include file="common/m_layout.jsp" %>
 				</c:otherwise>

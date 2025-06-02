@@ -17,17 +17,17 @@ document.getElementById("scrollUpBtn").addEventListener("click", function () {
 });
 
 /* 스크롤 시 메인 서브메뉴 고정 */
-if (window.location.pathname !== "/") {
-    window.addEventListener("scroll", function () {
-        let menu = document.querySelector(".m_submenu");
+// if (window.location.pathname !== "/") {
+//     window.addEventListener("scroll", function () {
+//         let menu = document.querySelector(".m_submenu");
 
-        if (window.scrollY > 50) {
-            menu.classList.add("m_menu_fixed");
-        } else {
-            menu.classList.remove("m_menu_fixed");
-        }
+//         if (window.scrollY > 50) {
+//             menu.classList.add("m_menu_fixed");
+//         } else {
+//             menu.classList.remove("m_menu_fixed");
+//         }
 
-    });
-} else {
-    console.log("메인 페이지여서 실행 안함!!");
-}
+//     });
+// } else {
+//     console.log("메인 페이지여서 실행 안함!!");
+// }

@@ -1,54 +1,118 @@
 @charset "UTF-8";
 
 .main {
-	width: 1200px;
+	width: var(--main-width);
 	height: 100%;
-	
-	flex-basis: auto;
 	
 	margin: 0 auto;
 
-	display: flex; /* item: m_submenu_area, main_area */
+	display: flex; /* item: m_title, m_content */
 	flex-direction: column;
 }
 
-.m_head {
-	height: 130px;
-	background-color: var(--sub-color);
+.m_title {
+	width: 100%;
+	height: 100px;
 	
-	display: flex; /* item : m_submenu_area, m_h_pageRoute */
-}
-
-.m_body {
-	height: 400px;
+	background-color: var(--sub-color);
 
 	display: flex;
+	justify-self: flex-end;
 }
 
-.m_h_main_area {
-	width: 75%;
+.m_content {
+	width: 100%;
+	height: 400px;
 
-	display: flex; /* item : m_h_pageTitle, m_h_main_area */
+	background-color: white;
+
+	display: flex;
+	justify-self: flex-end;
+}
+
+.m_submenu_title {
+	width: 20%;
+
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+}
+
+.m_main_title {
+	width: 80%;
+
+	display: flex; /* item : m_pageTitle, m_pageRoute */
+	align-items: flex-end;
+	justify-content: flex-start;
+}
+
+.m_submenu_content {
+	width: 20%;
+
+	border: 1px solid var(--gray-color);
+
+	display: flex;
 	flex-direction: column;
-	align-items: flex-start;
-	justify-content: flex-end;
+	align-items: center;
+	justify-content: flex-start;
 }
 
-.m_submenu_area {
-	width: 25%;
-	height: 100%;
-}
+.m_main_content {
+	width: 80%;
 
-.m_main_area {
-	width: 75%;
-	height: 100%;
-	
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
-.m_h_pageTitle {
+.m_submenu_title_tx {
+	width: 250px;
+	height: 60px;
+
+	background-color: var(--main-color);
+	color: white;
+
 	font-size: 1.5em;
+	font-weight: bold;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.m_submenu_content_tx {
+	width: 250px;
+
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.m_pageTitle {
+	font-size: 2em;
+	font-weight: bold;
+
+	padding-bottom: 10px;
+}
+
+
+.m_submenu_item {
+	cursor: pointer;
+
+	width: 100%;
+	height: 50px;
+	
+	box-sizing: border-box;
+	padding-left: 10px;
+	padding: 0px 20px;
+	
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.m_submenu_item:hover {
+	background-color: var(--sub-color);
 	font-weight: bold;
 }

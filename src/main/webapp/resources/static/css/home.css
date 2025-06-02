@@ -12,7 +12,7 @@
 .home_1, .home_2, .home_3, .home_4, .home_5 {
 	border: 1px solid var(--gray-color);
 	
-	width: 1200px;
+	width: var(--main-width);
 	margin: 0 auto;
 }
 

@@ -22,7 +22,7 @@
 
 .h_1 { /* 다국어, 로고, 헤더간편메뉴/회원 마이페이지 */
 	height: 150px;
-	width: 1200px;
+	width: var(--main-width);
 	margin: 0 auto;
 	
 	position: relative;
@@ -33,7 +33,7 @@
 
 .h_2 { /* 메뉴 */
 	height: 50px;
-	width: 1200px;
+	width: var(--main-width);
 	margin: 0 auto;
 	
 	text-align: center;

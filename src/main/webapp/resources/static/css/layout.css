@@ -8,6 +8,8 @@ div { /* 테스트 */
 	--main-color: #004080;
 	--sub-color: #dceaf7;
 	--gray-color: #e9e9e9;
+
+	--main-width: 1400px;
 }
 
 html {
@@ -48,7 +50,7 @@ header {
 
 main {
 	background-size: white;
-	/* flex-grow: 1; */
+	flex-grow: 1;
 
 	/* min-height: 600px; */
 }
@@ -73,74 +75,5 @@ footer {
 	
 	cursor: pointer;
 	display: none;
-}
-
-/* 메인 서브메뉴 */
-.m_submenu {
-	position: fixed;
-	top: 250px;
-	left: 15%;
-	
-	width: 200px;
-	
-	margin: 0;
-	padding: 0;
-}
-
-.m_submenu .title {
-	font-size: 1.5em;
-	font-weight: bold;
-	color: white;
-	
-	background-color: var(--main-color);
-	
-	width: 100%;
-	height: 80px;
-	
-	margin: 0;
-	padding: 0;
-	
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.m_submenu .list {
-	background-color: white;
-	
-	width: 100%;
-	height: 250px;
-	
-	margin: 0;
-	padding: 0;
-}
-
-.m_submenu_item {
-	cursor: pointer;
-
-	width: 100%;
-	height: 50px;
-	
-	box-sizing: border-box;
-	padding-left: 10px;
-	
-	
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-}
-
-.m_submenu_item:hover {
-	background-color: var(--sub-color);
-	font-weight: bold;
-}
-
-/* 메뉴 고정 */
-.m_menu_fixed {
-    z-index: 998;
-
-	top: 100px;
-
-	transition: top 0.3s ease-in-out;
 }
 

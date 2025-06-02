@@ -4,19 +4,30 @@
 
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/static/css/main.css">
+	
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
 
 <div class="main">
-	<div class="m_head">
-		<div class="m_submenu_area"></div>
-		<div class="m_h_main_area">
-			<div class="m_h_pageTitle">${pageTitle}</div>
-			<div class="m_h_pageRoute">홈 > 회원 정보 > ${pageTitle}</div>
+	<div class="m_title">
+		<div class="m_submenu_title">
+			<div class="m_submenu_title_tx">회원 정보</div>
+		</div>
+		<div class="m_main_title">
+			<div class="m_pageTitle">${pageTitle}</div>
+			<div class="m_pageRoute"><i class="bi bi-house-fill"></i> > 회원 정보 > ${pageTitle}</div>
 		</div>
 	</div>
-	<div class="m_body">
-		<div class="m_submenu_area"></div>
-		<div class="m_main_area">
-			<jsp:include page="${pagePath}" />
+	
+	<div class="m_content">
+		<div class="m_submenu_content">
+			<div class="m_submenu_content_tx">
+				<div class="m_submenu_item">로그인</div>
+				<div class="m_submenu_item">가입 여부 확인</div>
+				<div class="m_submenu_item">비밀번호 재발급</div>
+				<div class="m_submenu_item">회원가입</div>
+			</div>
 		</div>
+
+		<div class="m_main_content"><jsp:include page="${pagePath}" /></div>
 	</div>
 </div>
