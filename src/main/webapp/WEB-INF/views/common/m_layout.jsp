@@ -5,8 +5,6 @@
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/static/css/main.css">
 	
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
-
 <div class="main">
 	<div class="m_title">
 		<div class="m_submenu_title">

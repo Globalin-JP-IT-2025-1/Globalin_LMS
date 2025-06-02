@@ -1,73 +1,49 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
-<!-- Bootstrap CSS & Icons -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet" />
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
-	rel="stylesheet" />
-
 <style>
-.form-control {
-	background-color: #f0f6ff;
-}
-
-.login-btn {
-	background-color: #0056b3;
-	color: white;
-	width: 100px;
-}
-
-.login-links a {
-	margin-right: 15px;
-	font-size: 14px;
-	color: #666;
-	text-decoration: none;
-}
-
-.notice-box {
-	background-color: #f3f6f9;
-	padding: 15px;
-	margin-top: 30px;
-	font-size: 14px;
-	color: #555;
-}
 </style>
 
+<!-- 본문 -->
+<div class="m_main_area">
+	<!-- 로그인 입력 폼 -->
+	<div class="container mt-5" style="max-width: 500px;">
+		<form>
+			<div class="mb-3 row align-items-center">
+				<label class="col-sm-3 col-form-label fw-bold text-end">이메일</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control border border-info"
+						placeholder="아이디" name="emailId" required>
+				</div>
+				<div class="col-sm-1 text-center">@</div>
+				<div class="col-sm-4">
+					<select class="form-select border border-info" name="emailDomain"
+						required>
+						<option value="naver.com">naver.com</option>
+						<option value="gmail.com">gmail.com</option>
+						<option value="gmail.com">yahoo.co.jp</option>
+					</select>
+				</div>
+			</div>
 
-<div class="login-area text-center">
-	<i class="bi bi-lock-fill icon"></i>
+			<!-- 비밀번호 입력 -->
+			<div class="mb-3 row align-items-center">
+				<label class="col-sm-3 col-form-label fw-bold text-end">비밀번호</label>
+				<div class="col-sm-9">
+					<input type="password" class="form-control border border-info"
+						placeholder="비밀번호" name="password" required>
+				</div>
+			</div>
 
-	<form class="text-start">
-		<div class="input-group mb-3">
-			<span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-			<input type="text" class="form-control" placeholder="아이디 입력">
-		</div>
-
-		<div class="input-group mb-4">
-			<span class="input-group-text"><i
-				class="bi bi-shield-lock-fill"></i></span> <input type="password"
-				class="form-control" placeholder="비밀번호 입력">
-		</div>
-
-		<div class="text-end mb-3">
-			<button type="submit" class="btn login-btn">로그인</button>
-		</div>
-	</form>
-
-	<div class="login-links mb-3 text-start">
-		<a href="#"><i class="bi bi-person"></i> 아이디찾기</a> <a href="#">비밀번호
-			재발급</a> <a href="#">회원가입</a>
-	</div>
-
-	<div class="notice-box text-start">
-		<div>・ 로그인 안 될 경우 한/영 키와 Caps Lock 키 확인</div>
-		<div>・ 계속 문제 발생 시 관리자에게 문의 바랍니다</div>
+			<!-- 로그인 버튼 -->
+			<div class="text-center mt-4">
+				<button type="submit" class="btn text-white px-5 py-2 fw-bold"
+					style="background-color: var(- -main-color); border-radius: 10px;">
+					로그인</button>
+			</div>
+		</form>
 	</div>
 </div>
-
 
 
 
