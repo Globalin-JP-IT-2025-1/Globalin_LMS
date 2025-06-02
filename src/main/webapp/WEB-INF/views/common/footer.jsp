@@ -22,6 +22,7 @@
 			<a href="/etc/91">개인정보처리방침</a> <a href="/admin">Admin Page</a>
 		</div>
 	</div>
-	<div class="f_2">Copyright &copy; 2025. GLOBALIN LIBRARY. All
-		Rights Reserved.</div>
+	<div class="f_2">
+		Copyright &copy; 2025. GLOBALIN LIBRARY. All Rights Reserved.
+	</div>
 </div>

@@ -6,7 +6,6 @@
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/static/css/home.css">
 
-
 <div class="home">
 	<div class="home_1_bg">
 		<div class="home_1">
@@ -23,7 +22,7 @@
 
 	<div class="home_2_bg">
 		<div class="home_2">
-			<div class="home_2_1">로그인</div>
+			<div class="home_2_1"><a href="/login">로그인</a></div>
 			<div class="home_2_2">추천도서</div>
 			<div class="home_2_3">공지사항</div>
 		</div>

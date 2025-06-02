@@ -1,19 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<fmt:requestEncoding value="utf-8" />
 
-
-<form action="/user/loginCheck" method="POST" onsubmit="return checkBlank(this)">
+<form action="#" method="POST" onsubmit="return checkBlank(this)">
 	<table id="loginForm">
 		<tr>
-			<td>ID : </td>
-			<td><input type="text" name="userid" max="30"></td>
+			<td>이메일</td>
+			<td><input type="text" name="email" max="30"> @ <select
+				id="loginSelector">
+					<option value="naver.com">naver.com</option>
+					<option value="gmail.com">gmail.com</option>
+			</select></td>
 		</tr>
 
 		<tr>
-			<td>PW : </td>
+			<td>비밀번호</td>
 			<td><input type="password" name="password" max="30"></td>
 		</tr>
 		<tr>
@@ -21,4 +21,3 @@
 		</tr>
 	</table>
 </form>
-

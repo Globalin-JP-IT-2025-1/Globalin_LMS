@@ -59,7 +59,6 @@
 	</div>
 
 	<div class="h_2_bg">
-		<div id="h_2_placeholder"></div>
 		<div class="h_2">
 			<div class="h2_1">
 				<div class="menu_each">

@@ -4,16 +4,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.library.dto.PageInfo;
 
 import lombok.AllArgsConstructor;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/login")
 @AllArgsConstructor
-public class HomeController {
+public class LoginController {
 	private PageInfo pageInfo;
     
 	public void setPageInfo(Model model) {
@@ -22,12 +21,13 @@ public class HomeController {
 	}
 	
     @GetMapping
-    public String showHome(@RequestParam(name = "membersId", required = false) String membersId, Model model) {
-    	System.out.println("✅ HomeController - / - GET 요청 정상 처리!");
+    public String showLoginForm(Model model) {
+    	System.out.println("✅ LoginController - /login - GET 요청 정상 처리!");
     	
-    	if (membersId != null) {
-    		model.addAttribute("membersId", membersId);
-    	}
+    	pageInfo = PageInfo.builder()
+    			.pageTitle("로그인")
+    			.pagePath("page/loginForm.jsp")
+    			.build();
     	
     	setPageInfo(model);
         

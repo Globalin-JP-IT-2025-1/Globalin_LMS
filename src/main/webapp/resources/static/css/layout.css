@@ -5,9 +5,14 @@ div { /* 테스트 */
 }
 
 :root {
-	--main-color: #004080; /* 메인 색상 */
+	--main-color: #004080;
 	--sub-color: #dceaf7;
 	--gray-color: #e9e9e9;
+}
+
+html {
+	width: 100vw;
+	height: 100vh;
 }
 
 body {
@@ -15,8 +20,8 @@ body {
 	font-size: 12pt;
 	color: var(--main-color);
 	
-	width: 100vw;
-	min-height: 100vh;
+	width: 100%;
+	min-height: 100%;
 	
 	margin: 0 auto;
 	padding: 0;
@@ -24,14 +29,17 @@ body {
 
 .layout {
 	flex: 1;
+	
 	width: 100%;
 	height: 100%;
 	min-height: 100vh;
+	
 	margin: 0;
 	padding: 0;
+	
 	display: flex; /* item: header, main, footer */
 	flex-direction: column;
-	align-items: centergb(0, 255, 128) /* border: 1px solid yellow; */
+	/* align-items: center; */
 }
 
 header {
@@ -40,7 +48,9 @@ header {
 
 main {
 	background-size: white;
-	flex-grow: 1;
+	/* flex-grow: 1; */
+
+	/* min-height: 600px; */
 }
 
 footer {
@@ -52,11 +62,85 @@ footer {
 	position: fixed;
 	bottom: 20px;
 	right: 20px;
-	background: var(--main-color);
+	
+	background-color: var(--main-color);
 	color: white;
-	padding: 10px 15px;
+	
 	border: none;
 	border-radius: 5px;
+	
+	padding: 10px 15px;
+	
 	cursor: pointer;
 	display: none;
 }
+
+/* 메인 서브메뉴 */
+.m_submenu {
+	position: fixed;
+	top: 250px;
+	left: 15%;
+	
+	width: 200px;
+	
+	margin: 0;
+	padding: 0;
+}
+
+.m_submenu .title {
+	font-size: 1.5em;
+	font-weight: bold;
+	color: white;
+	
+	background-color: var(--main-color);
+	
+	width: 100%;
+	height: 80px;
+	
+	margin: 0;
+	padding: 0;
+	
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.m_submenu .list {
+	background-color: white;
+	
+	width: 100%;
+	height: 250px;
+	
+	margin: 0;
+	padding: 0;
+}
+
+.m_submenu_item {
+	cursor: pointer;
+
+	width: 100%;
+	height: 50px;
+	
+	box-sizing: border-box;
+	padding-left: 10px;
+	
+	
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.m_submenu_item:hover {
+	background-color: var(--sub-color);
+	font-weight: bold;
+}
+
+/* 메뉴 고정 */
+.m_menu_fixed {
+    z-index: 998;
+
+	top: 100px;
+
+	transition: top 0.3s ease-in-out;
+}
+

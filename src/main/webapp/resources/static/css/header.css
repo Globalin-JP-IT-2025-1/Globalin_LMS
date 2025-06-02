@@ -21,7 +21,7 @@
 }
 
 .h_1 { /* 다국어, 로고, 헤더간편메뉴/회원 마이페이지 */
-	height: 140px;
+	height: 150px;
 	width: 1200px;
 	margin: 0 auto;
 	
@@ -32,7 +32,7 @@
 }
 
 .h_2 { /* 메뉴 */
-	height: 60px;
+	height: 50px;
 	width: 1200px;
 	margin: 0 auto;
 	
@@ -232,20 +232,7 @@
 }
 
 /* 메뉴 고정 */
-#h_2_placeholder {
-    height: 60px;
-    width: inherit;
-    
-    border: 1px solid var(--gray-color);
-    
-    display: none;
-}
-
-.menu-fixed + #h_2_placeholder {
-    display: block;
-}
-
-.menu-fixed {
+.menu_fixed {
     position: fixed;
     top: 0;
     width: 100%;

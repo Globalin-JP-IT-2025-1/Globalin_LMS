@@ -1,0 +1,54 @@
+@charset "UTF-8";
+
+.main {
+	width: 1200px;
+	height: 100%;
+	
+	flex-basis: auto;
+	
+	margin: 0 auto;
+
+	display: flex; /* item: m_submenu_area, main_area */
+	flex-direction: column;
+}
+
+.m_head {
+	height: 130px;
+	background-color: var(--sub-color);
+	
+	display: flex; /* item : m_submenu_area, m_h_pageRoute */
+}
+
+.m_body {
+	height: 400px;
+
+	display: flex;
+}
+
+.m_h_main_area {
+	width: 75%;
+
+	display: flex; /* item : m_h_pageTitle, m_h_main_area */
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: flex-end;
+}
+
+.m_submenu_area {
+	width: 25%;
+	height: 100%;
+}
+
+.m_main_area {
+	width: 75%;
+	height: 100%;
+	
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.m_h_pageTitle {
+	font-size: 1.5em;
+	font-weight: bold;
+}

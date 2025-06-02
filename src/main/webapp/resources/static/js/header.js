@@ -85,15 +85,12 @@ document.querySelectorAll(".lang-btn").forEach((btn) => {
 
 /* 스크롤 시 헤더 메뉴 고정 */
 window.addEventListener("scroll", function () {
-    let menu = document.querySelector(".h_2");
-    let placeholder = document.querySelector("#h_2_placeholder");
+    let menu = document.querySelector(".h_2_bg");
     let menuTop = menu.offsetTop;
 
     if (window.scrollY > menuTop) {
-        menu.classList.add("menu-fixed");
-        placeholder.style.display = "block"; // 빈 공간 유지
+        menu.classList.add("menu_fixed");
     } else {
-        menu.classList.remove("menu-fixed");
-        placeholder.style.display = "none";
+        menu.classList.remove("menu_fixed");
     }
 });
