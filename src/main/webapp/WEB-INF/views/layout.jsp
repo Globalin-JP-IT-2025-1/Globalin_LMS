@@ -6,19 +6,24 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Globalin Library : ${pageTitle}</title>
+<title>Globalin Library : ${pageTitle[1]}</title>
+	
+	<link rel="stylesheet" type="text/css"
+		href="${pageContext.request.contextPath}/resources/static/css/layout.css">
+	
+	<!-- Bootstrap CSS & Icons -->
+	<!-- <link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+		rel="stylesheet" /> -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+	
+	<!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>    
 
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/resources/static/css/layout.css">
-
-<!-- Bootstrap CSS & Icons -->
-<!-- <link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet" /> -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
-	rel="stylesheet" />
-
+    <!-- Sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	
 </head>
 <body>
 	<div class="layout">
@@ -50,6 +55,21 @@
 
 	<script
 		src="${pageContext.request.contextPath}/resources/static/js/layout.js"></script>
+		
+	<script>
+	    window.onload = function() {
+	        var alertType = "${alertType}";
+	        var alertMessage = "${alertMessage}";
+	        if (alertMessage && alertMessage.trim() !== "") {
+	            Swal.fire({
+	                icon: alertType,
+	                title: '알림',
+	                text: alertMessage,
+	                confirmButtonText: '확인'
+	            });
+	        }
+	    };
+	</script>
 
 </body>
 </html>

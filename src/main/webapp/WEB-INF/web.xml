@@ -25,6 +25,10 @@
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 	
+	<!-- <listener>
+	    <listener-class>com.library.listener.DBConnectionListener</listener-class>
+	</listener> -->
+	
 
 	<!-- 인코딩 필터 -->
 	<filter>
@@ -42,6 +46,17 @@
 	<filter-mapping>
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- hiddenHttpMethodFilter -->
+	<filter>
+	    <filter-name>hiddenHttpMethodFilter</filter-name>
+	    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+	    <filter-name>hiddenHttpMethodFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
 	</filter-mapping>
 
 	<!-- Error Page 설정 -->

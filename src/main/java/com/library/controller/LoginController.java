@@ -25,7 +25,7 @@ public class LoginController {
     	System.out.println("✅ LoginController - /login - GET 요청 정상 처리!");
     	
     	pageInfo = PageInfo.builder()
-    			.pageTitle("로그인")
+    			.pageTitle(new String[]{"회원정보", "로그인"})
     			.pagePath("page/loginForm.jsp")
     			.build();
     	

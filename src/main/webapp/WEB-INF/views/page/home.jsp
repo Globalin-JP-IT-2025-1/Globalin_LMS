@@ -13,8 +13,7 @@
 				<label id="searchType">통합검색</label>
 			</div>
 			<div class="home1_item2">
-				<input type="text" id="searchInput" placeholder="검색어를 입력하세요"
-					maxlength="20">
+				<input type="text" id="searchInput" placeholder="검색어를 입력하세요" maxlength="20">
 				<button id="searchBtn">검색</button>
 			</div>
 		</div>
@@ -22,7 +21,12 @@
 
 	<div class="home_2_bg">
 		<div class="home_2">
-			<div class="home_2_1"><a href="/login">로그인</a></div>
+			<div class="home_2_1">
+				<a href="/login">로그인</a><br>
+				~~ DB 테스트 ~~<br>
+				<a href="/register">회원가입</a><br>
+				<a href="/members">회원 목록</a><br>
+			</div>
 			<div class="home_2_2">추천도서</div>
 			<div class="home_2_3">공지사항</div>
 		</div>

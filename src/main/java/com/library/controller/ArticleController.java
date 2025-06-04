@@ -32,7 +32,7 @@ public class ArticleController {
     	model.addAttribute("articleList", articleList);
     	
     	pageInfo = PageInfo.builder()
-    			.pageTitle("글 목록 조회")
+    			.pageTitle(new String[]{"", "글 목록 조회"})
     			.pagePath("page/articleList.jsp")
     			.build();
         	

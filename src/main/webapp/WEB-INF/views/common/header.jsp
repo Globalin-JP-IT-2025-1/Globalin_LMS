@@ -34,23 +34,23 @@
 						<tr>
 							<td><a href="/">홈</a></td>
 							<td>|</td>
-							<td><a href="/login" id="loginForm">로그인</a></td>
+							<td><a href="/login">로그인</a></td>
 							<td>|</td>
-							<td><a href="/register" id="regForm">회원가입</a></td>
+							<td><a href="/register">회원가입</a></td>
 							<td>|</td>
-							<td><a href="/etc/92">사이트맵</a></td>
+							<td><a href="/etc/91">사이트맵</a></td>
 						</tr>
 					</table>
 				</div>
 
 				<div class="h_member_info">
-					<a href="#">가길동</a> 님
+					<a href="/members/2">가길동</a> 님
 				</div>
 
-				<%-- <c:if test="${not empty memberId}">
+				<%-- <c:if test="${not empty membersId}">
 					<div>
-						<a href="/user/mypage/${memberId}" id="mypage">
-							<c:out value="${empty memberId ? '게스트' : memberId}" />
+						<a href="/user/mypage/${membersId}" id="mypage">
+							<c:out value="${empty membersId ? '게스트' : membersId}" />
 						</a> 님 환영합니다!
 					</div>
 				</c:if> --%>

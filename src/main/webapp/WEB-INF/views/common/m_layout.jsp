@@ -11,8 +11,8 @@
 			<div class="m_submenu_title_tx">회원 정보</div>
 		</div>
 		<div class="m_main_title">
-			<div class="m_pageTitle">${pageTitle}</div>
-			<div class="m_pageRoute"><i class="bi bi-house-fill"></i> > 회원 정보 > ${pageTitle}</div>
+			<div class="m_pageTitle">${pageTitle[1]}</div>
+			<div class="m_pageRoute"><i class="bi bi-house-fill"></i> > ${pageTitle[0]} > ${pageTitle[1]}</div>
 		</div>
 	</div>
 	

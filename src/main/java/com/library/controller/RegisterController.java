@@ -1,40 +1,32 @@
 package com.library.controller;
 
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.library.dto.PageInfo;
-import com.library.service.BookService;
-import com.library.vo.Book;
 
 import lombok.AllArgsConstructor;
 
 @Controller
-@RequestMapping("/books")
+@RequestMapping("/register")
 @AllArgsConstructor
-public class BookController {
-    private final BookService bookService;
+public class RegisterController {
     private PageInfo pageInfo;
     
     public void setPageInfo(Model model) {
     	model.addAttribute("pageTitle", pageInfo.getPageTitle());
     	model.addAttribute("pagePath", pageInfo.getPagePath());
     }
-
+    
+    // 회원가입 폼
     @GetMapping
-    public String getAllBooks(Model model) {
-    	List<Book> bookList = bookService.findAllBooks();
-        
-    	model.addAttribute("bookList", bookList);
-    	
+    public String showRegForm(Model model) {
     	pageInfo = PageInfo.builder()
-    			.pageTitle(new String[] { "", "도서 목록 조회" })
-    			.pagePath("page/bookList.jsp")
-    			.build();
+			.pageTitle(new String[] { "회원 정보", "회원가입" })
+			.pagePath("page/regForm.jsp")
+			.build();
     	
     	setPageInfo(model);
     	
