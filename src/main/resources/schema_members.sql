@@ -1,5 +1,4 @@
 
--- 테스트용
 -- 테이블 생성
 CREATE TABLE MEMBERS (
     MEMBERS_ID NUMBER,
