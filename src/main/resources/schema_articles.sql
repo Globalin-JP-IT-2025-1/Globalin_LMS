@@ -7,14 +7,14 @@ CREATE TABLE ARTICLES (
   CONTENT        VARCHAR2(1000)     NOT NULL,                            -- 내용
   CREATE_DATE    DATE               DEFAULT SYSDATE NOT NULL,            -- 최초등록일자
   UPDATE_DATE    DATE				NOT NULL,                                                   -- 최종수정일자
-  REPLY_COUNT    NUMBER(9)          DEFAULT 0,                  -- 댓글수
-  VIEW_COUNT     NUMBER(9)          DEFAULT 0,                  -- 조회수
-  IS_SECRET      BOOLEAN            DEFAULT FALSE NOT NULL,              -- 비밀글 여부
+  REPLY_COUNT    NUMBER(9)          DEFAULT 0,                  		 -- 댓글수
+  VIEW_COUNT     NUMBER(9)          DEFAULT 0,                  		 -- 조회수
+  IS_SECRET 	NUMBER(1) 			DEFAULT 0 NOT NULL,              	 -- 비밀글 여부 (0: 공개, 1: 비밀)
 
   -- 제약조건 명시
   CONSTRAINT PK_ARTICLES PRIMARY KEY (ARTICLES_ID),
   CONSTRAINT FK_ARTICLES_AUTHOR FOREIGN KEY (AUTHOR_ID)
-    REFERENCES MEMBERS(MEMBER_ID)
+    REFERENCES MEMBERS(MEMBERS_ID)
 );
 
 -- 시퀀스 생성

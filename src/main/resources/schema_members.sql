@@ -1,4 +1,3 @@
-
 -- 테이블 생성
 CREATE TABLE MEMBERS (
     MEMBERS_ID NUMBER,
@@ -43,8 +42,15 @@ SELECT * FROM user_sequences;
 
 -- 시퀀스 삭제
 DROP SEQUENCE SQ_MEMBERS;
+
 -- 테이블 내용 전체 삭제
 TRUNCATE TABLE MEMBERS;
+
 -- 테이블 제거
 DROP TABLE MEMBERS;
+
+-- 테이블 fk 함께 삭제
+DROP TABLE RECO_BOOKS CASCADE CONSTRAINTS;
+
+
 
