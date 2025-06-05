@@ -40,10 +40,19 @@ public class MemberService {
 		// 회원을 블랙리스트에 등록하는 로직이 있다면 추가
 		tokenService.addToBlacklist(membersId);
 		
-		// 회원의 리프레시 & 액세스 토큰 삭제
+		// 회원 브라우저상의 리프레시 & 액세스 토큰 삭제
         tokenService.invalidateTokens(membersId);
         
 		return memberMapper.leaveMember(membersId);
+	}
+
+	public int getMemberByEmail() {
+		
+		// 이메일 기준으로 모바일, 성함이 일치하는지 DB에서 확인하는 코드
+		// 맞으면0 : 비밀번호 재발급 메일 보내기
+		// 틀리면-1 : 해당 정보와 일치하는 회원이 없습니다. 알림만 띄우기
+		
+		return 0;
 	}
 
 

@@ -84,44 +84,44 @@
 				<div class="h2_2">
 					<div class="h_submenu">
 						<ul>
-							<li class="h_submenu_item"><a href="#">통합검색</a></li>
-							<li class="h_submenu_item"><a href="#">주제별검색</a></li>
-							<li class="h_submenu_item"><a href="#">대출베스트</a></li>
-							<li class="h_submenu_item"><a href="#">인기도서</a></li>
+							<li class="h_submenu_item"><a href="/books">통합검색</a></li>
+							<li class="h_submenu_item"><a href="/books?type=class">주제별검색</a></li>
+							<li class="h_submenu_item"><a href="/books?type=loan">대출베스트</a></li>
+							<li class="h_submenu_item"><a href="/books?type=like">인기도서</a></li>
 						</ul>
 					</div>
 					<div class="h_submenu_blank"></div>
 					<div class="h_submenu">
 						<ul>
-							<li class="h_submenu_item">공지사항</li>
-							<li class="h_submenu_item">자주묻는질문</li>
-							<li class="h_submenu_item">Q&A</li>
-							<li class="h_submenu_item">희망도서신청</li>
+							<li class="h_submenu_item"><a href="/articles?type=notice">공지사항</a></li>
+							<li class="h_submenu_item"><a href="/articles?type=fnq">자주묻는질문</a></li>
+							<li class="h_submenu_item"><a href="/articles?type=qna">Q&A</a></li>
+							<li class="h_submenu_item"><a href="/articles?type=req">희망도서신청</a></li>
 						</ul>
 					</div>
 					<div class="h_submenu_blank"></div>
 					<div class="h_submenu">
 						<ul>
-							<li class="h_submenu_item">인사말</li>
-							<li class="h_submenu_item">연혁</li>
-							<li class="h_submenu_item">도서현황</li>
+							<li class="h_submenu_item"><a href="/etc/41">도서관 정보</a></li>
+							<li class="h_submenu_item"><a href="/etc/42">연혁</a></li>
+							<li class="h_submenu_item"><a href="/etc/43">도서 현황</a></li>
 						</ul>
 					</div>
 					<div class="h_submenu_blank"></div>
 					<div class="h_submenu">
 						<ul>
-							<li class="h_submenu_item">이용시간 및 휴관일</li>
-							<li class="h_submenu_item">회원가입</li>
-							<li class="h_submenu_item">도서대출/반납/예약</li>
+							<li class="h_submenu_item"><a href="/etc/51">이용시간/휴관일</a></li>
+							<li class="h_submenu_item"><a href="/etc/52">회원가입 안내</a></li>
+							<li class="h_submenu_item"><a href="/etc/53">도서 이용 안내</a></li>
 						</ul>
 					</div>
 					<div class="h_submenu_blank"></div>
 					<div class="h_submenu">
 						<ul>
-							<li class="h_submenu_item">기본정보</li>
-							<li class="h_submenu_item">도서이용정보</li>
-							<li class="h_submenu_item">관심자료목록</li>
-							<li class="h_submenu_item">도서신청목록</li>
+							<li class="h_submenu_item"><a href="/members/${membersId}">내 정보</a></li>
+							<li class="h_submenu_item"><a href="/members/${membersId}/book-history">도서 이용 정보</a></li>
+							<li class="h_submenu_item"><a href="/members/${membersId}/book-like">관심 도서 목록</a></li>
+							<li class="h_submenu_item"><a href="/members/${membersId}/book-req">도서 신청 목록</a></li>
 						</ul>
 					</div>
 				</div>

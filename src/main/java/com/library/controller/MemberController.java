@@ -71,6 +71,22 @@ public class MemberController {
         return "layout";
     }
     
+    // 회원 가입 여부 확인
+    @PostMapping("/check")
+    public String getMemberByEmail(RedirectAttributes redirectAttributes) {
+		int result = memberService.getMemberByEmail();
+    	
+    	if (result == -1) {
+    		redirectAttributes.addFlashAttribute("alertType", "error");
+        	redirectAttributes.addFlashAttribute("alertMessage", "회원 가입 실패");
+    	} else {
+    		redirectAttributes.addFlashAttribute("alertType", "success");
+    		redirectAttributes.addFlashAttribute("alertMessage", "회원 가입 완료");
+    	}
+    	
+    	return "redirect:/members/check"; // 회원 가입 여부 확인 페이지 그대로
+    }
+    
     // 회원가입 폼
     @GetMapping("/register")
     public String showRegForm(Model model) {
@@ -106,7 +122,7 @@ public class MemberController {
     public String insertMember(RedirectAttributes redirectAttributes) {
     	int result = memberService.insertMember();
     	
-    	if (result == 1) {
+    	if (result == -1) {
     		redirectAttributes.addFlashAttribute("alertType", "error");
         	redirectAttributes.addFlashAttribute("alertMessage", "회원 가입 실패");
 
@@ -124,7 +140,7 @@ public class MemberController {
     public String updateMember(@PathVariable("membersId") int membersId, RedirectAttributes redirectAttributes) {
     	int result = memberService.updateMember(membersId);
     	
-    	if (result == 1) {
+    	if (result == -1) {
     		redirectAttributes.addFlashAttribute("alertType", "error");
         	redirectAttributes.addFlashAttribute("alertMessage", "회원 정보 수정 실패");
 
@@ -141,7 +157,7 @@ public class MemberController {
     public String leaveMember(@PathVariable("membersId") int membersId, RedirectAttributes redirectAttributes) {
     	int result = memberService.leaveMember(membersId);
     	
-    	if (result == 1) {
+    	if (result == -1) {
     		redirectAttributes.addFlashAttribute("alertType", "error");
         	redirectAttributes.addFlashAttribute("alertMessage", "회원 탈퇴 실패");
 
@@ -158,7 +174,7 @@ public class MemberController {
     public String deleteMember(@PathVariable("membersId") int membersId, RedirectAttributes redirectAttributes) {
     	int result = memberService.deleteMember(membersId);
     	
-    	if (result == 1) {
+    	if (result == -1) {
     		redirectAttributes.addFlashAttribute("alertType", "error");
         	redirectAttributes.addFlashAttribute("alertMessage", "회원 삭제 실패");
 

@@ -55,7 +55,7 @@
 .m_submenu_content {
 	width: 20%;
 
-	border: 1px solid var(--gray-color);
+	/* border: 1px solid var(--gray-color); */
 
 	display: flex;
 	/* flex-direction: column; */

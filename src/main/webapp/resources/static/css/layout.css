@@ -57,6 +57,11 @@ footer {
 	background-color: var(--gray-color);
 }
 
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
 /* 스크롤 맨 위로 올리기 */
 #scrollUpBtn {
 	position: fixed;

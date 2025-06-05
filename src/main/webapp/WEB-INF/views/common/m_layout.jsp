@@ -4,7 +4,7 @@
 
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/static/css/main.css">
-	
+
 <div class="main">
 	<div class="m_title">
 		<div class="m_submenu_title">
