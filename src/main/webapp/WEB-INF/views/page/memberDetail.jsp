@@ -10,8 +10,8 @@
 <!-- @GetMapping("/members/{membersId}") -->
 <ul class="memberDetailForm">
 	<li>members_id : ${member.membersId}</li>
-	<li>status : ${member.status}</li>
-	<li>card_num : ${member.cardNum}</li>
+	<li>status : ${member.status eq 0 ? '준회원' : member.status eq 1 ? '정회원' : '대출정지'}</li>
+	<li>card_num : ${not empty member.cardNum ? member.cardNum : '도서관 방문 후 도서 이용이 가능합니다.'}</li>
 	<li>email : ${member.email}</li>
 	<li>password : ${member.password}</li>
 	<li>name : ${member.name}</li>

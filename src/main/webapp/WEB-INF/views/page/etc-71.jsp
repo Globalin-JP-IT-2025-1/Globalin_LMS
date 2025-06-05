@@ -121,8 +121,8 @@
 		<div class="sitemap_content">
 			<ul>
 				<li>회원 관리</li>
-				<li>탈퇴회원 토큰 관리</li>
-				<li>도서 추가/수정</li>
+				<li>게시글 관리</li>
+				<li>도서 관리</li>
 				<li></li>
 			</ul>
 		</div>
