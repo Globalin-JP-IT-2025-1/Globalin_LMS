@@ -36,9 +36,9 @@
 							<td>|</td>
 							<td><a href="/login">로그인</a></td>
 							<td>|</td>
-							<td><a href="/register">회원가입</a></td>
+							<td><a href="/members/register">회원가입</a></td>
 							<td>|</td>
-							<td><a href="/etc/91">사이트맵</a></td>
+							<td><a href="/etc/71">사이트맵</a></td>
 						</tr>
 					</table>
 				</div>

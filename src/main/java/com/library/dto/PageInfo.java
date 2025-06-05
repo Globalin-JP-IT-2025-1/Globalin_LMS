@@ -16,8 +16,8 @@ import lombok.Setter;
 @Component
 public class PageInfo {
 	@Builder.Default
-	private String[] pageTitle = {"main", "home"}; // 타이틀
+	private String pageTitleCode = "0"; // 현재 페이지 코드
 	@Builder.Default
     private String pagePath = "page/home.jsp"; // jsp 파일경로
-    
+	
 }

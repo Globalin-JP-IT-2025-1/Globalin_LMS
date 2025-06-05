@@ -16,7 +16,7 @@ public class LoginController {
 	private PageInfo pageInfo;
     
 	public void setPageInfo(Model model) {
-		model.addAttribute("pageTitle", pageInfo.getPageTitle());
+		model.addAttribute("pageTitleCode", pageInfo.getPageTitleCode());
 		model.addAttribute("pagePath", pageInfo.getPagePath());
 	}
 	
@@ -25,7 +25,7 @@ public class LoginController {
     	System.out.println("✅ LoginController - /login - GET 요청 정상 처리!");
     	
     	pageInfo = PageInfo.builder()
-    			.pageTitle(new String[]{"회원정보", "로그인"})
+    			.pageTitleCode("61")
     			.pagePath("page/loginForm.jsp")
     			.build();
     	

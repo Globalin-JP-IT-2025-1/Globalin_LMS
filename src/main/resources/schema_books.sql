@@ -13,7 +13,7 @@ CREATE TABLE BOOKS (
   VIEW_COUNT     NUMBER(9)          DEFAULT 0       NOT NULL,
   LOAN_COUNT     NUMBER(9)          DEFAULT 0       NOT NULL,
   LIKE_COUNT     NUMBER(9)          DEFAULT 0       NOT NULL,
-  STATUS         NUMBER(1)          DEFAULT 0       NOT NULL           -- 상태 (0: 기본, 1: 대여중, 2: 대여예약중)
+  STATUS         NUMBER(1)          DEFAULT 0       NOT NULL           -- 상태 (0: 기본, 1: 대여중, 2: 대여예약중, 3: 비활성화)
 );
 
 -- 시퀀스 생성

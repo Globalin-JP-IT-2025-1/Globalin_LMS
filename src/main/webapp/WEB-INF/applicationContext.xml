@@ -17,7 +17,7 @@
 	<!-- DB 환경 설정 파일 -->
 	<util:properties id="dsProperties" location="classpath:datasource.properties" />
 
-	<!-- oracleDB datasource -->
+	<!-- OracleDB DataSource -->
 	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="#{dsProperties['db.driver']}" />
 		<property name="url" value="#{dsProperties['db.url']}" />
@@ -58,5 +58,12 @@
     <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg ref="sqlSessionFactory"/>
     </bean>
+    
+    <!-- MessageSource 설정 -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	    <property name="basename" value="classpath:messages" />
+	    <property name="defaultEncoding" value="UTF-8" />
+	</bean>
+    
 
 </beans>

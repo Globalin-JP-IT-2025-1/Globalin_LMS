@@ -7,19 +7,20 @@ import org.springframework.stereotype.Service;
 import com.library.mapper.MemberMapper;
 import com.library.vo.Member;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class MemberService {
 	private final MemberMapper memberMapper;
+	private final TokenService tokenService;
 
-	public List<Member> findAllMembers() {
-		return memberMapper.findAllMembers();
+	public List<Member> getAllMembers() {
+		return memberMapper.getAllMembers();
 	}
 
-	public Member findMemberById(int membersId) {
-		return memberMapper.findMemberById(membersId);
+	public Member getMemberById(int membersId) {
+		return memberMapper.getMemberById(membersId);
 	}
 
 	public int updateMember(int membersId) {
@@ -32,6 +33,17 @@ public class MemberService {
 	
 	public int insertMember() {
 		return memberMapper.insertMember();
+	}
+
+	public int leaveMember(int membersId) {
+		// 해당 회원의 리프레쉬, 액세스토큰을 브라우저 세션과 쿠키에서 삭제하고 블랙 리스트에 등록하는 코드
+		// 회원을 블랙리스트에 등록하는 로직이 있다면 추가
+		tokenService.addToBlacklist(membersId);
+		
+		// 회원의 리프레시 & 액세스 토큰 삭제
+        tokenService.invalidateTokens(membersId);
+        
+		return memberMapper.leaveMember(membersId);
 	}
 
 

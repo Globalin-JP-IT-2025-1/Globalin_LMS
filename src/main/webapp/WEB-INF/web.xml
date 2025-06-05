@@ -21,14 +21,10 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
+	<!-- Spring 웹 애플리케이션 실행/종료 감지 리스너 -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	
-	<!-- <listener>
-	    <listener-class>com.library.listener.DBConnectionListener</listener-class>
-	</listener> -->
-	
 
 	<!-- 인코딩 필터 -->
 	<filter>

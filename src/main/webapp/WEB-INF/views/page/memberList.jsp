@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="memberList" value="${memberList}" />
 <fmt:formatDate value="${joinDate}" pattern="yyyy-MM-dd" />
 <fmt:formatDate value="${leaveDate}" pattern="yyyy-MM-dd" />
@@ -25,6 +25,7 @@ background-color: var(--gray-color);
 <br>
 <table id="memberList">
 	<tr>
+		<th>선택</th>
 		<th>NO</th>
 		<th>MEMBERS_ID</th>
 		<th>STATUS</th>
@@ -42,6 +43,10 @@ background-color: var(--gray-color);
 	<c:forEach var="member" items="${memberList}">
 	<c:set var="cnt" value="${cnt + 1}" />
 		<tr>
+			<td>
+	            <input type="checkbox" class="checkbox" name="members" value="${member.membersId}" 
+	                ${member.leaveDate == null ? "disabled" : ""}>
+	        </td>
 			<td>${cnt}</td>
 			<td>${member.membersId}</td>
 			<td>${member.status}</td>
@@ -58,3 +63,22 @@ background-color: var(--gray-color);
 
 </table>
 
+<button id="selectAll">전체 선택</button>
+<button id="deselectAll">전체 해제</button>
+<br>
+<!-- 삭제 요청  -->
+<!-- @RequestMapping(value = "/{membersId}", method = RequestMethod.DELETE) -->
+<form action="/members/${membersId}" method="post">
+	<input type="hidden" name="_method" value="delete"> 
+	<input type="submit" value="삭제">
+</form>
+
+<script>
+    document.getElementById("selectAll").addEventListener("click", function() {
+        document.querySelectorAll(".checkbox").forEach(cb => cb.checked = true);
+    });
+
+    document.getElementById("deselectAll").addEventListener("click", function() {
+        document.querySelectorAll(".checkbox").forEach(cb => cb.checked = false);
+    });
+</script>

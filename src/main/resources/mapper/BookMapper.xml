@@ -4,14 +4,14 @@
 <mapper namespace="com.library.mapper.BookMapper">
 
 	<!-- 도서 전체 조회 -->
-	<select id="findAllBooks" resultType="com.library.vo.Book">
+	<select id="getAllBooks" resultType="com.library.vo.Book">
 		SELECT BOOKS_ID, TITLE, AUTHOR, PUBLISHER, PUBLISH_DATE, ISBN, CATEGORY,
 		IMAGE_LINK, DESCRIPTION, CREATE_DATE, LOAN_COUNT, LIKE_COUNT, STATUS
 		FROM BOOKS
 	</select>
 
 	<!-- 도서 상세 조회 -->
-	<select id="findBookById" parameterType="int" resultType="com.library.vo.Book">
+	<select id="getBookById" parameterType="int" resultType="com.library.vo.Book">
 		SELECT BOOKS_ID, TITLE, AUTHOR, PUBLISHER, PUBLISH_DATE, ISBN, CATEGORY,
 		IMAGE_LINK, DESCRIPTION, CREATE_DATE, LOAN_COUNT, LIKE_COUNT, STATUS
 		FROM BOOKS
@@ -25,11 +25,18 @@
 		IMAGE_LINK, DESCRIPTION, CREATE_DATE, LOAN_COUNT, LIKE_COUNT, STATUS
 		)
 		VALUES (
-		SEQ_BOOKS.NEXTVAL, #{title}, #{author}, #{publisher}, #{publishDate},
+		SQ_BOOKS.NEXTVAL, #{title}, #{author}, #{publisher}, #{publishDate},
 		#{isbn}, #{category}, #{imageLink}, #{description}, #{createDate},
 		#{loanCount}, #{likeCount}, #{status}
 		)
 	</insert>
+	
+	<!-- 도서 비활성화 -->
+	<update id="invalidateBook" parameterType="com.library.vo.Book">
+		UPDATE BOOKS
+		SET STATUS = #{status}
+		WHERE BOOKS_ID = #{booksId}
+	</update>
 
 	<!-- 도서 수정 -->
 	<update id="updateBook" parameterType="com.library.vo.Book">

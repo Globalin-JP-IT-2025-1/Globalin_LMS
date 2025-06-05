@@ -21,7 +21,7 @@ public class BookController {
     private PageInfo pageInfo;
     
     public void setPageInfo(Model model) {
-    	model.addAttribute("pageTitle", pageInfo.getPageTitle());
+    	model.addAttribute("pageTitleCode", pageInfo.getPageTitleCode());
     	model.addAttribute("pagePath", pageInfo.getPagePath());
     }
 
@@ -32,7 +32,7 @@ public class BookController {
     	model.addAttribute("bookList", bookList);
     	
     	pageInfo = PageInfo.builder()
-    			.pageTitle(new String[] { "", "도서 목록 조회" })
+    			.pageTitleCode("11")
     			.pagePath("page/bookList.jsp")
     			.build();
     	

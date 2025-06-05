@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.library.mapper.TokenMapper">
+	<select id="getAllTokens" resultType="com.library.vo.Token">
+		SELECT jwt_blacklist_id, member_id, type, token, expires_date FROM jwt_blacklist
+	</select>
+	
+	<insert id="addToken" parameterType="int">
+		INSERT INTO jwt_blacklist (jwt_blacklist_id, members_id, type, token, expires_date) 
+		VALUES sq_jwt_blacklist.nextval, #{membersId}, #{type}, #{token}, #{expiresDate}
+	</insert>
+
+	<delete id="deleteToken" parameterType="int">
+		DELETE FROM jwt_blacklist WHERE jwt_blacklist_id = #{jwtBlacklistId}
+	</delete>
+</mapper>

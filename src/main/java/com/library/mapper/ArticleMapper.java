@@ -2,9 +2,11 @@ package com.library.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.library.vo.Article;
 
-
+@Mapper
 public interface ArticleMapper {
 	
 	List<Article> findAllArticles(); // 글 전체 조회

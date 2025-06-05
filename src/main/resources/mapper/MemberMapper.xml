@@ -3,13 +3,13 @@
 
 <mapper namespace="com.library.mapper.MemberMapper">
     <!-- 회원 목록 조회 -->
-    <select id="findAllMembers" resultType="com.library.vo.Member">
+    <select id="getAllMembers" resultType="com.library.vo.Member">
         SELECT MEMBERS_ID, STATUS, CARD_NUM, EMAIL, PASSWORD, NAME, MOBILE, ZIPCODE, ADDRESS, JOIN_DATE, LEAVE_DATE 
         FROM MEMBERS
     </select>
 
     <!-- 회원 상세 조회 -->
-    <select id="findMemberById" resultType="com.library.vo.Member" parameterType="int">
+    <select id="getMemberById" resultType="com.library.vo.Member" parameterType="int">
         SELECT MEMBERS_ID, STATUS, CARD_NUM, EMAIL, PASSWORD, NAME, MOBILE, ZIPCODE, ADDRESS, JOIN_DATE, LEAVE_DATE 
         FROM MEMBERS WHERE MEMBERS_ID = #{memberId}
     </select>
@@ -26,7 +26,7 @@
     <!-- 회원 등록 -->
     <insert id="insertMember" parameterType="com.library.vo.Member">
         INSERT INTO MEMBERS (MEMBERS_ID, STATUS, CARD_NUM, EMAIL, PASSWORD, NAME, MOBILE, ZIPCODE, ADDRESS, JOIN_DATE, LEAVE_DATE)
-        VALUES SEQ_MEMBERS.NEXTVAL, #{status}, #{cardNum}, #{email}, #{password}, #{name}, #{mobile}, #{zipcode}, #{address}, SYSDATE, #{leaveDate}
+        VALUES SQ_MEMBERS.NEXTVAL, #{status}, #{cardNum}, #{email}, #{password}, #{name}, #{mobile}, #{zipcode}, #{address}, SYSDATE, #{leaveDate}
     </insert>
 
     <!-- 회원 삭제 -->

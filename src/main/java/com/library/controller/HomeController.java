@@ -17,7 +17,7 @@ public class HomeController {
 	private PageInfo pageInfo;
     
 	public void setPageInfo(Model model) {
-		model.addAttribute("pageTitle", pageInfo.getPageTitle());
+		model.addAttribute("pageTitleCode", pageInfo.getPageTitleCode());
 		model.addAttribute("pagePath", pageInfo.getPagePath());
 	}
 	

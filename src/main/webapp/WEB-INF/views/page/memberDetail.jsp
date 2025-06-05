@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <c:set var="member" value="${member}" />
-
+<fmt:formatDate value="${joinDate}" pattern="yyyy-MM-dd" />
+<fmt:formatDate value="${leaveDate}" pattern="yyyy-MM-dd" />
 
 <!-- 회원 상세 조회 -->
 <!-- @GetMapping("/members/{membersId}") -->
@@ -22,16 +23,13 @@
 </ul>
 <br>
 
-<!-- 수정 -->
+<!-- 수정 폼으로 이동 -->
+<a href="/members/${membersId}/edit">수정</a>
+
+<!-- 탈퇴 요청 (수정 요청)  -->
 <!-- @RequestMapping(value = "/{membersId}", method = RequestMethod.PUT) -->
-<form action="members/${membersId}" method="post">
-	<input type="hidden" name="_method" value="put">
-	<input type="submit" value="수정">
+<form action="/members/${membersId}" method="post">
+	<input type="hidden" name="_method" value="delete"> 
+	<input type="submit" value="탈퇴">
 </form>
 
-<!-- 삭제  -->
-<!-- @RequestMapping(value = "/{membersId}", method = RequestMethod.DELETE) -->
-<form action="members/${membersId}" method="post">
-	<input type="hidden" name="_method" value="delete"> 
-	<input type="submit" value="삭제">
-</form>

@@ -21,7 +21,7 @@ public class ArticleController {
     private PageInfo pageInfo;
     
     public void setPageInfo(Model model) {
-    	model.addAttribute("pageTitle", pageInfo.getPageTitle());
+    	model.addAttribute("pageTitleCode", pageInfo.getPageTitleCode());
     	model.addAttribute("pagePath", pageInfo.getPagePath());
     }
 
@@ -32,7 +32,7 @@ public class ArticleController {
     	model.addAttribute("articleList", articleList);
     	
     	pageInfo = PageInfo.builder()
-    			.pageTitle(new String[]{"", "글 목록 조회"})
+    			.pageTitleCode("21")
     			.pagePath("page/articleList.jsp")
     			.build();
         	

@@ -24,7 +24,7 @@
 			<div class="home_2_1">
 				<a href="/login">로그인</a><br>
 				~~ DB 테스트 ~~<br>
-				<a href="/register">회원가입</a><br>
+				<a href="/members/register">회원가입</a><br>
 				<a href="/members">회원 목록</a><br>
 			</div>
 			<div class="home_2_2">추천도서</div>
