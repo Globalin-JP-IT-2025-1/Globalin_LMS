@@ -1,37 +1,55 @@
-/* 회원가입 폼, 로그인 폼 빈칸 체크 */
-function checkBlank(form) {
-	let id = form["id"].value.trim();
-	let pw = form["pw"].value.trim();
+/* 폼 빈칸 체크 */
+function checkBlankEditMember(form) {
+	let password = form["password"].value.trim();
+	let confirmPassword = form["confirmPassword"].value.trim();
+	let mobile1 = form["mobile1"].value.trim();
+	let mobile2 = form["mobile2"].value.trim();
+	let mobile3 = form["mobile3"].value.trim();
+	let zipcode = form["zipcode"].value.trim();
+	let address = form["address"].value.trim();
 
-	if (name === "") {
-		alert("⚠️ 이름을 입력해주세요!");
-		form["name"].focus();
+	if (password === "") {
+		alert("⚠️ 비밀번호를 입력해주세요!");
+		form["password"].focus();
 		return false;
 	}
 
-	if (email === "") {
-		alert("⚠️ 이메일을 입력해주세요!");
-		form["email"].focus();
+	if (confirmPassword === "") {
+		alert("⚠️ 비밀번호 확인을 입력해주세요!");
+		form["confirmPassword"].focus();
 		return false;
 	}
 
-	// 회원가입 폼의 경우 2항목 더 확인
-	if (form.id === "regForm") {
-		let name = form["name"].value.trim();
-		let email = form["email"].value.trim();
-
-		if (id === "") {
-			alert("⚠️ ID를 입력해주세요!");
-			form["id"].focus();
-			return false;
-		}
-
-		if (pw === "") {
-			alert("⚠️ 비밀번호를 입력해주세요!");
-			form["pw"].focus();
-			return false;
-		}
+	if (mobile1 === "") {
+		alert("⚠️ 연락처를 입력해주세요!");
+		form["mobile1"].focus();
+		return false;
 	}
+
+	if (mobile2 === "") {
+		alert("⚠️ 연락처를 입력해주세요!");
+		form["mobile2"].focus();
+		return false;
+	}
+
+	if (mobile3 === "") {
+		alert("⚠️ 연락처를 입력해주세요!");
+		form["mobile3"].focus();
+		return false;
+	}
+
+	if (zipcode === "") {
+		alert("⚠️ 우편번호를 입력해주세요!");
+		form["zipcode"].focus();
+		return false;
+	}
+
+	if (address === "") {
+		alert("⚠️ 주소를 입력해주세요!");
+		form["address"].focus();
+		return false;
+	}
+
 
 	return true;
 }

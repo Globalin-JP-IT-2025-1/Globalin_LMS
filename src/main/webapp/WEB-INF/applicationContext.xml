@@ -3,19 +3,25 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
 	xsi:schemaLocation="
-           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd 
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
 		   http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
 
 	<!-- 빈 자동 등록 -->
 	<context:component-scan base-package="com.library" />
 	
-	<!-- DB 환경 설정 파일 -->
+	<!-- 환경 설정 파일 : 외부(@Value) -->
+	<context:property-placeholder location="classpath:application.properties"/>
+	
+	<!-- 환경 설정 파일 : 내부 -->
 	<util:properties id="dsProperties" location="classpath:datasource.properties" />
+	<util:properties id="appProperties" location="classpath:application.properties" />
 
 	<!-- OracleDB DataSource -->
 	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -39,7 +45,6 @@
 	    <property name="poolName" value="HikariCP-Pool"/>
 	</bean>
 	
-	
 	<!-- 트랜잭션 관리 -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
@@ -59,11 +64,66 @@
         <constructor-arg ref="sqlSessionFactory"/>
     </bean>
     
-    <!-- MessageSource 설정 -->
+    <!-- MessageSource 설정 : 다국어, 메뉴 관리 -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 	    <property name="basename" value="classpath:messages" />
 	    <property name="defaultEncoding" value="UTF-8" />
 	</bean>
     
-
+    <!-- 회원가입 시 패스워드 암호화 -->
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    
+    
+    <!-- Redis 연결 설정 -->
+    <bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+	    <property name="hostName" value="localhost"/>
+	    <property name="port" value="6379"/>
+	</bean>
+	
+	<!-- RedisTemplate 설정 (트랜잭션 활성화) -->
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+	    <constructor-arg ref="redisConnectionFactory"/>
+	    <property name="enableTransactionSupport" value="true"/>
+	</bean>
+	
+	
+	<!-- Spring Security 관련 설정 -->
+	<!-- JWT 인증 필터 Bean 등록 -->
+    <bean id="jwtAuthenticationFilter" class="com.library.security.JwtAuthenticationFilter">
+        <constructor-arg ref="jwtUtil" />
+        <constructor-arg ref="userDetailsService" />
+    </bean>
+    
+	<!-- UserDetailsService Bean 등록 -->
+	<bean id="userDetailsService" class="com.library.security.CustomUserDetailsService"/>
+    
+    <!-- Interceptor 등록 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/private/**"/>
+            <mvc:mapping path="/admin/**"/>
+            <bean class="com.library.security.JwtHeaderInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    
+    
+    <!-- Mail 관련 설정 -->
+	<bean id="mailSender" class = "org.springframework.mail.javamail.JavaMailSenderImpl">
+	   <property name="host" value="#{appProperties['spring.mail.host']}" />
+	   <property name="port" value="#{appProperties['spring.mail.port']}" />
+	   <property name="username" value="#{appProperties['spring.mail.username']}" />
+	   <property name="password" value="#{appProperties['spring.mail.password']}" />
+	   <property name="javaMailProperties">
+	      <props>
+	            <prop key="mail.transport.protocol">smtp</prop>
+	            <prop key="mail.smtp.auth">true</prop>
+	            <prop key="mail.smtp.starttls.enable">true</prop>
+	            <prop key="mail.debug">true</prop>
+	      </props>
+	   </property>
+	</bean>
+	
+	<!-- JSON 관련 설정 -->
+	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+    
 </beans>

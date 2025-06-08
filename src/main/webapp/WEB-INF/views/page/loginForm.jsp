@@ -1,35 +1,61 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <style>
 </style>
 
-<form action="/login" method="POST" onsubmit="return checkBlank(this)">
-	<ul id="loginForm">
-		<li>email : 
-			<input type="email" id="email1" maxlength="30">@
-			<select id="email2">
-				<option value="test.com" selected>test.com</option>
-				<option value="naver.com">naver.com</option>
-				<option value="gmail.com">gmail.com</option>
-			</select>
-		</li>
-		<li><input type="text" id="email" value="email"></li>  <!-- 테스트 후 hidden으로 변경하기 -->
-		<li>password : <input type="password" id="password" placeholder="비밀번호 입력" maxlength="20"></li>
+<!-- 로그인 폼 -->
+<ul id="loginForm">
+	<li>id : <input type="text" id="username" placeholder="아이디 입력" maxlength="10">
+	<li>password : <input type="password" id="password" placeholder="비밀번호 입력" maxlength="20"></li>
+</ul>
 
-	</ul>
-</form>
+<button onclick="loginProc()">로그인</button> <!-- POST /public/login -->
 
 <script>
-function combineEmail() {
-    let value1 = document.getElementById("email1").value;
-    let value2 = document.getElementById("email2").value;
-    document.getElementById("email").value = value1 + "@" + value2;
-
-    console.log(document.getElementById("email").value); // 예: "test@naver.com"
+// 로그인 요청
+function loginProc() {
+	// 폼 데이터 가져오기
+    const login = {
+    	username: document.getElementById("username").value,
+    	password: document.getElementById("password").value,
+    };
+	
+	console.log(document.getElementById("username").value);
+	console.log(document.getElementById("password").value);
+	
+	Swal.fire({
+        title: "로그인 요청",
+        text: "로그인 하시겠습니까?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "확인",
+        cancelButtonText: "취소"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/public/auth/login`, { 
+            	method: "POST",
+            	headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(login) // 객체를 JSON 문자열로 변환
+            })
+            .then(response => {
+                if (response.ok) {
+                    Swal.fire("로그인 성공", "로그인 성공 하였습니다.", "success").then(() => {
+                    	location.href = "/"; // 홈으로
+                    });
+                } else {
+                    Swal.fire("오류 발생", "로그인 실패 하였습니다.", "error");
+                }
+            })
+            .catch(error => {
+                Swal.fire("오류 발생", "서버 오류가 발생했습니다.", "error");
+                console.error("Error:", error);
+            });
+        }
+    });
 }
 
-// 입력값 변경 시 자동 업데이트
-document.getElementById("email1").addEventListener("input", combineEmail);
-document.getElementById("email2").addEventListener("change", combineEmail);
 </script>

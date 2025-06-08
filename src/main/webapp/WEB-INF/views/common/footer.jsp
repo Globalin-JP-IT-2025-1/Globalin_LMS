@@ -19,7 +19,7 @@
 		</div>
 
 		<div class="f1_3">
-			<a href="/etc/73">개인정보처리방침</a> <a href="/admin/91">Admin Page</a>
+			<a href="/etc/73">개인정보처리방침</a> <a href="/admin/members">Admin Page</a>
 		</div>
 	</div>
 	<div class="f_2">

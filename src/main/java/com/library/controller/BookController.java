@@ -7,9 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.library.dto.Book;
 import com.library.dto.PageInfo;
 import com.library.service.BookService;
-import com.library.vo.Book;
 
 import lombok.AllArgsConstructor;
 
@@ -27,7 +27,7 @@ public class BookController {
 
     @GetMapping
     public String getAllBooks(Model model) {
-    	List<Book> bookList = bookService.findAllBooks();
+    	List<Book> bookList = bookService.getAllBooks();
         
     	model.addAttribute("bookList", bookList);
     	

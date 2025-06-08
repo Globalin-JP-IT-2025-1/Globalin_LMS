@@ -6,6 +6,8 @@
 build/
 target/
 
-datasource.properties
 /.apt_generated/
 /.apt_generated_tests/
+
+datasource.properties
+application.properties

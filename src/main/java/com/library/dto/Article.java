@@ -1,6 +1,6 @@
-package com.library.vo;
+package com.library.dto;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +18,8 @@ public class Article {
 	private String category; // 카테고리
 	private String title; // 제목
 	private String content; // 내용
-	private Date createDate; // 최초등록날짜
-	private Date updateDate; // 마지막수정날짜
+	private Timestamp createDate; // 최초등록날짜
+	private Timestamp updateDate; // 마지막수정날짜
 	private int replyCount; // 댓글수
 	private int viewCount; // 조회수
 	private boolean isSecret; // 비밀글여부

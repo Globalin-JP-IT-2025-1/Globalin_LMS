@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.library.vo.Book;
+import com.library.dto.Book;
 
 @Mapper
 public interface BookMapper {
 	
-	List<Book> findAllBooks(); // 도서 전체 조회
+	List<Book> getAllBooks(); // 도서 전체 조회
 	
 }

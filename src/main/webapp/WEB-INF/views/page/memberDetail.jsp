@@ -24,12 +24,44 @@
 <br>
 
 <!-- 수정 폼으로 이동 -->
-<a href="/members/${membersId}/edit">수정</a>
+<a href="/private/members/${member.membersId}/edit">수정</a> <!-- GET private/members/${membersId}/edit -->
 
-<!-- 탈퇴 요청 (수정 요청)  -->
-<!-- @RequestMapping(value = "/{membersId}", method = RequestMethod.PUT) -->
-<form action="/members/${membersId}" method="post">
-	<input type="hidden" name="_method" value="delete"> 
-	<input type="submit" value="탈퇴">
-</form>
+<!-- 탈퇴 요청 -->
+<button onclick="leaveMember(${member.membersId})">탈퇴</button>
+
+<script>
+// 탈퇴 요청
+function leaveMember(memberId) {
+	Swal.fire({
+        title: "회원 탈퇴",
+        text: "정말로 탈퇴 하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "탈퇴",
+        cancelButtonText: "취소"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/private/members/${membersId}/leave`, { 
+            	method: "PATCH"
+            })
+            .then(response => {
+                if (response.ok) {
+                    Swal.fire("탈퇴 완료", "탈퇴가 완료 되었습니다.", "success").then(() => {
+                    	location.href = "/"; // 홈으로 이동
+                    });
+                } else {
+                    Swal.fire("오류 발생", "탈퇴를 실패했습니다.", "error");
+                }
+            })
+            .catch(error => {
+                Swal.fire("오류 발생", "서버 오류가 발생했습니다.", "error");
+                console.error("Error:", error);
+            });
+        }
+    });
+}
+
+</script>
 

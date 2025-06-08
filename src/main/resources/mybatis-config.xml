@@ -11,6 +11,7 @@
 	    <setting name="aggressiveLazyLoading" value="false"/> <!-- 모든 지연 로딩 객체를 한 번에 로드하지 않음 (선택적 로딩) -->
 	    <setting name="multipleResultSetsEnabled" value="true"/> <!-- 쿼리 실행 시 다중 결과 집합을 처리할 수 있도록 허용 -->
 	    <setting name="useColumnLabel" value="true"/> <!-- 컬럼의 라벨명을 사용하여 결과 매핑 (별칭 사용 가능) -->
+	    <setting name="jdbcTypeForNull" value="NULL"/>
 	    
 	    <setting name="mapUnderscoreToCamelCase" value="true"/> <!-- DB의 언더스코어(_) 기반 컬럼명을 Java의 카멜 표기법으로 자동 변환 -->
 	</settings>

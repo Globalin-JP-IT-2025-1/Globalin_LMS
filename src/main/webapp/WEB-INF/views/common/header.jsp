@@ -34,9 +34,9 @@
 						<tr>
 							<td><a href="/">홈</a></td>
 							<td>|</td>
-							<td><a href="/login">로그인</a></td>
+							<td><a href="/public/auth/login">로그인</a></td>
 							<td>|</td>
-							<td><a href="/members/register">회원가입</a></td>
+							<td><a href="/public/members/register">회원가입</a></td>
 							<td>|</td>
 							<td><a href="/etc/71">사이트맵</a></td>
 						</tr>
@@ -44,7 +44,7 @@
 				</div>
 
 				<div class="h_member_info">
-					<a href="/members/2">가길동</a> 님
+					<a href="/private/members/3">가길동</a> 님
 				</div>
 
 				<%-- <c:if test="${not empty membersId}">

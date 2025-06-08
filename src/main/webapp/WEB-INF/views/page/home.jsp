@@ -22,10 +22,10 @@
 	<div class="home_2_bg">
 		<div class="home_2">
 			<div class="home_2_1">
-				<a href="/login">로그인</a><br>
+				<a href="/public/auth/login">로그인</a><br>
 				~~ DB 테스트 ~~<br>
-				<a href="/members/register">회원가입</a><br>
-				<a href="/members">회원 목록</a><br>
+				<a href="/public/members/register">회원가입</a><br>
+				<a href="/admin/members">회원 목록</a><br>
 			</div>
 			<div class="home_2_2">추천도서</div>
 			<div class="home_2_3">공지사항</div>

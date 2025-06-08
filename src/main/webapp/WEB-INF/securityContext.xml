@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:security="http://www.springframework.org/schema/security" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+	
+	<security:http auto-config="true">
+		<security:csrf disabled="true"/> <!-- CSRF 보호 비활성화 -->
+		<security:custom-filter ref="jwtAuthenticationFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+		<!-- 접근 권한 설정 -->
+		<security:intercept-url pattern="/" access="permitAll"/>
+		<!-- <security:intercept-url pattern="/public/**" access="permitAll" />
+		<security:intercept-url pattern="/etc/**" access="permitAll" />
+		<security:intercept-url pattern="/private/**" access="hasRole('ROLE_USER')" /> -->
+		<security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+		
+		<!-- <security:intercept-url pattern="/members/{membersId}" access="hasRole('ROLE_ADMIN') or @memberService.canAccess(#membersId)" /> -->
+	</security:http>
+	
+	<security:authentication-manager>
+        <security:authentication-provider>
+            <security:user-service>
+                <security:user name="admin" password="{noop}admin123" authorities="ROLE_ADMIN" />
+                <security:user name="user" password="{noop}user123" authorities="ROLE_USER" />
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+	
+</beans>

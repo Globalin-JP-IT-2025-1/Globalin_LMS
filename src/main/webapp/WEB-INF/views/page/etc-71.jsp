@@ -60,18 +60,16 @@
 }
 </style>
 
-
-
 <div class="sitemap">
 
 	<div>
 		<div class="sitemap_title">자료검색</div>
 		<div class="sitemap_content">
 			<ul>
-				<li><a href="/books">통합검색</a></li>
-				<li><a href="/books?type=class">주제별검색</a></li>
-				<li><a href="/books?type=loan">대출베스트</a></li>
-				<li><a href="/books?type=like">인기도서</a></li>
+				<li><a href="/public/books">통합검색</a></li>
+				<li><a href="/public/books?type=class">주제별검색</a></li>
+				<li><a href="/public/books?type=loan">대출베스트</a></li>
+				<li><a href="/public/books?type=like">인기도서</a></li>
 			</ul>
 		</div>
 	</div>
@@ -80,10 +78,10 @@
 		<div class="sitemap_title">열린마당</div>
 		<div class="sitemap_content">
 			<ul>
-				<li><a href="/articles?type=notice">공지사항</a></li>
-				<li><a href="/articles?type=fnq">자주 묻는 질문</a></li>
-				<li><a href="/articles?type=qna">Q&A</a></li>
-				<li><a href="/articles?type=req">희망 도서 신청</a></li>
+				<li><a href="/public/articles?type=notice">공지사항</a></li>
+				<li><a href="/public/articles?type=fnq">자주 묻는 질문</a></li>
+				<li><a href="/public/articles?type=qna">Q&A</a></li>
+				<li><a href="/private/articles?type=req">희망 도서 신청</a></li>
 			</ul>
 		</div>
 	</div>
@@ -92,10 +90,10 @@
 		<div class="sitemap_title">내 서재</div>
 		<div class="sitemap_content">
 			<ul>
-				<li><a href="/members/${membersId}">내 정보</a></li>
-				<li><a href="/members/${membersId}/book-history">도서 이용 정보</a></li>
-				<li><a href="/members/${membersId}/book-like">관심 도서 목록</a></li>
-				<li><a href="/members/${membersId}/book-req">도서 신청 목록</a></li>
+				<li><a href="/private/members/${membersId}">내 정보</a></li>
+				<li><a href="/private/members/${membersId}/book-history">도서 이용 정보</a></li>
+				<li><a href="/private/members/${membersId}/book-like">관심 도서 목록</a></li>
+				<li><a href="/private/members/${membersId}/book-req">도서 신청 목록</a></li>
 			</ul>
 		</div>
 	</div>
@@ -137,10 +135,10 @@
 		<div class="sitemap_title">회원 정보</div>
 		<div class="sitemap_content">
 			<ul>
-				<li><a href="/etc/61">로그인</a></li>
-				<li><a href="/etc/62">가입 여부 확인</a></li>
-				<li><a href="/etc/63">비밀번호 재발급</a></li>
-				<li><a href="/etc/64">회원가입</a></li>
+				<li><a href="/public/auth/login">로그인</a></li>
+				<li><a href="/public/members/check">가입 여부 확인</a></li>
+				<li><a href="/public/members/repass">비밀번호 재발급</a></li>
+				<li><a href="/public/members/register">회원가입</a></li>
 			</ul>
 		</div>
 	</div>
@@ -149,9 +147,10 @@
 		<div class="sitemap_title">관리자 페이지</div>
 		<div class="sitemap_content">
 			<ul>
-				<li><a href="/admin/91">회원 관리</a></li>
-				<li><a href="/admin/92">게시글 관리</a></li>
-				<li><a href="/admin/93">도서 관리</a></li>
+				<li><a href="/admin/members">회원 관리</a></li>
+				<li><a href="/admin/articles">게시글 관리</a></li>
+				<li><a href="/admin/books">도서 관리</a></li>
+				<li><a href="/admin/tokens">토큰 관리</a></li>
 			</ul>
 		</div>
 	</div>
