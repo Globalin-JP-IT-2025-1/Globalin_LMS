@@ -108,7 +108,7 @@
     
     
     <!-- Mail 관련 설정 -->
-	<bean id="mailSender" class = "org.springframework.mail.javamail.JavaMailSenderImpl">
+	<!-- <bean id="mailSender" class = "org.springframework.mail.javamail.JavaMailSenderImpl">
 	   <property name="host" value="#{appProperties['spring.mail.host']}" />
 	   <property name="port" value="#{appProperties['spring.mail.port']}" />
 	   <property name="username" value="#{appProperties['spring.mail.username']}" />
@@ -121,7 +121,7 @@
 	            <prop key="mail.debug">true</prop>
 	      </props>
 	   </property>
-	</bean>
+	</bean> -->
 	
 	<!-- JSON 관련 설정 -->
 	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>

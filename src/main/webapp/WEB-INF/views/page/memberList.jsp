@@ -45,7 +45,7 @@ background-color: var(--gray-color);
 			<th>주소<br>ADDRESS</th>
 			<th>가입날짜<br>JOIN_DATE</th>
 			<th>탈퇴날짜<br>LEAVE_DATE</th>
-			<th>회원 정보 삭제</th>
+			<!-- <th>회원 정보 삭제</th> -->
 			<th>회원 등급 변경</th>
 		</tr>
 	
@@ -64,13 +64,15 @@ background-color: var(--gray-color);
 				<td>${member.address}</td>
 				<td>${member.joinDate}</td>
 				<td>${member.leaveDate}</td>
-		        <td><button onclick="deleteMember(${member.membersId})">삭제</button></td>
+		        <%-- <td><button onclick="deleteMember(${member.membersId})">삭제</button></td> --%>
 		        <td><button onclick="upgradeMember(${member.membersId})">정회원으로 변경</button></td>
 			</tr>
 		</c:forEach>
 	
 	</table>
 </div>
+
+<td><button onclick="deleteMember(${member.membersId})">삭제</button></td>
 
 <script>
 function deleteMember(membersId) {

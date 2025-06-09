@@ -6,7 +6,6 @@
 	href="${pageContext.request.contextPath}/resources/static/css/header.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
 <div class="header">
 	<div class="h_1_bg">
 		<div class="h_1">
@@ -132,3 +131,11 @@
 
 <script
 	src="${pageContext.request.contextPath}/resources/static/js/header.js"></script>
+
+<script type="text/javascript">
+
+
+
+
+
+</script>
