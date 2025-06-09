@@ -22,31 +22,103 @@
 	<div class="home_2_bg">
 		<div class="home_2">
 			<div class="home_2_1">
-				<a href="/public/auth/login">로그인</a><br>
-				~~ DB 테스트 ~~<br>
-				<a href="/public/members/register">회원가입</a><br>
-				<a href="/admin/members">회원 목록</a><br>
+				<p>회원 로그인</p>
+				<div class="h2_1_div1">
+					<input type="text" id="username" placeholder="아이디">
+					<input type="text" id="password" placeholder="비밀번호">
+				</div>
+				<div class="h2_1_div2">
+					<button class="loginbtn" onclick="loginProc()">로그인</button>
+				</div>
+				<div class="h2_1_div3">
+					<a href="#">회원가입</a>&nbsp;|
+					<a href="#">가입 여부 확인</a>&nbsp;|
+					<a href="#">비밀번호 재발급</a>
+				</div>
 			</div>
-			<div class="home_2_2">추천도서</div>
-			<div class="home_2_3">공지사항</div>
+			
+			<div class="home_2_2">
+			  <div class="h2_2_top">
+			    <div class="h2_2_left">
+			      <a href="#" class="active">추천도서</a> |
+			      <a href="#">인기도서</a> |
+			      <a href="#">신작도서</a>
+			    </div>
+			    <div class="h2_2_right">
+			      <a href="#"><i class="bi bi-plus-circle"></i></a>
+			    </div>
+			  </div>
+			
+			  <div class="book_list">
+			    <div class="book_card">
+			      <img src="/resources/images/book1.png" alt="책1" class="book_img">
+			      <div class="book_title">책제목1<br><span>저자1</span></div>
+			    </div>
+			    <div class="book_card">
+			      <img src="/resources/images/book2.png" alt="책2" class="book_img">
+			      <div class="book_title">책제목2<br><span>저자2</span></div>
+			    </div>
+			    <div class="book_card">
+			      <img src="/resources/images/book3.png" alt="책3" class="book_img">
+			      <div class="book_title">책제목3<br><span>저자3</span></div>
+			    </div>
+			  </div>
+			</div>
+
+			<div class="home_2_3">
+				<div class="h2_3_div1">
+					<p>공지사항</p>
+					<a href="#"><i class="bi bi-plus-circle"></i></a>
+				</div>
+			</div>
 		</div>
 	</div>
-
 	<div class="home_3_bg">
-		<div class="home_3">
-			<button class="home_3_item">간편메뉴1</button>
-			<button class="home_3_item">간편메뉴2</button>
-			<button class="home_3_item">간편메뉴3</button>
-			<button class="home_3_item">간편메뉴4</button>
-			<button class="home_3_item">간편메뉴5</button>
-		</div>
-	</div>
-
+	  <div class="home_3">
+	    <div class="home_3_item" onclick="location.href='/etc/53'">이용안내</div>
+	    <div class="home_3_item" onclick="location.href='/etc/54'">대출/반납</div>
+	    <div class="home_3_item" onclick="location.href='/private/articles?type=req'">희망도서 신청</div>
+	    <div class="home_3_item" onclick="location.href='/public/books?type=loan'">대출베스트</div>
+	    <div class="home_3_item" onclick="location.href='/private/members/${membersId}/book-like'">관심도서 목록</div>
+	  </div>
+</div>
+	
 	<div class="home_4_bg">
-		<div class="home_4">도서관간략소개</div>
+		<div class="home_4">
+			<div class="home_4_left">
+				<div class="lib_title"><p><i class="bi bi-bank"></i>&nbsp;도서관 전경</p></div>
+				<img class="lib_img" src="${pageContext.request.contextPath}/resources/images/library.png"/>
+			</div>
+			<div class="home_4_right">
+				<p class="lib_welcome">글로벌인도서관 홈페이지 방문을 환영합니다.</p>
+				<p>저희 글로벌인 도서관은 2025년 6월 1일 개관하였습니다.<br>
+				여러분들의 많은 관심과 이용 부탁드립니다.<br>
+				다양한 장르의 책을 준비하였으니 대여를 원하시는 분들은 회원가입 후 도서관에 방문하여 회원카드를<br>
+				발급하여주시기 바랍니다.
+				</p>
+				<table class="lib_table">
+					<tr>
+						<th>이용시간</th>
+						<td>평일 : 오전10시~오후10시<br>휴일 : 오전10시~오후5시30분</td>
+					</tr>
+					<tr>
+						<th>정기 휴관일</th>
+						<td>매주 월요일</td>
+					</tr>
+				</table>
+				<div class="lib_btn_div">
+					<button class="lib_btn">도서관안내 &gt;</button>
+					<button class="lib_btn">이용안내 &gt;</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div class="home_5_bg">
-		<div class="home_5">베너</div>
+		<div class="home_5">베너<br>
+				~~ DB 테스트 ~~<br>
+				<a href="/public/members/register">회원가입</a><br>
+				<a href="/admin/members">회원 목록</a><br>
+		</div>
 	</div>
 </div>
