@@ -124,7 +124,8 @@
 }
 
 .h_member_info {
-	width: 200px;
+	width: auto;
+	padding: 0px 10px;
 	
 	background-color: var(--sub-color);
 	border-radius: 10px;

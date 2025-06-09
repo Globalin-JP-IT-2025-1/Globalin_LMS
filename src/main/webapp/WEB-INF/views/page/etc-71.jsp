@@ -150,7 +150,7 @@
 				<li><a href="/admin/members">회원 관리</a></li>
 				<li><a href="/admin/articles">게시글 관리</a></li>
 				<li><a href="/admin/books">도서 관리</a></li>
-				<li><a href="/admin/tokens">토큰 관리</a></li>
+				<li><a href="/admin/tokens">차단된 토큰 관리</a></li>
 			</ul>
 		</div>
 	</div>

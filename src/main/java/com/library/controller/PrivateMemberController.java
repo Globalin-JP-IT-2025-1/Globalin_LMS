@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +38,8 @@ public class PrivateMemberController {
     	model.addAttribute("pagePath", pageInfo.getPagePath());
     }
  
-    // 회원 정보 조회
-    @PreAuthorize("hasRole('ADMIN') or @memberService.canAccess(#membersId)")
+    // 회원 정보 조회 --> OK
+	/* @PreAuthorize("hasRole('ADMIN') or @memberService.canAccess(#membersId)") */
     @GetMapping("/{membersId}")
     public String getMemberById(@PathVariable("membersId") int membersId, Model model) {
     	Member member = memberService.getMemberById(membersId);
@@ -60,7 +59,7 @@ public class PrivateMemberController {
         return "layout";
     }
     
-    // 회원 정보 수정 폼으로 이동
+    // 회원 정보 수정 폼으로 이동 --> OK
     @GetMapping("/{membersId}/edit")
     public String showEditMemberInfo(@PathVariable("membersId") int membersId, Model model) {
     	Member member = memberService.getMemberById(membersId);
@@ -77,7 +76,7 @@ public class PrivateMemberController {
     	return "layout";
     }
 
-    // 회원 정보 수정
+    // 회원 정보 수정 --> OK
     @PutMapping("/{membersId}")
     public ResponseEntity<Void> updateMemberInfo(@PathVariable("membersId") int membersId, @RequestBody Map<String, String> requestData) {
     	Member member = memberService.getMemberById(membersId);

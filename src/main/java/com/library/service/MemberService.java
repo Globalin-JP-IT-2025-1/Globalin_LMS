@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.library.dto.BlacklistedToken;
 import com.library.dto.CardnumSerial;
 import com.library.dto.Member;
 import com.library.mapper.MemberMapper;
@@ -24,7 +25,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class MemberService {
 	private final MemberMapper memberMapper;
-	private final TokenBlacklistService tokenBlacklistService;
+	private final BlacklistedTokenService blacklistedTokenService;
 	private final PasswordEncoder passwordEncoder;
 	
 	public boolean canAccess(int membersId) {
@@ -58,6 +59,12 @@ public class MemberService {
 	
 	// 회원 정보 수정
 	public int updateMemberInfo(Member member) {
+		if (member.getPassword() != null) {
+			// 비밀번호 암호화
+			String encodedPassword = passwordEncoder.encode(member.getPassword());
+			member.setPassword(encodedPassword);
+		}
+		
 		return memberMapper.updateMemberInfo(member);
 	}
 	
@@ -66,52 +73,37 @@ public class MemberService {
 	public int updateMemberLeave(int membersId, Map<String, String> tokens) {
 		Member member = memberMapper.getMemberById(membersId);
 		
+		// 회원 정보 수정
 		LocalDateTime leaveDate = LocalDateTime.now();
 		Timestamp tsLeaveDate = Timestamp.valueOf(leaveDate);
 		
 		member.setStatus(3); // 탈퇴회원으로 상태 변경
 		member.setLeaveDate(tsLeaveDate); // 탈퇴날짜 추가
 		
+		memberMapper.updateMemberLeave(member);
+		
 		// 탈퇴 회원의 토큰을 블랙리스트에 추가
-		tokenBlacklistService.addAccessTokenToBlacklist(tokens.get("aToken"));
-		tokenBlacklistService.addRefreshTokenToBlacklist(tokens.get("rToken"));
-
-		return memberMapper.updateMemberLeave(member);
+		// access token
+		BlacklistedToken blacklistedTokenA = BlacklistedToken.builder()
+				.type(0)
+				.token(tokens.get("aToken"))
+				.build();
+		blacklistedTokenService.insertBlacklistedToken(blacklistedTokenA);
+		
+		// refresh token
+		BlacklistedToken blacklistedTokenR = BlacklistedToken.builder()
+				.type(1)
+				.token(tokens.get("rToken"))
+				.build();
+		blacklistedTokenService.insertBlacklistedToken(blacklistedTokenR);
+		
+		return 1;
 	}
 	
 	// 회원 등급 수정
 	@Transactional
-	public int updateMemberGrade(int membersId) {
+	public int updateMemberGrade(int membersId, String cardNum) {
 		Member member = memberMapper.getMemberById(membersId);
-		CardnumSerial cardnumSerial = memberMapper.getCardnumSerial();
-		
-		// 오늘날짜
-		LocalDateTime currentDateReal = LocalDateTime.now();
-        DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String strCurrentDateReal = currentDateReal.format(formatDate);
-        
-        // DB상 마지막 날짜
-        Timestamp currentDateDB = cardnumSerial.getCurrentDate();
-        SimpleDateFormat formatTimestamp = new SimpleDateFormat("yyyyMMdd");
-        String strCurrentDateDB = formatTimestamp.format(currentDateDB);
-		
-        String today = "";
-        int serial = 0;
-        
-		if (!strCurrentDateReal.equals(strCurrentDateDB)) {
-			Timestamp tsCurrentDateReal = Timestamp.valueOf(currentDateReal);
-			cardnumSerial.setCurrentDate(tsCurrentDateReal);
-			cardnumSerial.setSerial(1);
-			memberMapper.updateCardnumSerial(cardnumSerial);
-			
-			today = strCurrentDateReal;
-			serial = 1;
-		} else {
-			today = strCurrentDateDB;
-			serial = cardnumSerial.getSerial();
-		}
-
-		String cardNum = today + "-" + String.format("%06d", serial);; // 카드발급날짜 8자리 - 000001
 
 		member.setStatus(1); // 정회원
 		member.setCardNum(cardNum);
@@ -157,5 +149,41 @@ public class MemberService {
 	private String generateRandomPassword() {
         return UUID.randomUUID().toString().substring(0, 8);
     }
+	
+	// 회원카드 번호 생성기 (15자리)
+	public String generateCardNumber() {
+		
+		CardnumSerial cardnumSerial = memberMapper.getCardnumSerial();
+		
+		// 오늘날짜
+		LocalDateTime currentDateReal = LocalDateTime.now();
+        DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String strCurrentDateReal = currentDateReal.format(formatDate);
+        
+        // DB상 마지막 날짜
+        Timestamp currentDateDB = cardnumSerial.getCurrentDate();
+        SimpleDateFormat formatTimestamp = new SimpleDateFormat("yyyyMMdd");
+        String strCurrentDateDB = formatTimestamp.format(currentDateDB);
+		
+        String today = "";
+        int serial = 0;
+        
+		if (!strCurrentDateReal.equals(strCurrentDateDB)) {
+			Timestamp tsCurrentDateReal = Timestamp.valueOf(currentDateReal);
+			cardnumSerial.setCurrentDate(tsCurrentDateReal);
+			cardnumSerial.setSerial(1);
+			memberMapper.updateCardnumSerial(cardnumSerial);
+			
+			today = strCurrentDateReal;
+			serial = 1;
+		} else {
+			today = strCurrentDateDB;
+			serial = cardnumSerial.getSerial();
+		}
+
+		String cardNum = today + "-" + String.format("%06d", serial);; // 카드발급날짜 8자리 - 000001
+		
+		return cardNum;
+	}
 
 }

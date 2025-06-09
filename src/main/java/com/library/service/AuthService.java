@@ -29,12 +29,16 @@ public class AuthService {
     public int verifyMemberDB(String username, String password) {
     	Member member = memberMapper.getMemberByUsername(username);
     	
+    	
     	if (member == null) {
-    		throw new RuntimeException("사용자를 찾을 수 없습니다.");
+    		return -1;
     	}
     	
+    	System.out.println("membersId : " + member.getMembersId());
+    	System.out.println(password + " : " + member.getPassword());
+    	
     	if (!passwordEncoder.matches(password, member.getPassword())) {
-    		throw new RuntimeException("비밀번호가 틀립니다.");
+    		return -2;
     	}
     	
     	return member.getMembersId();
@@ -42,17 +46,13 @@ public class AuthService {
     
     // 액세스 토큰 검증 (무결성, 유효시간)
     public boolean verifyAccessToken(String aToken) {
-    	
-    	
-    	
+
     	return true;
     }
     
     // 리프레시 토큰 검증 (무결성, 유효시간, 회원 존재 여부, 블랙리스트)
     public boolean verifyRefreshToken(String rtoken) {
-    	
-    	
-    	
+
     	return true;
     }
 	

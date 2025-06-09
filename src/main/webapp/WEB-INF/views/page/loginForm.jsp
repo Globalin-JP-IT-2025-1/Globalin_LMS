@@ -8,12 +8,12 @@
 <!-- 로그인 폼 -->
 <ul id="loginForm">
 	<li>id : <input type="text" id="username" placeholder="아이디 입력" maxlength="10">
-	<li>password : <input type="password" id="password" placeholder="비밀번호 입력" maxlength="20"></li>
+	<li>password : <input type="text" id="password" placeholder="비밀번호 입력" maxlength="20"></li> <!-- 테스트 후 password로 변경 -->
 </ul>
 
-<button onclick="loginProc()">로그인</button> <!-- POST /public/login -->
+<button class="loginbtn" onclick="loginProc()">로그인</button> <!-- POST /public/login -->
 
-<script>
+<script type="text/javascript">
 // 로그인 요청
 function loginProc() {
 	// 폼 데이터 가져오기
@@ -21,9 +21,6 @@ function loginProc() {
     	username: document.getElementById("username").value,
     	password: document.getElementById("password").value,
     };
-	
-	console.log(document.getElementById("username").value);
-	console.log(document.getElementById("password").value);
 	
 	Swal.fire({
         title: "로그인 요청",

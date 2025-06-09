@@ -6,6 +6,10 @@
 	href="${pageContext.request.contextPath}/resources/static/css/header.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<%-- <c:set var="h_membersId" value="${member.membersId}" /> 
+<c:set var="h_username" value="${member.username}" /> 
+<c:set var="h_name" value="${member.name}" />  --%>
+
 <div class="header">
 	<div class="h_1_bg">
 		<div class="h_1">
@@ -33,26 +37,30 @@
 						<tr>
 							<td><a href="/">홈</a></td>
 							<td>|</td>
-							<td><a href="/public/auth/login">로그인</a></td>
-							<td>|</td>
-							<td><a href="/public/members/register">회원가입</a></td>
-							<td>|</td>
+							<c:choose>
+								<c:when test="${empty member.membersId}">
+									<td><a href="/public/auth/login">로그인</a></td>
+									<td>|</td>
+									<td><a href="/public/members/register">회원가입</a></td>
+									<td>|</td>
+								</c:when>
+								<c:otherwise>
+									<td><a href="/private/auth/logout/${member.membersId}">로그아웃</a></td>
+									<td>|</td>
+								</c:otherwise>
+							</c:choose>
 							<td><a href="/etc/71">사이트맵</a></td>
 						</tr>
 					</table>
 				</div>
-
-				<div class="h_member_info">
-					<a href="/private/members/3">가길동</a> 님
-				</div>
-
-				<%-- <c:if test="${not empty membersId}">
-					<div>
-						<a href="/user/mypage/${membersId}" id="mypage">
-							<c:out value="${empty membersId ? '게스트' : membersId}" />
+				
+				<c:if test="${not empty member.membersId}">
+					<div class="h_member_info">
+						<a href="/private/members/${member.membersId}" id="mypage">
+							<c:out value="${member.name}" />(<c:out value="${member.username}" />)
 						</a> 님 환영합니다!
 					</div>
-				</c:if> --%>
+				</c:if>
 			</div>
 		</div>
 	</div>
@@ -117,10 +125,10 @@
 					<div class="h_submenu_blank"></div>
 					<div class="h_submenu">
 						<ul>
-							<li class="h_submenu_item"><a href="/members/${membersId}">내 정보</a></li>
-							<li class="h_submenu_item"><a href="/members/${membersId}/book-history">도서 이용 정보</a></li>
-							<li class="h_submenu_item"><a href="/members/${membersId}/book-like">관심 도서 목록</a></li>
-							<li class="h_submenu_item"><a href="/members/${membersId}/book-req">도서 신청 목록</a></li>
+							<li class="h_submenu_item"><a href="/members/${member.membersId}">내 정보</a></li>
+							<li class="h_submenu_item"><a href="/members/${member.membersId}/book-history">도서 이용 정보</a></li>
+							<li class="h_submenu_item"><a href="/members/${member.membersId}/book-like">관심 도서 목록</a></li>
+							<li class="h_submenu_item"><a href="/members/${member.membersId}/book-req">도서 신청 목록</a></li>
 						</ul>
 					</div>
 				</div>

@@ -4,7 +4,7 @@ CREATE TABLE MEMBERS (
     STATUS      NUMBER(1)		NOT NULL,
     CARD_NUM    VARCHAR2(15),
     USERNAME	VARCHAR2(20)	NOT NULL,
-    PASSWORD    VARCHAR2(20)	NOT NULL,
+    PASSWORD    VARCHAR2(100)	NOT NULL,
     NAME        VARCHAR2(30)	NOT NULL,
     EMAIL       VARCHAR2(50)	NOT NULL,
     MOBILE      VARCHAR2(20)	NOT NULL,
@@ -29,19 +29,19 @@ SELECT * FROM MEMBERS;
 
 -- 예제 데이터 추가
 INSERT INTO MEMBERS (MEMBERS_ID, STATUS, CARD_NUM, USERNAME, PASSWORD, NAME, EMAIL, MOBILE, ZIPCODE, ADDRESS, JOIN_DATE, LEAVE_DATE)
-VALUES (SQ_MEMBERS.NEXTVAL, 0, null, 'test1', 'test1', '가길동', 'test1@test.com', '010-1234-5678', '12345', '서울특별시 강남구 테헤란로 123', SYSDATE, null);
+VALUES (SQ_MEMBERS.NEXTVAL, 0, null, 'test1', '$2a$10$0vk0zyFZMzcGDLIrsoMOueIA293VXoS8Kwbx4mIPwOCgy4K1o/s5y', '가길동', 'test1@test.com', '010-1234-5678', '12345', '서울특별시 강남구 테헤란로 123', SYSDATE, null);
 
 INSERT INTO MEMBERS (MEMBERS_ID, STATUS, CARD_NUM, USERNAME, PASSWORD, NAME, EMAIL, MOBILE, ZIPCODE, ADDRESS, JOIN_DATE, LEAVE_DATE)
-VALUES (SQ_MEMBERS.NEXTVAL, 0, null, 'test2', 'test2', '나길동', 'test2@test.com', '010-2345-6789', '23456', '서울특별시 서초구 반포대로 45', SYSDATE, null);
+VALUES (SQ_MEMBERS.NEXTVAL, 0, null, 'test2', '$2a$10$P5LMBjrM7vBWXO/H9t18FuBYo6JVvyzeU6.HHIZwxdlpUFJqJxZdG', '나길동', 'test2@test.com', '010-2345-6789', '23456', '서울특별시 서초구 반포대로 45', SYSDATE, null);
 
 INSERT INTO MEMBERS (MEMBERS_ID, STATUS, CARD_NUM, USERNAME, PASSWORD, NAME, EMAIL, MOBILE, ZIPCODE, ADDRESS, JOIN_DATE, LEAVE_DATE)
-VALUES (SQ_MEMBERS.NEXTVAL, 0, null, 'test3', 'test3', '다길동', 'test3@test.com', '010-3456-7890', '34567', '서울특별시 종로구 새문안로 98', SYSDATE, null);
+VALUES (SQ_MEMBERS.NEXTVAL, 0, null, 'test3', '$2a$10$mx7OGupZuUmRG3Fg3vHQy.ottEsVis75ui4i3h1mdUiigojZ5fxO.', '다길동', 'test3@test.com', '010-3456-7890', '34567', '서울특별시 종로구 새문안로 98', SYSDATE, null);
 
 INSERT INTO MEMBERS (MEMBERS_ID, STATUS, CARD_NUM, USERNAME, PASSWORD, NAME, EMAIL, MOBILE, ZIPCODE, ADDRESS, JOIN_DATE, LEAVE_DATE)
-VALUES (SQ_MEMBERS.NEXTVAL, 0, null, 'test4', 'test4', '라길동', 'test4@test.com', '010-4567-8901', '45678', '서울특별시 마포구 독막로 12', SYSDATE, null);
+VALUES (SQ_MEMBERS.NEXTVAL, 0, null, 'test4', '$2a$10$mEIgBayUkF.lxiQVN7.GmOiJvXvN2YeiaSl//kix85PirAzq96neS', '라길동', 'test4@test.com', '010-4567-8901', '45678', '서울특별시 마포구 독막로 12', SYSDATE, null);
 
 INSERT INTO MEMBERS (MEMBERS_ID, STATUS, CARD_NUM, USERNAME, PASSWORD, NAME, EMAIL, MOBILE, ZIPCODE, ADDRESS, JOIN_DATE, LEAVE_DATE)
-VALUES (SQ_MEMBERS.NEXTVAL, 0, null, 'test5', 'test5', '마길동', 'test5@test.com', '010-5678-9012', '56789', '서울특별시 송파구 올림픽로 78', SYSDATE, null);
+VALUES (SQ_MEMBERS.NEXTVAL, 0, null, 'test5', '$2a$10$0Xc1dZuM7PQYSbHKFFpg9.5SFV3Z8d5bta9LfUOHVGFtdeEDgeKrK', '마길동', 'test5@test.com', '010-5678-9012', '56789', '서울특별시 송파구 올림픽로 78', SYSDATE, null);
 
 
 -- 시퀀스 전체 조회

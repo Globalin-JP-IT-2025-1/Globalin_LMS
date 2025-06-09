@@ -47,10 +47,10 @@
 	            .then(response => {
 	                if (response.ok) {
 	                    Swal.fire("회원 조회 완료", "회원 조회 완료하였습니다. 메일을 확인해주세요.", "success").then(() => {
-	                    	location.href = "/public/login"; // 로그인 폼으로 이동
+	                    	location.href = "/public/auth/login"; // 로그인 폼으로 이동
 	                    });
 	                } else {
-	                    Swal.fire("오류 발생", "회원 조회 실패했습니다.", "error");
+	                    Swal.fire("회원 조회 실패", "회원 조회 실패했습니다.", "error");
 	                }
 	            })
 	            .catch(error => {

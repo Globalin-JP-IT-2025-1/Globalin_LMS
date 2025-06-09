@@ -3,6 +3,7 @@ package com.library.dto;
 import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Member {
 	
 	private int membersId; // 회원 ID (MEMBERS_ID, PK)

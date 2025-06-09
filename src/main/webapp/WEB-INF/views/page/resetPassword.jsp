@@ -49,7 +49,7 @@
 	            .then(response => {
 	                if (response.ok) {
 	                    Swal.fire("비밀번호 재발급 완료", "비밀번호 재발급 완료하였습니다. 메일을 확인해주세요.", "success").then(() => {
-	                    	location.href = "/public/login"; // 로그인 폼으로 이동
+	                    	location.href = "/public/auth/login"; // 로그인 폼으로 이동
 	                    });
 	                } else {
 	                    Swal.fire("오류 발생", "비밀번호 재발급 실패했습니다.", "error");

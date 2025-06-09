@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -110,16 +109,30 @@ public class PublicMemberController {
     
     // 회원 등록
     @PostMapping
-    public ResponseEntity<Void> insertMember(@ModelAttribute Member member) {
-    	int result = memberService.insertMember(member);
+    public ResponseEntity<Member> insertMember(@RequestBody Map<String, String> requestData) {
+    	Member member = Member.builder()
+    			.username(requestData.get("username"))
+    			.password(requestData.get("password"))
+    			.name(requestData.get("name"))
+    			.email(requestData.get("email"))
+    			.mobile(requestData.get("mobile"))
+    			.zipcode(requestData.get("zipcode"))
+    			.address(requestData.get("address"))
+    			.build();
     	
-    	if (result == -1) {
-    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 실패 시 400 반환
+    	if (memberService.insertMember(member) < 0) {
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    	}
+    	
+    	member = memberService.getMemberByUsername(member.getUsername());
+    	
+    	if (member.getMembersId() < 0) {
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     	}
     	
     	emailService.sendRegister(member);
     	
-    	return ResponseEntity.ok().build(); // 성공 시 200 반환
+    	return ResponseEntity.ok().body(member);
     }
 
 }

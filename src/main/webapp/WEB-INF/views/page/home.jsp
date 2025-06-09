@@ -51,15 +51,15 @@
 			
 			  <div class="book_list">
 			    <div class="book_card">
-			      <img src="/resources/images/book1.png" alt="책1" class="book_img">
+			      <img src="${pageContext.request.contextPath}/resources/static/images/book1.jpg" alt="책1" class="book_img">
 			      <div class="book_title">책제목1<br><span>저자1</span></div>
 			    </div>
 			    <div class="book_card">
-			      <img src="/resources/images/book2.png" alt="책2" class="book_img">
+			      <img src="${pageContext.request.contextPath}/resources/static/images/book2.jpg" alt="책2" class="book_img">
 			      <div class="book_title">책제목2<br><span>저자2</span></div>
 			    </div>
 			    <div class="book_card">
-			      <img src="/resources/images/book3.png" alt="책3" class="book_img">
+			      <img src="${pageContext.request.contextPath}/resources/static/images/book3.jpg" alt="책3" class="book_img">
 			      <div class="book_title">책제목3<br><span>저자3</span></div>
 			    </div>
 			  </div>

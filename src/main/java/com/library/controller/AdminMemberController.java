@@ -1,6 +1,7 @@
 package com.library.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.library.dto.Member;
@@ -30,7 +32,7 @@ public class AdminMemberController {
     	model.addAttribute("pagePath", pageInfo.getPagePath());
     }
     
-    // 회원 목록 조회
+    // 회원 목록 조회 --> ok
     @GetMapping
     public String getAllMembers(Model model) {
     	List<Member> memberList = memberService.getAllMembers();
@@ -50,16 +52,32 @@ public class AdminMemberController {
         return "layout";
     }
 
-    // 회원 등급 수정 (준-->정)
-    @PatchMapping("/{membersId}/grade")
-    public ResponseEntity<Void> updateMemberGrade(@PathVariable("membersId") int membersId) {
-        int result = memberService.updateMemberGrade(membersId);
-
+    // 회원 등급 수정 (준회원 -> 정회원) --> 진행중
+    @PutMapping("/{membersId}/upgrade")
+    public ResponseEntity<Void> updateMemberGrade(@PathVariable("membersId") int membersId, @RequestBody Map<String, String> requestData) {
+        int result = memberService.updateMemberGrade(membersId, requestData.get("cardNumber"));
+        
+        System.out.println(membersId + ", " + result + ", " + requestData.get("cardNumber")); // 디버깅용
+        
         if (result == -1) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 실패 시 400 반환
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400
         }
 
-        return ResponseEntity.ok().build(); // 성공 시 200 반환
+        return ResponseEntity.ok().build(); // 200
+    }
+    
+    // 회원카드 발급 --> 진행중
+    @GetMapping("/cardnumber")
+    public ResponseEntity<String> gMemberGrade() {
+        String cardnum = memberService.generateCardNumber();
+        
+        System.out.println(cardnum); // 디버깅용
+        
+        if (cardnum == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400
+        }
+
+        return ResponseEntity.ok().build(); // 200
     }
 
     
@@ -69,10 +87,10 @@ public class AdminMemberController {
         int result = memberService.deleteMember(membersId);
 
         if (result == -1) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 실패 시 400 반환
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400
         }
 
-        return ResponseEntity.ok().build(); // 성공 시 200 반환
+        return ResponseEntity.ok().build(); // 200
     }
 
 

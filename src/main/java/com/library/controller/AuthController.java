@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +17,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.library.dto.Member;
 import com.library.dto.PageInfo;
 import com.library.service.AuthService;
+import com.library.service.MemberService;
 import com.library.service.RefreshTokenService;
 
 import lombok.AllArgsConstructor;
@@ -29,6 +32,7 @@ public class AuthController {
 	private PageInfo pageInfo;
 	private final AuthService authService;
 	private final RefreshTokenService refreshTokenService;
+	private final MemberService memberService;
     
 	public void setPageInfo(Model model) {
 		model.addAttribute("pageTitleCode", pageInfo.getPageTitleCode());
@@ -52,19 +56,26 @@ public class AuthController {
 	
     // 로그인 처리
     @PostMapping("/public/auth/login")
-    public ResponseEntity<Void> loginProc(@RequestBody Map<String, String> requestData, HttpServletRequest request, HttpServletResponse response) {
+    @Transactional
+    public ResponseEntity<Member> loginProc(@RequestBody Map<String, String> requestData, HttpServletRequest request, HttpServletResponse response) {
     	System.out.println("✅ AuthController - /login - POST 요청 정상 처리!");
     	
     	// DB 로그인 검증
     	int membersId = authService.verifyMemberDB(requestData.get("username"), requestData.get("password"));
-    	if (membersId < 0) {
-    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    	
+    	System.out.println("membersId : " + membersId); // DB 로그인 성공은 했는지
+    	
+    	if (membersId <= 0) {
+    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401
     	}
     	
     	// 토큰 관리 처리
     	try {
     		// 액세스 토큰 & 리프레시 토큰 발급
     		Map<String, String> tokens = authService.generateTokens(String.valueOf(membersId));
+    		
+    		System.out.println(tokens.get("aToken")); // access token 발급은 됐는지
+    		System.out.println(tokens.get("rToken")); // refresh token 발급은 됐는지
     		
     		// 액세스 토큰: 쿠키에 저장
     		Cookie cookie = new Cookie("aToken", tokens.get("aToken"));
@@ -74,17 +85,21 @@ public class AuthController {
             cookie.setMaxAge(600); // 쿠키 유효기간: 10분 (초 단위)
             response.addCookie(cookie);
     		
-         // 리프레시 토큰: DB에 저장
-            if (refreshTokenService.insertRefreshToken(membersId, tokens.get("rToken")) < 0) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
+            int result = refreshTokenService.insertRefreshToken(membersId, tokens.get("rToken"));
+            
+	        // 리프레시 토큰: DB에 저장
+	        if (result <= 0) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500
+	        }
     		
     	} catch (Exception e) {
     		e.printStackTrace();
-    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401
     	}
     	
-    	return ResponseEntity.ok().build();
+    	Member member = memberService.getMemberById(membersId);
+    	
+    	return ResponseEntity.ok().body(member); // 200
     }
     
     // 로그아웃 처리

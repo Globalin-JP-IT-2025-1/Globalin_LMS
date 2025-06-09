@@ -24,18 +24,34 @@ public class RefreshTokenService {
 	
 	// 리프레시 토큰 정보 조회 (회원 탈퇴 시) 
 	public RefreshToken getRefreshTokenByMembersId(int membersId) {
-		return refreshTokenMapper.getRefreshTokenByMembersId(membersId);
+	    RefreshToken refreshToken = refreshTokenMapper.getRefreshTokenByMembersId(membersId);
+	    if (refreshToken == null) {
+	        throw new RuntimeException("해당 회원의 리프레시 토큰이 존재하지 않습니다.");
+	    }
+	    return refreshToken;
 	}
+
 	
 	// 리프레시 토큰 추가 (회원 로그인 시)
 	public int insertRefreshToken(int membersId, String rToken) {
+		if (membersId <= 0 || rToken == null || rToken.trim().isEmpty()) {
+		    throw new IllegalArgumentException("유효하지 않은 입력값입니다.");
+		}
+		
 		Timestamp expiresDate = jwtUtil.extractExpiresDate(rToken);
+		
 		
 		RefreshToken refreshToken = RefreshToken.builder()
 				.membersId(membersId)
 				.refreshToken(rToken)
 				.expiresDate(expiresDate)
 				.build();
+		
+		System.out.println(refreshToken.getRefreshTokenId() + ",\n" +
+				refreshToken.getMembersId() + ",\n" +
+				refreshToken.getRefreshToken() + ",\n" +
+				refreshToken.getExpiresDate()
+		);
 		
 		return refreshTokenMapper.insertRefreshToken(refreshToken);
 	} 

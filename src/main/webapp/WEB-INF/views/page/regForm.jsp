@@ -54,13 +54,13 @@
 	    };
 		
 		Swal.fire({
-	        title: "회원 정보 수정",
-	        text: "회원 정보 하시겠습니까?",
+	        title: "회원 가입",
+	        text: "회원 가입 하시겠습니까?",
 	        icon: "question",
 	        showCancelButton: true,
 	        confirmButtonColor: "#d33",
 	        cancelButtonColor: "#3085d6",
-	        confirmButtonText: "수정",
+	        confirmButtonText: "확인",
 	        cancelButtonText: "취소"
 	    }).then((result) => {
 	        if (result.isConfirmed) {
@@ -71,8 +71,9 @@
 	            })
 	            .then(response => {
 	                if (response.ok) {
-	                    Swal.fire("수정 완료", "회원 정보가 수정 되었습니다.", "success").then(() => {
-	                    	location.reload(); // 페이지 새로고침
+	                    Swal.fire("가입 완료", "회원 가입을 성공 하였습니다.", "success")
+	                    .then(() => {
+	                    	location.href = "/"; // 홈으로
 	                    });
 	                } else {
 	                    Swal.fire("오류 발생", "회원 정보 수정 실패했습니다.", "error");
