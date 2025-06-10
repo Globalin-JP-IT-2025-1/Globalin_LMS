@@ -13,7 +13,7 @@
  * org.mockito.junit.MockitoJUnitRunner; import org.springframework.ui.Model;
  * import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * 
- * import com.library.dto.Member; import com.library.service.MemberService;
+ * import com.library.model.Member; import com.library.service.MemberService;
  * 
  * @RunWith(MockitoJUnitRunner.class) public class MemberControllerTest {
  * 

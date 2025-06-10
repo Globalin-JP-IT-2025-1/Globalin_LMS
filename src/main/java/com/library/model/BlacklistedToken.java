@@ -1,4 +1,4 @@
-package com.library.dto;
+package com.library.model;
 
 import java.sql.Timestamp;
 
@@ -16,12 +16,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Component
-public class RefreshToken {
+public class BlacklistedToken {
 	
-	private int refreshTokenId; // id
-	private int membersId; // 회원 id
-	private String refreshToken; // 토큰
+	private int BlacklistedTokenId; // id
+	private int type; // 종류 : 0-액세스 토큰, 1-리프레시 토큰
+	private String token; // 토큰
 	private Timestamp expiresDate; // 만료시간
-	private String ipAddress; // ip주소
-	
+
 }

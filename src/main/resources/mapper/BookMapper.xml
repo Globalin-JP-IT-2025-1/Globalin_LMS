@@ -4,14 +4,14 @@
 <mapper namespace="com.library.mapper.BookMapper">
 
 	<!-- 도서 전체 조회 -->
-	<select id="getAllBooks" resultType="com.library.dto.Book">
+	<select id="getAllBooks" resultType="com.library.model.Book">
 		SELECT BOOKS_ID, TITLE, AUTHOR, PUBLISHER, PUBLISH_DATE, ISBN, CATEGORY,
 		IMAGE_LINK, DESCRIPTION, CREATE_DATE, LOAN_COUNT, LIKE_COUNT, STATUS
 		FROM BOOKS
 	</select>
 
 	<!-- 도서 상세 조회 -->
-	<select id="getBookById" parameterType="int" resultType="com.library.dto.Book">
+	<select id="getBookById" parameterType="int" resultType="com.library.model.Book">
 		SELECT BOOKS_ID, TITLE, AUTHOR, PUBLISHER, PUBLISH_DATE, ISBN, CATEGORY,
 		IMAGE_LINK, DESCRIPTION, CREATE_DATE, LOAN_COUNT, LIKE_COUNT, STATUS
 		FROM BOOKS
@@ -19,7 +19,7 @@
 	</select>
 
 	<!-- 도서 등록 -->
-	<insert id="insertBook" parameterType="com.library.dto.Book">
+	<insert id="insertBook" parameterType="com.library.model.Book">
 		INSERT INTO BOOKS (
 		BOOKS_ID, TITLE, AUTHOR, PUBLISHER, PUBLISH_DATE, ISBN, CATEGORY,
 		IMAGE_LINK, DESCRIPTION, CREATE_DATE, LOAN_COUNT, LIKE_COUNT, STATUS
@@ -32,14 +32,14 @@
 	</insert>
 	
 	<!-- 도서 비활성화 -->
-	<update id="invalidateBook" parameterType="com.library.dto.Book">
+	<update id="invalidateBook" parameterType="com.library.model.Book">
 		UPDATE BOOKS
 		SET STATUS = #{status}
 		WHERE BOOKS_ID = #{booksId}
 	</update>
 
 	<!-- 도서 수정 -->
-	<update id="updateBook" parameterType="com.library.dto.Book">
+	<update id="updateBook" parameterType="com.library.model.Book">
 		UPDATE BOOKS
 		SET TITLE = #{title},
 		AUTHOR = #{author},

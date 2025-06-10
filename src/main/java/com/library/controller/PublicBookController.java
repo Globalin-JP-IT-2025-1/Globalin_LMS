@@ -7,8 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.library.dto.Book;
-import com.library.dto.PageInfo;
+import com.library.model.Book;
+import com.library.model.PageInfo;
 import com.library.service.BookService;
 
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.library.dto;
+package com.library.model;
 
 import java.sql.Timestamp;
 

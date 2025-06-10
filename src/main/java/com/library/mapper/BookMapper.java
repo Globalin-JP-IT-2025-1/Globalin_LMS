@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.library.dto.Book;
+import com.library.model.Book;
 
 @Mapper
 public interface BookMapper {

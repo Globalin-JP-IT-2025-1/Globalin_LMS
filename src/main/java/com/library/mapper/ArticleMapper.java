@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.library.dto.Article;
+import com.library.model.Article;
 
 @Mapper
 public interface ArticleMapper {

@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.library.dto.Member;
+import com.library.model.Member;
 
 import lombok.extern.slf4j.Slf4j;
 

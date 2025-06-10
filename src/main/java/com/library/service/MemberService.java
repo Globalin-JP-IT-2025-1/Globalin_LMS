@@ -14,9 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.library.dto.CardnumSerial;
-import com.library.dto.Member;
 import com.library.mapper.MemberMapper;
+import com.library.model.CardnumSerial;
+import com.library.model.Member;
 
 import lombok.AllArgsConstructor;
 

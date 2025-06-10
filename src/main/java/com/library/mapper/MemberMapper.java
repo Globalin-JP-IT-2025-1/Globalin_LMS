@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.library.dto.CardnumSerial;
-import com.library.dto.Member;
+import com.library.model.CardnumSerial;
+import com.library.model.Member;
 
 @Mapper
 public interface MemberMapper {

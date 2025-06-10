@@ -70,45 +70,21 @@
 	    <property name="defaultEncoding" value="UTF-8" />
 	</bean>
     
-    <!-- 회원가입 시 패스워드 암호화 -->
-    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
-    
-    
     <!-- Redis 연결 설정 -->
-    <bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+    <!-- <bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
 	    <property name="hostName" value="localhost"/>
 	    <property name="port" value="6379"/>
-	</bean>
+	</bean> -->
 	
 	<!-- RedisTemplate 설정 (트랜잭션 활성화) -->
-	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+	<!-- <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
 	    <constructor-arg ref="redisConnectionFactory"/>
 	    <property name="enableTransactionSupport" value="true"/>
-	</bean>
+	</bean> -->
 	
-	
-	<!-- Spring Security 관련 설정 -->
-	<!-- JWT 인증 필터 Bean 등록 -->
-    <bean id="jwtAuthenticationFilter" class="com.library.security.JwtAuthenticationFilter">
-        <constructor-arg ref="jwtUtil" />
-        <constructor-arg ref="userDetailsService" />
-    </bean>
-    
-	<!-- UserDetailsService Bean 등록 -->
-	<bean id="userDetailsService" class="com.library.security.CustomUserDetailsService"/>
-    
-    <!-- Interceptor 등록 -->
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/private/**"/>
-            <mvc:mapping path="/admin/**"/>
-            <bean class="com.library.security.JwtHeaderInterceptor"/>
-        </mvc:interceptor>
-    </mvc:interceptors>
-    
     
     <!-- Mail 관련 설정 -->
-	<!-- <bean id="mailSender" class = "org.springframework.mail.javamail.JavaMailSenderImpl">
+	<bean id="mailSender" class = "org.springframework.mail.javamail.JavaMailSenderImpl">
 	   <property name="host" value="#{appProperties['spring.mail.host']}" />
 	   <property name="port" value="#{appProperties['spring.mail.port']}" />
 	   <property name="username" value="#{appProperties['spring.mail.username']}" />
@@ -121,9 +97,18 @@
 	            <prop key="mail.debug">true</prop>
 	      </props>
 	   </property>
-	</bean> -->
+	</bean>
 	
 	<!-- JSON 관련 설정 -->
 	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+	
+    <!-- Interceptor 등록 : header에 jwt 추가 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!-- <mvc:mapping path="/private/**"/> -->
+            <mvc:mapping path="/admin/**"/>
+            <bean class="com.library.security.JwtHeaderInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
     
 </beans>

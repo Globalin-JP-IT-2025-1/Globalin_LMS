@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.library.dto.Member;
-import com.library.dto.PageInfo;
+import com.library.model.Member;
+import com.library.model.PageInfo;
 import com.library.service.MemberService;
 
 import lombok.AllArgsConstructor;

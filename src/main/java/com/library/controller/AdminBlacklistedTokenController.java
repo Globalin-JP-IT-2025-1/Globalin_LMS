@@ -7,8 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.library.dto.BlacklistedToken;
-import com.library.dto.PageInfo;
+import com.library.model.BlacklistedToken;
+import com.library.model.PageInfo;
 import com.library.service.BlacklistedTokenService;
 
 import lombok.AllArgsConstructor;

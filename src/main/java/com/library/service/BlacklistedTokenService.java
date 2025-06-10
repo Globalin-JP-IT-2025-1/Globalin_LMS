@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.library.dto.BlacklistedToken;
 import com.library.mapper.BlacklistedTokenMapper;
+import com.library.model.BlacklistedToken;
 import com.library.security.JwtUtil;
 
 import lombok.AllArgsConstructor;

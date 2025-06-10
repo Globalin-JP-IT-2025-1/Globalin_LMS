@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.library.dto.Member;
-import com.library.dto.PageInfo;
+import com.library.model.Member;
+import com.library.model.PageInfo;
 import com.library.service.AuthService;
 import com.library.service.BlacklistedTokenService;
 import com.library.service.MemberService;
@@ -73,6 +73,9 @@ public class AuthController {
     		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401
     	}
     	
+    	// ip 주소 가져오기
+    	String ipAddress = request.getRemoteAddr();
+    	
     	// 토큰 관리 처리
     	try {
     		// 액세스 토큰 & 리프레시 토큰 발급
@@ -89,7 +92,7 @@ public class AuthController {
             cookie.setMaxAge(600); // 쿠키 유효기간: 10분 (초 단위)
             response.addCookie(cookie);
     		
-            int result = refreshTokenService.insertRefreshToken(membersId, tokens.get("rToken"));
+            int result = refreshTokenService.insertRefreshToken(membersId, ipAddress, tokens.get("rToken"));
             
 	        // 리프레시 토큰: DB에 저장
 	        if (result <= 0) {

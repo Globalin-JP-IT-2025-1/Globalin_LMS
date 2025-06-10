@@ -3,21 +3,22 @@
 
 <mapper namespace="com.library.mapper.RefreshTokenMapper">
 	<!-- 리프레시 토큰 목록 조회 : 관리자 -->
-	<select id="getAllRefreshTokens" resultType="com.library.dto.RefreshToken">
+	<select id="getAllRefreshTokens" resultType="com.library.model.RefreshToken">
 		SELECT * FROM refresh_token
 	</select>
 	
 	<!-- 리프레시 토큰 정보 조회 : 회원 탈퇴 시 -->
-	<select id="getRefreshTokenByMembersId" resultType="com.library.dto.RefreshToken" parameterType="int">
-		SELECT * FROM refresh_token WHERE members_id = #{membersId}
+	<select id="getRefreshTokenByMembersIdAndIpAddress" resultType="com.library.model.RefreshToken" parameterType="map">
+		SELECT * FROM refresh_token WHERE members_id = #{membersId} and ip_address = #{idAddress}
 	</select>
 
 	<!-- 리프레시 토큰 추가 : 회원 로그인 시 -->
-	<insert id="insertRefreshToken" parameterType="com.library.dto.RefreshToken">
+	<insert id="insertRefreshToken" parameterType="com.library.model.RefreshToken">
 		<selectKey keyProperty="refreshTokenId" resultType="java.lang.Integer" order="BEFORE">
 		    SELECT sq_refresh_token.nextval FROM DUAL
 		</selectKey>
-		INSERT INTO refresh_token (refresh_token_id, members_id, refresh_token, expires_date) VALUES (#{refreshTokenId}, #{membersId}, #{refreshToken}, #{expiresDate})
+		INSERT INTO refresh_token (refresh_token_id, members_id, refresh_token, expires_date, ip_address) 
+		VALUES (#{refreshTokenId}, #{membersId}, #{refreshToken}, #{expiresDate}, #{ipAddress})
 	</insert>
 	
 	<!-- 만료된 리프레시 토큰 삭제 : 회원 탈퇴&로그아웃 시 -->

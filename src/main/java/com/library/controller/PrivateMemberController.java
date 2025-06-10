@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.library.dto.Member;
-import com.library.dto.PageInfo;
-import com.library.dto.RefreshToken;
+import com.library.model.Member;
+import com.library.model.PageInfo;
+import com.library.model.RefreshToken;
 import com.library.service.BlacklistedTokenService;
 import com.library.service.MemberService;
 import com.library.service.RefreshTokenService;
@@ -118,6 +118,9 @@ public class PrivateMemberController {
     	String baToken = "";
     	String brToken = "";
     	
+    	// ip 주소 얻기
+    	String ipAddress = request.getRemoteAddr();
+    	
     	try {
     		// 액세스 토큰: 쿠키에서 가져온 후 저장 후 삭제
         	Cookie[] cookies = request.getCookies();
@@ -131,7 +134,7 @@ public class PrivateMemberController {
     		}
         	
         	// 리프레시 토큰: DB에서 가져온 후 저장 후 삭제
-        	RefreshToken rToken = refreshTokenService.getRefreshTokenByMembersId(membersId);
+        	RefreshToken rToken = refreshTokenService.getRefreshTokenByMembersIdAndIpAddress(membersId, ipAddress);
         	brToken = rToken.getRefreshToken();
         	refreshTokenService.deleteRefreshToken(rToken.getRefreshTokenId());
         	

@@ -6,20 +6,36 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
 						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 	
-	<security:http auto-config="true">
-		<security:csrf disabled="true"/> <!-- CSRF 보호 비활성화 -->
+	<security:http auto-config="true" use-expressions="true">
+	    <!-- 로그인 설정 -->
+	    <security:form-login 
+	        login-page="/private/auth/login" 
+	        default-target-url="/" 
+	        authentication-failure-url="/"
+	        username-parameter="username"
+	        password-parameter="password" />
+    
+	    <!-- 로그아웃 설정 -->
+	    <security:logout logout-url="/logout" logout-success-url="/login?logout=true" />
+	    
+	    <!-- CSRF 보호 비활성화 -->
+		<security:csrf disabled="true"/> 
+		
 		<security:custom-filter ref="jwtAuthenticationFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
 		<!-- 접근 권한 설정 -->
 		<security:intercept-url pattern="/" access="permitAll"/>
 		<security:intercept-url pattern="/public/**" access="permitAll" />
-		<!-- <security:intercept-url pattern="/private/**" access="hasRole('ROLE_USER')" />
-		<security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" /> -->
-		
-		<!-- <security:form-login login-page="/private/auth/login" default-target-url="/" authentication-failure-url="/home?error=true" /> -->
+		<security:intercept-url pattern="/private/**" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
 		
 		<!-- <security:intercept-url pattern="/members/{membersId}" access="hasRole('ROLE_ADMIN') or @memberService.canAccess(#membersId)" /> -->
 	</security:http>
 	
+	
+	
+    <bean id="noopPasswordEncoder"
+      class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
+      
 	<security:authentication-manager>
         <security:authentication-provider>
             <security:user-service>
@@ -30,7 +46,14 @@
         </security:authentication-provider>
     </security:authentication-manager>
     
-    <bean id="noopPasswordEncoder"
-      class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
+	<!-- Spring Security 관련 설정 -->
+	<!-- JWT 인증 필터 Bean 등록 -->
+    <bean id="jwtAuthenticationFilter" class="com.library.security.JwtAuthenticationFilter">
+        <constructor-arg ref="jwtUtil" />
+        <constructor-arg ref="userDetailsService" />
+    </bean>
+    
+	<!-- UserDetailsService Bean 등록 -->
+	<bean id="userDetailsService" class="com.library.security.CustomUserDetailsService"/>
 	
 </beans>

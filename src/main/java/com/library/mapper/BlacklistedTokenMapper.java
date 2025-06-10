@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.library.dto.BlacklistedToken;
+import com.library.model.BlacklistedToken;
 
 @Mapper
 public interface BlacklistedTokenMapper {

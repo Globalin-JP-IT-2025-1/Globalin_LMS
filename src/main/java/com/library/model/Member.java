@@ -1,4 +1,4 @@
-package com.library.dto;
+package com.library.model;
 
 import java.sql.Timestamp;
 
@@ -10,8 +10,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Member {
 	
@@ -27,5 +27,5 @@ public class Member {
     private String address; // 상세주소 (ADDRESS)
     private Timestamp joinDate; // 가입일자 (JOIN_DATE)
     private Timestamp leaveDate; // 탈퇴일자 (LEAVE_DATE)
-
+    
 }
