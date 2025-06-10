@@ -31,7 +31,7 @@
 }
 
 .home_2 { /* 로그인, 추천도서, 공지사항 */
-	height: 350px;
+	height: 400px;
 	display: flex;
 	justify-content: center;
 }
@@ -112,7 +112,7 @@
 
 /* home_2 내부 구성 */
 .home_2_1 {
-	width: 30%;
+	width: 27%;
 }
 /* 아이디, 비번 */
 #username, #password {
@@ -131,6 +131,9 @@
 	margin-left: 10px;
 	font-size: 1.5em;
 	font-weight: bolder;
+	margin-bottom: 28px;
+	margin-top: 28px;
+	
 }
 
 .home_2_1 .h2_1_div1{
@@ -139,27 +142,29 @@
 	flex-direction: column;
 	margin-left: 10px;
 	gap:10px;
-	margin-bottom: 10px;
 }
 
 .home_2_1 .h2_1_div2 {
-	width: 100%;
+	width: 97%;
 }
 
 .h2_1_div2 .loginbtn{
+	all: unset;
 	width: 92%;
-	font-size: 1.5em;
+	font-size: 1.8em;
 	border-radius: 15px;
 	padding: 5px;
 	background-color: var(--main-color);
+	text-align: center;
 	color: white;
-	margin-top: 10px;
-	margin-left: 10px;	
+	margin-top: 20px;
+	margin-left: 10px;
 }
 
 .home_2_1 .h2_1_div3{
-	margin-left: 10px;
+	margin-left: 18px;
 	margin-top: 25px;
+	font-size: 0.9em;
 }
 
 .h2_1_div3 > a:hover {
@@ -169,7 +174,7 @@
 /* 추천 도서 부분 */
 /* home_2_2 개선 전체 */
 .home_2_2 {
-	width: 43%;
+	width: 50%;
 	padding: 20px;
 	display: flex;
 	flex-direction: column;
@@ -186,7 +191,7 @@
 }
 
 .h2_2_left {
-  font-size: 1.2em;
+  font-size: 1.5em;
   font-weight: bold;
   color: var(--main-color);
 }
@@ -212,23 +217,25 @@
 /* 도서 카드 리스트 */
 .book_list {
   display: flex;
-  justify-content: flex-start;
-  gap: 20px;
+  justify-content: center;
+  gap: 30px;
   flex-wrap: nowrap;
 }
 
 .book_card {
-  width: 140px;
+  width: 180px;
   text-align: center;
   flex-shrink: 0;
+  
 }
 
 .book_img {
   width: 100%;
-  height: 170px;
-  object-fit: cover;
-  border: 1px solid #aaa;
-  border-radius: 6px;
+  height: 230px;
+  object-fit: fill;
+  border: 1.5px solid #333;
+  box-shadow: 7px 7px 15px rgba(0, 0, 0, 0.3);
+  
 }
 
 .book_title {
@@ -241,6 +248,7 @@
   font-size: 0.9em;
   color: gray;
 }
+
 
 /* 공지사항 부분 */
 .home_2_3 {
@@ -333,7 +341,7 @@
 .lib_img {
 	width: 100%;
 	height: 360px; 
-	border: 1px solid #ccc;
+	border: 1.5px solid #ccc;
 	border-radius: 6px;
 	display: block; 
 }
@@ -398,4 +406,45 @@
 	align-self: flex-start;
 	margin-top: auto;
 	margin-left: 5px;
+}
+
+/* 배너 래퍼 스타일 */
+.banner_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  height: 150px;
+}
+
+/* 배너 트랙 스타일 */
+.banner_track {
+  display: flex;
+  gap: 30px; /* 배너 사이 간격 추가 */
+  transition: transform 0.5s ease;
+}
+
+/* 배너 카드 스타일 */
+.banner_card {
+  flex: 0 0 auto;
+  height: 100%;
+  text-align: center;
+}
+
+/* 배너 이미지 스타일 */
+.banner_card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 1.5px solid #ccc;
+}
+/* 슬라이드 애니메이션 */
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-1400px); /* -7 * 200px */
+  }
 }

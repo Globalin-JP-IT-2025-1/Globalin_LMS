@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/static/css/home.css">
 
@@ -113,12 +114,26 @@
 			</div>
 		</div>
 	</div>
-
 	<div class="home_5_bg">
-		<div class="home_5">베너<br>
-				~~ DB 테스트 ~~<br>
-				<a href="/public/members/register">회원가입</a><br>
-				<a href="/admin/members">회원 목록</a><br>
+	  	<div class="home_5">
+			<div class="banner_wrapper">
+			  <div class="banner_track" id="bannerTrack">
+			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner1.jpg" alt="배너1"></div>
+			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner2.jpg" alt="배너2"></div>
+			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner3.jpg" alt="배너3"></div>
+			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner4.jpg" alt="배너4"></div>
+			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner5.jpg" alt="배너5"></div>
+			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner6.jpg" alt="배너6"></div>
+			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner7.jpg" alt="배너7"></div>
+			  </div>
+			</div>
+
 		</div>
 	</div>
+
 </div>
+
+
+<script
+	src="${pageContext.request.contextPath}/resources/static/js/home.js"></script>
+
