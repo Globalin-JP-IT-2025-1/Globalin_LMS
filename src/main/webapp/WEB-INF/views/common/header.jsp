@@ -1,14 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/static/css/header.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<%-- <c:set var="h_membersId" value="${member.membersId}" /> 
-<c:set var="h_username" value="${member.username}" /> 
-<c:set var="h_name" value="${member.name}" />  --%>
+<style>
+#logoutBtn {
+	all: unset;
+}
+
+#logoutBtn:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+</style>
+
+<c:set var="h_membersId" value="${sessionScope.currentMember.membersId}" /> 
+<c:set var="h_username" value="${sessionScope.currentMember.username}" /> 
+<c:set var="h_name" value="${sessionScope.currentMember.name}" />
 
 <div class="header">
 	<div class="h_1_bg">
@@ -35,30 +48,41 @@
 				<div class="h_mini_menu">
 					<table>
 						<tr>
-							<td><a href="/">홈</a></td>
+							<td><a href="/"><spring:message code="menu.0.title" /></a></td>
 							<td>|</td>
 							<c:choose>
-								<c:when test="${empty member.membersId}">
-									<td><a href="/public/auth/login">로그인</a></td>
+								<c:when test="${empty h_membersId}">
+									<td>
+										<a href="/public/auth/login"><spring:message code="menu.6.con1" /></a>
+									</td>
 									<td>|</td>
-									<td><a href="/public/members/register">회원가입</a></td>
+									<td>
+										<a href="/public/members/register"><spring:message code="menu.6.con4" /></a>
+									</td>
 									<td>|</td>
 								</c:when>
 								<c:otherwise>
-									<td><a href="/private/auth/logout/${member.membersId}">로그아웃</a></td>
+									<td>
+										<form action="/private/auth/logout/${h_membersId}" method="post">
+											<c:set var="logout">
+												<spring:message code="h.minimenu.logout" />
+											</c:set>
+											<input type="submit" value="${logout}" id="logoutBtn">
+										</form>
+									</td>
 									<td>|</td>
 								</c:otherwise>
 							</c:choose>
-							<td><a href="/etc/71">사이트맵</a></td>
+							<td><a href="/etc/71"><spring:message code="menu.7.con1" /></a></td>
 						</tr>
 					</table>
 				</div>
 				
-				<c:if test="${not empty member.membersId}">
+				<c:if test="${not empty h_membersId}">
 					<div class="h_member_info">
-						<a href="/private/members/${member.membersId}" id="mypage">
-							<c:out value="${member.name}" />(<c:out value="${member.username}" />)
-						</a> 님 환영합니다!
+						<a href="/private/members/${h_membersId}" id="mypage">
+							<c:out value="${h_name}" />(<c:out value="${h_username}" />)
+						</a> <spring:message code="h.welcome.message" />
 					</div>
 				</c:if>
 			</div>
@@ -69,15 +93,15 @@
 		<div class="h_2">
 			<div class="h2_1">
 				<div class="menu_each">
-					<button class="menu_e_toggle" id="menu_1_toggle">자료검색</button>
+					<button class="menu_e_toggle" id="menu_1_toggle"><spring:message code="menu.1.title" /></button>
 					<div class="menu_e_blank">|</div>
-					<button class="menu_e_toggle" id="menu_2_toggle">열린마당</button>
+					<button class="menu_e_toggle" id="menu_2_toggle"><spring:message code="menu.2.title" /></button>
 					<div class="menu_e_blank">|</div>
-					<button class="menu_e_toggle" id="menu_3_toggle">도서관안내</button>
+					<button class="menu_e_toggle" id="menu_3_toggle"><spring:message code="menu.4.title" /></button>
 					<div class="menu_e_blank">|</div>
-					<button class="menu_e_toggle" id="menu_4_toggle">이용안내</button>
+					<button class="menu_e_toggle" id="menu_4_toggle"><spring:message code="menu.5.title" /></button>
 					<div class="menu_e_blank">|</div>
-					<button class="menu_e_toggle" id="menu_5_toggle">내서재</button>
+					<button class="menu_e_toggle" id="menu_5_toggle"><spring:message code="menu.3.title" /></button>
 					<div class="menu_e_blank">|</div>
 				</div>
 				<div class="menu_all">
@@ -91,44 +115,80 @@
 				<div class="h2_2">
 					<div class="h_submenu">
 						<ul>
-							<li class="h_submenu_item"><a href="/books">통합검색</a></li>
-							<li class="h_submenu_item"><a href="/books?type=class">주제별검색</a></li>
-							<li class="h_submenu_item"><a href="/books?type=loan">대출베스트</a></li>
-							<li class="h_submenu_item"><a href="/books?type=like">인기도서</a></li>
+							<li class="h_submenu_item">
+								<a href="/public/books/total"><spring:message code="menu.1.con1" /></a>
+							</li>
+							<li class="h_submenu_item">
+								<a href="/public/books/class"><spring:message code="menu.1.con2" /></a>
+							</li>
+							<li class="h_submenu_item">
+								<a href="/public/books/loan"><spring:message code="menu.1.con3" /></a>
+							</li>
+							<li class="h_submenu_item">
+								<a href="/public/books/like"><spring:message code="menu.1.con4" /></a>
+							</li>
 						</ul>
 					</div>
 					<div class="h_submenu_blank"></div>
 					<div class="h_submenu">
 						<ul>
-							<li class="h_submenu_item"><a href="/articles?type=notice">공지사항</a></li>
-							<li class="h_submenu_item"><a href="/articles?type=fnq">자주묻는질문</a></li>
-							<li class="h_submenu_item"><a href="/articles?type=qna">Q&A</a></li>
-							<li class="h_submenu_item"><a href="/articles?type=req">희망도서신청</a></li>
+							<li class="h_submenu_item">
+								<a href="/public/articles/notice"><spring:message code="menu.2.con1" /></a>
+							</li>
+							<li class="h_submenu_item">
+								<a href="/public/articles/fnq"><spring:message code="menu.2.con2" /></a>
+									</li>
+							<li class="h_submenu_item">
+								<a href="/public/articles/qna"><spring:message code="menu.2.con3" /></a>
+							</li>
+							<li class="h_submenu_item">
+								<a href="/private/articles/req"><spring:message code="menu.2.con4" /></a>
+							</li>
 						</ul>
 					</div>
 					<div class="h_submenu_blank"></div>
 					<div class="h_submenu">
 						<ul>
-							<li class="h_submenu_item"><a href="/etc/41">도서관 정보</a></li>
-							<li class="h_submenu_item"><a href="/etc/42">연혁</a></li>
-							<li class="h_submenu_item"><a href="/etc/43">도서 현황</a></li>
+							<li class="h_submenu_item">
+								<a href="/public/etc/41"><spring:message code="menu.4.con1" /></a>
+							</li>
+							<li class="h_submenu_item">
+								<a href="/public/etc/42"><spring:message code="menu.4.con2" /></a>
+							</li>
+							<li class="h_submenu_item">
+								<a href="/public/etc/43"><spring:message code="menu.4.con3" /></a>
+							</li>
 						</ul>
 					</div>
 					<div class="h_submenu_blank"></div>
 					<div class="h_submenu">
 						<ul>
-							<li class="h_submenu_item"><a href="/etc/51">이용시간/휴관일</a></li>
-							<li class="h_submenu_item"><a href="/etc/52">회원가입 안내</a></li>
-							<li class="h_submenu_item"><a href="/etc/53">도서 이용 안내</a></li>
+							<li class="h_submenu_item">
+								<a href="/public/etc/51"><spring:message code="menu.5.con1" /></a>
+							</li>
+							<li class="h_submenu_item">
+								<a href="/public/etc/52"><spring:message code="menu.5.con2" /></a>
+							</li>
+							<li class="h_submenu_item">
+								<a href="/public/etc/53"><spring:message code="menu.5.con3" /></a>
+							</li>
 						</ul>
 					</div>
 					<div class="h_submenu_blank"></div>
 					<div class="h_submenu">
 						<ul>
-							<li class="h_submenu_item"><a href="/members/${member.membersId}">내 정보</a></li>
-							<li class="h_submenu_item"><a href="/members/${member.membersId}/book-history">도서 이용 정보</a></li>
-							<li class="h_submenu_item"><a href="/members/${member.membersId}/book-like">관심 도서 목록</a></li>
-							<li class="h_submenu_item"><a href="/members/${member.membersId}/book-req">도서 신청 목록</a></li>
+							<li class="h_submenu_item">
+								<a href="/private/members/${h_membersId}"><spring:message code="menu.3.con1" /></a>
+							</li>
+							<li class="h_submenu_item">
+								<a href="/private/members/${h_membersId}/book-history"><spring:message code="menu.3.con2" /></a>
+							</li>
+							<li class="h_submenu_item">
+								<a href="/private/members/${h_membersId}/book-like"><spring:message code="menu.3.con3" /></a>
+							</li>
+							<li class="h_submenu_item">
+								<a href="/private/members/${h_membersId}/book-req"><spring:message code="menu.3.con4" /></a>
+							</li>
 						</ul>
 					</div>
 				</div>

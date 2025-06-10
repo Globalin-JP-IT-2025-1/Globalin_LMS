@@ -12,15 +12,14 @@
 		<!-- 접근 권한 설정 -->
 		<security:intercept-url pattern="/" access="permitAll"/>
 		<security:intercept-url pattern="/public/**" access="permitAll" />
-		<!-- <security:intercept-url pattern="/etc/**" access="permitAll" />
-		<security:intercept-url pattern="/private/**" access="hasRole('ROLE_USER')" />
+		<!-- <security:intercept-url pattern="/private/**" access="hasRole('ROLE_USER')" />
 		<security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" /> -->
 		
 		<!-- <security:form-login login-page="/private/auth/login" default-target-url="/" authentication-failure-url="/home?error=true" /> -->
 		
 		<!-- <security:intercept-url pattern="/members/{membersId}" access="hasRole('ROLE_ADMIN') or @memberService.canAccess(#membersId)" /> -->
 	</security:http>
-	 
+	
 	<security:authentication-manager>
         <security:authentication-provider>
             <security:user-service>

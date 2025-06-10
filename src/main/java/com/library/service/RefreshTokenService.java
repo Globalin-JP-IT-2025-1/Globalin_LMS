@@ -22,7 +22,7 @@ public class RefreshTokenService {
 		return refreshTokenMapper.getAllRefreshTokens();
 	}
 	
-	// 리프레시 토큰 정보 조회 (회원 탈퇴 시) 
+	// 리프레시 토큰 정보 조회 (회원 탈퇴 시)
 	public RefreshToken getRefreshTokenByMembersId(int membersId) {
 	    RefreshToken refreshToken = refreshTokenMapper.getRefreshTokenByMembersId(membersId);
 	    if (refreshToken == null) {
@@ -30,7 +30,6 @@ public class RefreshTokenService {
 	    }
 	    return refreshToken;
 	}
-
 	
 	// 리프레시 토큰 추가 (회원 로그인 시)
 	public int insertRefreshToken(int membersId, String rToken) {
@@ -39,7 +38,6 @@ public class RefreshTokenService {
 		}
 		
 		Timestamp expiresDate = jwtUtil.extractExpiresDate(rToken);
-		
 		
 		RefreshToken refreshToken = RefreshToken.builder()
 				.membersId(membersId)

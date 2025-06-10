@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.library.dto.Member;
 import com.library.dto.PageInfo;
 import com.library.service.AuthService;
+import com.library.service.BlacklistedTokenService;
 import com.library.service.MemberService;
 import com.library.service.RefreshTokenService;
 
@@ -32,6 +34,7 @@ public class AuthController {
 	private PageInfo pageInfo;
 	private final AuthService authService;
 	private final RefreshTokenService refreshTokenService;
+	private final BlacklistedTokenService blacklistedTokenService;
 	private final MemberService memberService;
     
 	public void setPageInfo(Model model) {
@@ -39,7 +42,7 @@ public class AuthController {
 		model.addAttribute("pagePath", pageInfo.getPagePath());
 	}
 	
-	// 로그인 폼
+	// 로그인 폼 --> ok!!
     @GetMapping("/public/auth/login")
     public String showLoginForm(Model model) {
     	System.out.println("✅ AuthController - /login - GET 요청 정상 처리!");
@@ -54,10 +57,11 @@ public class AuthController {
         return "layout";
     }
 	
-    // 로그인 처리
+    // 로그인 처리 --> ok!!
     @PostMapping("/public/auth/login")
     @Transactional
-    public ResponseEntity<Member> loginProc(@RequestBody Map<String, String> requestData, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Void> loginProc(@RequestBody Map<String, String> requestData, 
+    		HttpServletRequest request, HttpServletResponse response, HttpSession session) {
     	System.out.println("✅ AuthController - /login - POST 요청 정상 처리!");
     	
     	// DB 로그인 검증
@@ -98,26 +102,44 @@ public class AuthController {
     	}
     	
     	Member member = memberService.getMemberById(membersId);
+    	session.setAttribute("currentMember", member);
     	
-    	return ResponseEntity.ok().body(member); // 200
+    	return ResponseEntity.ok().build(); // 200
     }
     
-    // 로그아웃 처리
+    // 로그아웃 처리 (액세스 토큰 처리 -> 세션 처리) --> 진행중
     @PostMapping("/private/auth/logout/{membersId}")
-    public ResponseEntity<Void> logoutProc(@PathVariable("membersId") String membersId) {
-    	System.out.println("✅ AuthController - /logout - POST 요청 정상 처리!");
+    public ResponseEntity<Void> logoutProc(@PathVariable("membersId") String membersId, 
+    		HttpServletRequest request, HttpServletResponse response, HttpSession session) {
     	
-    	// 액세스 토큰: 쿠키에서 가져온 후 삭제
-    	// 리프레시 토큰: DB에서 가져온 후 삭제
-    	// 블랙리스트에 저장
+    	System.out.println("✅ AuthController - /private/auth/logout/" + membersId + " - POST 요청 정상 처리!");
     	
-    	int result = 0;
+    	String baToken = "";
     	
-    	if (result == -1) {
-    		return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 반환
+    	try {
+    		// 액세스 토큰: 쿠키에서 가져온 후 저장 후 삭제
+        	Cookie[] cookies = request.getCookies();
+        	for (Cookie cookie : cookies) {
+    			if (cookie.getName().equals("aToken")) {
+    				baToken = cookie.getValue(); // 토큰 저장
+    			}
+    			cookie.setMaxAge(0); // 쿠키 만료시간 0 설정
+    			cookie.setPath("/"); // 같은 path로 설정
+    			response.addCookie(cookie); // 덮어쓰기
+    		}
+        	
+        	// 블랙리스트에 저장
+        	blacklistedTokenService.insertBlacklistedToken(baToken, 0);
+        	
+        	// 세션에서 회원 정보 제거
+        	session.removeAttribute("currentMember");
+        	
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400
     	}
-        
-    	return ResponseEntity.ok().build(); // 성공 시 200 반환
+    	
+    	return ResponseEntity.ok().build(); // 200
     }
 
 }

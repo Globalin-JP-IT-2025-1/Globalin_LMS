@@ -1,9 +1,10 @@
 package com.library.controller;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.library.dto.Member;
 import com.library.dto.PageInfo;
 import com.library.dto.RefreshToken;
+import com.library.service.BlacklistedTokenService;
 import com.library.service.MemberService;
 import com.library.service.RefreshTokenService;
 
@@ -31,6 +32,7 @@ import lombok.AllArgsConstructor;
 public class PrivateMemberController {
     private final MemberService memberService;
     private final RefreshTokenService refreshTokenService;
+    private final BlacklistedTokenService blacklistedTokenService;
     private PageInfo pageInfo;
     
     public void setPageInfo(Model model) {
@@ -42,6 +44,8 @@ public class PrivateMemberController {
 	/* @PreAuthorize("hasRole('ADMIN') or @memberService.canAccess(#membersId)") */
     @GetMapping("/{membersId}")
     public String getMemberById(@PathVariable("membersId") int membersId, Model model) {
+    	System.out.println("✅ PrivateMemberController - /private/members/" + membersId + " - GET 요청 정상 처리!");
+    	
     	Member member = memberService.getMemberById(membersId);
         
     	model.addAttribute("member", member);
@@ -62,6 +66,8 @@ public class PrivateMemberController {
     // 회원 정보 수정 폼으로 이동 --> OK
     @GetMapping("/{membersId}/edit")
     public String showEditMemberInfo(@PathVariable("membersId") int membersId, Model model) {
+    	System.out.println("✅ PrivateMemberController - /private/members/" + membersId + "/edit - GET 요청 정상 처리!");
+    	
     	Member member = memberService.getMemberById(membersId);
     	
     	model.addAttribute("member", member);
@@ -78,11 +84,14 @@ public class PrivateMemberController {
 
     // 회원 정보 수정 --> OK
     @PutMapping("/{membersId}")
-    public ResponseEntity<Void> updateMemberInfo(@PathVariable("membersId") int membersId, @RequestBody Map<String, String> requestData) {
+    public ResponseEntity<Void> updateMemberInfo(@PathVariable("membersId") int membersId, 
+    		@RequestBody Map<String, String> requestData) {
+    	System.out.println("✅ PrivateMemberController - /private/members/" + membersId + " - PUT 요청 정상 처리!");
+    	
     	Member member = memberService.getMemberById(membersId);
     	
     	if (member == null) {
-    		return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 반환 (회원 없음)
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 (회원 없음)
     	}
     	
     	member.setPassword(requestData.get("password"));
@@ -93,36 +102,52 @@ public class PrivateMemberController {
     	int result = memberService.updateMemberInfo(member);
     	
     	if (result == -1) {
-        	return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 실패 시 400 반환
+        	return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400
     	}
     	
-    	return ResponseEntity.ok().build(); // 성공 시 200 반환
+    	return ResponseEntity.ok().build(); // 200
     }
  
-    // 회원 탈퇴 처리
-    @PatchMapping("/{membersId}/leave")
-    public ResponseEntity<Void> leaveMember(@PathVariable("membersId") int membersId, HttpServletRequest request) {
-    	Map<String, String> tokens = new HashMap<>();
+    // 회원 탈퇴 처리 (리프레시 토큰 처리 -> 로그아웃 처리(액세스 토큰 처리 -> 세션 처리) -> 회원 정보 수정)
+    @PutMapping("/{membersId}/leave")
+    public ResponseEntity<Void> leaveMember(@PathVariable("membersId") int membersId, 
+    		HttpServletRequest request, HttpServletResponse response, HttpSession session) {
     	
-    	// 세션에서 access token 가져온 후 삭제
-    	HttpSession session = request.getSession();
-    	if (session != null) {
-    		tokens.put("aToken", (String)session.getAttribute("aToken"));
-    		session.removeAttribute("aToken");
+    	System.out.println("✅ PrivateMemberController - /private/members/" + membersId + "/leave - PUT 요청 정상 처리!");
+    	
+    	String baToken = "";
+    	String brToken = "";
+    	
+    	try {
+    		// 액세스 토큰: 쿠키에서 가져온 후 저장 후 삭제
+        	Cookie[] cookies = request.getCookies();
+        	for (Cookie cookie : cookies) {
+    			if (cookie.getName().equals("aToken")) {
+    				baToken = cookie.getValue(); // 토큰 저장
+    			}
+    			cookie.setMaxAge(0); // 쿠키 만료시간 0 설정
+    			cookie.setPath("/"); // 같은 path로 설정
+    			response.addCookie(cookie); // 덮어쓰기
+    		}
+        	
+        	// 리프레시 토큰: DB에서 가져온 후 저장 후 삭제
+        	RefreshToken rToken = refreshTokenService.getRefreshTokenByMembersId(membersId);
+        	brToken = rToken.getRefreshToken();
+        	refreshTokenService.deleteRefreshToken(rToken.getRefreshTokenId());
+        	
+        	// 블랙리스트에 저장
+        	blacklistedTokenService.insertBlacklistedToken(baToken, 0);
+        	blacklistedTokenService.insertBlacklistedToken(brToken, 1);
+        	
+        	// 세션에서 회원 정보 제거
+        	session.removeAttribute("currentMember");
+        	
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400
     	}
     	
-    	// DB에서 refresh token 가져온 후 삭제
-    	RefreshToken rToken = refreshTokenService.getRefreshTokenByMembersId(membersId);
-    	tokens.put("rToken", rToken.getRefreshToken());
-    	
-    	// 회원 정보 수정 + 토큰 세트 블랙리스트에 저장
-    	int result = memberService.updateMemberLeave(membersId, tokens);
-    	
-    	if (result == -1) {
-    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 실패 시 400 반환
-    	}
-    	
-    	return ResponseEntity.ok().build(); // 성공 시 200 반환
+    	return ResponseEntity.ok().build(); // 200
     }
     
     

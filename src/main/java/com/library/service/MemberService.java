@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.library.dto.BlacklistedToken;
 import com.library.dto.CardnumSerial;
 import com.library.dto.Member;
 import com.library.mapper.MemberMapper;
@@ -84,18 +83,10 @@ public class MemberService {
 		
 		// 탈퇴 회원의 토큰을 블랙리스트에 추가
 		// access token
-		BlacklistedToken blacklistedTokenA = BlacklistedToken.builder()
-				.type(0)
-				.token(tokens.get("aToken"))
-				.build();
-		blacklistedTokenService.insertBlacklistedToken(blacklistedTokenA);
+		blacklistedTokenService.insertBlacklistedToken(tokens.get("aToken"), 0);
 		
 		// refresh token
-		BlacklistedToken blacklistedTokenR = BlacklistedToken.builder()
-				.type(1)
-				.token(tokens.get("rToken"))
-				.build();
-		blacklistedTokenService.insertBlacklistedToken(blacklistedTokenR);
+		blacklistedTokenService.insertBlacklistedToken(tokens.get("rToken"), 1);
 		
 		return 1;
 	}
