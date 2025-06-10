@@ -20,7 +20,7 @@
 		
 		<!-- <security:intercept-url pattern="/members/{membersId}" access="hasRole('ROLE_ADMIN') or @memberService.canAccess(#membersId)" /> -->
 	</security:http>
-	
+	 
 	<security:authentication-manager>
         <security:authentication-provider>
             <security:user-service>
