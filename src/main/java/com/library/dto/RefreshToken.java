@@ -22,7 +22,6 @@ public class RefreshToken {
 	private int membersId; // 회원 id
 	private String refreshToken; // 토큰
 	private Timestamp expiresDate; // 만료시간
-	/*
-	 * private String ipAddress; // ip주소
-	 */
+	private String ipAddress; // ip주소
+	
 }
