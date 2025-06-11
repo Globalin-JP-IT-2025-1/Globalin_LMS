@@ -71,6 +71,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	z-index: 9999;
 }
 
 #searchInput {
@@ -81,32 +82,29 @@
 	border-radius: 11px;
 	text-indent: 10px;
 	padding-right: 40px;
+	align-content: center;
 	padding: 2px;
 }
 
 #searchBtn {
-	all: unset;
-	cursor: pointer;
-	width: 100px;
-	height: 90%;
-	text-align: center;
-	color: white;
-	font-size: 1.5em;
-	background-color: var(--main-color);
-	border: 1px solid var(--main-color);
-	border-radius: 8px;
-	position: absolute;
-	right: 4px;
-	top: 3px;
+all: unset;
+    cursor: pointer;
+    width: 100px;
+    height: 82%;
+    text-align: center;
+    padding-top: 2px;
+    color: white;
+    font-size: 1.5em;
+    background-color: var(--main-color);
+    border: 1px solid var(--main-color);
+    border-radius: 0 8px 8px 0;
+    position: absolute;
+    right: 2px;
 	transition: background 0.2s ease-in-out;
 }
 
 #searchBtn:hover {
 	background: linear-gradient(45deg, #0059b3, #0073e6);
-}
-
-#searchBtn:active {
-	transform: scale(0.95);
 }
 
 
@@ -137,7 +135,7 @@
 }
 
 .home_2_1 .h2_1_div1{
-	width: 95%;	
+	width: 102%;	
 	display: flex;
 	flex-direction: column;
 	margin-left: 10px;
@@ -162,9 +160,9 @@
 }
 
 .home_2_1 .h2_1_div3{
-	margin-left: 18px;
-	margin-top: 25px;
-	font-size: 0.9em;
+	margin-left: 10px;
+	margin-top: 27px;
+	font-size: 1em;
 }
 
 .h2_1_div3 > a:hover {
@@ -293,8 +291,10 @@
   transition: all 0.2s ease-in-out;
 
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 20px;
 
   min-height: 150px;
   text-align: center;
@@ -310,6 +310,9 @@
   background-color: #f0f8ff;
 }
 
+.home_3_item >i {
+  font-size: 50px; /* 아이콘 크기 키우기 */
+}
 
 /* 도서관 소개 */
 .home_4_bg {

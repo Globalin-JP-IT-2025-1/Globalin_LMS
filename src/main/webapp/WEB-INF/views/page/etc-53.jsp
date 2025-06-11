@@ -15,17 +15,18 @@
 	background-color: #fff;
 	border-radius: 10px;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-	padding: 10px 10px 15px 40px;
-    width: 90%;
+	padding: 25px 10px 15px 40px;
+    width: 100%;
     margin-bottom: 40px;
     margin-top: 35px;
 }
 .etc_53 .card2 {
 	background-color: #fff;
+	border: 0.5px solid #ccc;
 	border-radius: 10px;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-	padding: 40px 10px 40px 40px;
-    width: 90%;
+	padding: 30px 10px 40px 40px;
+    width: 100%;
 }
 
 .etc_t3_div >ul >li{
@@ -47,10 +48,14 @@
 .etc_53_table1 th{
 	border: 1.8px solid #333;
 	background-color: #f1f3f5;
+	margin-right: 20px;
+	color: var(--main-color);
+	padding: 15px 0 15px 15px;
 }
 
 .etc_53_table1 td{
 	border: 1.8px solid #333;
+	padding: 20px 0 10px 15px;
 }
 
 .etc_53_table1 .e53_th1 {
@@ -85,10 +90,13 @@
 .etc_53_table2 th{
 	border: 1.8px solid #333;
 	background-color: #f1f3f5;
+	padding: 15px 0 15px 15px;
+	
 }
 
 .etc_53_table2 td{
 	border: 1.8px solid #333;
+	padding: 20px 0 10px 15px;
 }
 
 .etc_53_table2 .e53_th1 {

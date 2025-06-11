@@ -33,7 +33,7 @@
 				</div>
 				<div class="h2_1_div3">
 					<a href="#">회원가입</a>&nbsp;|
-					<a href="#">가입 여부 확인</a>&nbsp;|
+					<a href="#">가입여부 확인</a>&nbsp;|
 					<a href="#">비밀번호 재발급</a>
 				</div>
 			</div>
@@ -76,13 +76,23 @@
 	</div>
 	<div class="home_3_bg">
 	  <div class="home_3">
-	    <div class="home_3_item" onclick="location.href='/public/etc/51'">이용안내</div>
-	    <div class="home_3_item" onclick="location.href='/public/etc/53'">대출/반납</div>
-	    <div class="home_3_item" onclick="location.href='/private/articles?type=req'">희망도서 신청</div>
-	    <div class="home_3_item" onclick="location.href='/public/books/loan'">대출베스트</div>
-	    <div class="home_3_item" onclick="location.href='/private/members/${membersId}/book-like'">관심도서 목록</div>
+	    <div class="home_3_item" onclick="location.href='/public/etc/51'">
+	    	<i class="bi bi-info-circle"></i>이용안내
+    	</div>
+	    <div class="home_3_item" onclick="location.href='/public/etc/53'">
+	    	<i class="bi bi-book"></i>대출/반납
+    	</div>
+	    <div class="home_3_item" onclick="location.href='/private/articles?type=req'">
+	    	<i class="bi bi-pencil"></i> 희망도서 신청
+    	</div>
+	    <div class="home_3_item" onclick="location.href='/public/books/loan'">
+	    	<i class="bi bi-graph-up-arrow"></i>대출 베스트
+    	</div>
+	    <div class="home_3_item" onclick="location.href='/private/members/${membersId}/book-like'">
+	    	<i class="bi bi-bookmark-heart"></i>관심도서 목록
+    	</div>
 	  </div>
-</div>
+	</div>
 	
 	<div class="home_4_bg">
 		<div class="home_4">

@@ -12,21 +12,11 @@
 	padding-top: 5px;
 }
 
-.etc_51 .card {
-	background-color: #fff;
-	border-radius: 10px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-	padding: 5px 20px 20px 20px; 
-	margin-top: 40px;
-	width: 70%;
-	height: 23%;
-}
-
 .etc51_table{
 	border-collapse: collapse;
 	border: 1.8px solid var(--main-color);
 	margin-bottom: 40px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .etc51_table th{
@@ -49,7 +39,16 @@
 .etc51_table .etc51_table_th {
 	height: 50px;
 }
-
+.etc_51 .card {
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	padding: 25px 20px 60px 30px; 
+	margin-top: 40px;
+	width: 70%;
+	height: 23%;
+	
+}
 </style>
 
 <div class="etc_51">

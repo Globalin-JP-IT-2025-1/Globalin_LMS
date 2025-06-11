@@ -28,7 +28,6 @@ document.getElementById("menu_a_toggle").addEventListener("click", function() {
 		this.textContent = "∨";
 	}
 });
-
 document.getElementById("h_submenu").addEventListener("mouseleave", function() {
 	let submenu = document.getElementById("h_submenu");
 
@@ -37,7 +36,6 @@ document.getElementById("h_submenu").addEventListener("mouseleave", function() {
 		document.getElementById("menu_a_toggle").textContent = "∨";
 	}
 });
-
 
 
 /* 다국어 */
@@ -85,12 +83,21 @@ document.querySelectorAll(".lang-btn").forEach((btn) => {
 
 /* 스크롤 시 헤더 메뉴 고정 */
 window.addEventListener("scroll", function () {
-    let menu = document.querySelector(".h_2_bg");
+    let menu = document.querySelector(".navbar-main");
     let menuTop = menu.offsetTop;
 
-    if (window.scrollY > menuTop) {
-        menu.classList.add("menu_fixed");
-    } else {
-        menu.classList.remove("menu_fixed");
-    }
+	  if (window.scrollY > 100) {
+	    menu.classList.add("menu_fixed");
+	} else {
+	    menu.classList.remove("menu_fixed");
+	}
+});
+
+document.querySelectorAll('.menu_e_toggle, .menu_a_toggle').forEach(function(element) {
+    element.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            element.click();
+        }
+    });
 });
