@@ -3,6 +3,7 @@ package com.library.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.library.model.PageInfo;
 
@@ -20,8 +21,13 @@ public class HomeController {
 	}
 	
 	@RequestMapping
-    public String showHome(Model model) {
+    public String showHome(@RequestParam(value="logout", required = false) boolean logout, Model model) {
     	System.out.println("✅ HomeController - / - GET 요청 정상 처리!");
+    	
+    	if (logout) {
+    		model.addAttribute("alertType", "success");
+    		model.addAttribute("alertMessage", "로그아웃 성공하였습니다");
+    	}
     	
     	setPageInfo(model);
         

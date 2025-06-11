@@ -28,11 +28,11 @@ public class AdminBookController {
     // 도서 관리 목록 조회
     @GetMapping
     public String getAllBooksTotal(Model model) {
-		/*
-		 * List<Book> bookList = bookService.getAllBooks();
-		 * 
-		 * model.addAttribute("bookList", bookList);
-		 */
+	
+		// List<Book> bookList = bookService.getAllBooks();
+    	List<Book> bookList = null;
+		 
+		model.addAttribute("bookList", bookList);
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("92")
@@ -58,7 +58,7 @@ public class AdminBookController {
     }
     
     // 도서 수정 폼
-    @GetMapping("/edit")
+    @GetMapping("/{booksId}/edit")
     public String showEditBook(Model model) {
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("96")
