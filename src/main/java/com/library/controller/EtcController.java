@@ -11,7 +11,7 @@ import com.library.model.PageInfo;
 import lombok.AllArgsConstructor;
 
 @Controller
-@RequestMapping("/etc")
+@RequestMapping("/public/etc")
 @AllArgsConstructor
 public class EtcController {
 	private PageInfo pageInfo;

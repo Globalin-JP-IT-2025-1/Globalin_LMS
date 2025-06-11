@@ -11,6 +11,23 @@
 	padding-top: 5px;
 }
 
+.etc_53 .card {
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	padding: 10px 10px 15px 40px;
+    width: 90%;
+    margin-bottom: 40px;
+    margin-top: 35px;
+}
+.etc_53 .card2 {
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	padding: 40px 10px 40px 40px;
+    width: 90%;
+}
+
 .etc_t3_div >ul >li{
 	font-size: 1.2em;
     margin-left: -10px;
@@ -29,6 +46,7 @@
 
 .etc_53_table1 th{
 	border: 1.8px solid #333;
+	background-color: #f1f3f5;
 }
 
 .etc_53_table1 td{
@@ -36,11 +54,11 @@
 }
 
 .etc_53_table1 .e53_th1 {
-	background-color: var(--sub-color);
+	background-color: #f1f3f5;;
 }
 
 .etc_53_table1 .e53_th2 {
-	background-color: var(--sub-color);
+	background-color: #f1f3f5;
 }
 
 .etc_53_table1 .e53_th3 {
@@ -66,6 +84,7 @@
 
 .etc_53_table2 th{
 	border: 1.8px solid #333;
+	background-color: #f1f3f5;
 }
 
 .etc_53_table2 td{
@@ -73,11 +92,11 @@
 }
 
 .etc_53_table2 .e53_th1 {
-	background-color: var(--sub-color);
+	background-color: #f1f3f5;
 }
 
 .etc_53_table2 .e53_th2 {
-	background-color: var(--sub-color);
+	background-color: #f1f3f5;
 }
 
 .e53_td2_li {
@@ -90,12 +109,12 @@
 </style>
 
 <div class="etc_53">
-	<div class="etc_t3_div">
-		<ul>
-			<li>대출/반납 안내</li>
-		</ul>
-	</div>
-	<div>
+	<div class="card">
+		<div class="etc_t3_div">
+			<ul>
+				<li>대출/반납 안내</li>
+			</ul>
+		</div>
 		<table class="etc_53_table1">
 			<tr>
 				<th class="e53_th1">구분</th>
@@ -115,7 +134,7 @@
 				<th>대출방법</th>
 				<td>
 					<ul>
-						<li>각 자료열람실에서 원하는 자료를 찾아 대출반납 데스크에 회원증 또는 모바일회원증 제시 후 대출</li>
+						<li>각 자료열람실에서 원하는 자료를 찾아 대출반납 데스크에 회원증 또는 모바일회원증 제시 후 대출.</li>
 					</ul>
 				</td>
 			</tr>
@@ -145,8 +164,8 @@
 				<th>대출 제한</th>
 				<td>
 					<ul>
-						<li>대출도서를 연체하였을 경우, 연체일수 만큼 대출정지</li>
-						<li>반납하신 도서는 당일 재대출 불가</li>
+						<li>대출도서를 연체하였을 경우, 연체일 수 만큼 대출정지.</li>
+						<li>반납하신 도서는 당일 재대출 불가.</li>
 					</ul>
 				</td>
 			</tr>
@@ -155,18 +174,19 @@
 				<th>도서 분실</th>
 				<td>
 					<ul>
-						<li>자료를 잃어버리거나 훼손하면 동일한 자료로 변상하여야 하며, 동일한 자료로 변상이 불가능할 시 자료실 담당자에게 문의하시길 바랍니다.</li>
+						<li>자료를 잃어버리거나 훼손하면 동일한 자료로 변상하여야 하며,<br>
+							동일한 자료로 변상이 불가능할 시 자료실 담당자에게 문의하시길 바랍니다.</li>
 					</ul>
 				</td>
 			</tr>
 		</table>
 	</div>
-	<div class="etc_t3_div">
-		<ul>
-			<li>도서 예약 안내</li>
-		</ul>
-	</div>
-	<div>
+	<div class="card2">
+		<div class="etc_t3_div">
+			<ul>
+				<li>도서 예약 안내</li>
+			</ul>
+		</div>
 		<table class="etc_53_table2">
 		<tr>
 				<th class="e53_th1">구분</th>
@@ -179,8 +199,8 @@
 				
 					<ul>
 						<li>
-							필요한 자료가 대출되어 이용이 불가능할 때 도서대출 예약을 이용하시면 해당 도서가 반납되는
-							즉시 예약 순서에 따라 우선적으로 자료를 보실 수 있습니다
+							필요한 자료가 대출되어 이용이 불가능할 때 도서대출 예약을 이용하시면<br>
+							해당 도서가 반납되는 즉시 예약 순서에 따라 우선적으로 자료를 보실 수 있습니다.
 						</li>
 					</ul>
 				</td>
@@ -190,7 +210,7 @@
 				<th>예약 대상 도서</th>
 				<td>
 					<ul>
-						<li>현재 대출중인 도서(대출 가능한 도서는 예약할 수 없습니다.)</li>
+						<li>현재 대출중인 도서(대출 가능한 도서는 예약 불가)</li>
 					</ul>
 				</td>
 			</tr>

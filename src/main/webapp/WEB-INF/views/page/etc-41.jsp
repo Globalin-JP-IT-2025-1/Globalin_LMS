@@ -118,7 +118,7 @@
 
 		<!-- 3. 도서관 정보 -->
 		<div class="info card">
-			<h5><i class="bi bi-book"></i>&nbsp;도서관 정보</h5>
+			<h5><i class="bi bi-book"></i>&nbsp;도서관 안내</h5>
 			<table>
 				<tr>
 					<th>도서관명</th>

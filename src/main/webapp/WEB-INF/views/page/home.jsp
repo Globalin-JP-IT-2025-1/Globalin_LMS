@@ -76,10 +76,10 @@
 	</div>
 	<div class="home_3_bg">
 	  <div class="home_3">
-	    <div class="home_3_item" onclick="location.href='/etc/53'">이용안내</div>
-	    <div class="home_3_item" onclick="location.href='/etc/54'">대출/반납</div>
+	    <div class="home_3_item" onclick="location.href='/public/etc/51'">이용안내</div>
+	    <div class="home_3_item" onclick="location.href='/public/etc/53'">대출/반납</div>
 	    <div class="home_3_item" onclick="location.href='/private/articles?type=req'">희망도서 신청</div>
-	    <div class="home_3_item" onclick="location.href='/public/books?type=loan'">대출베스트</div>
+	    <div class="home_3_item" onclick="location.href='/public/books/loan'">대출베스트</div>
 	    <div class="home_3_item" onclick="location.href='/private/members/${membersId}/book-like'">관심도서 목록</div>
 	  </div>
 </div>
@@ -108,8 +108,8 @@
 					</tr>
 				</table>
 				<div class="lib_btn_div">
-					<button class="lib_btn">도서관안내 &gt;</button>
-					<button class="lib_btn">이용안내 &gt;</button>
+					<button class="lib_btn" onclick="location.href='/public/etc/41'">도서관안내 &gt;</button>
+					<button class="lib_btn" onclick="location.href='/public/etc/51'">이용안내 &gt;</button>
 				</div>
 			</div>
 		</div>

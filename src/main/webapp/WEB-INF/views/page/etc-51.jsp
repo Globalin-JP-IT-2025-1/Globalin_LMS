@@ -12,6 +12,16 @@
 	padding-top: 5px;
 }
 
+.etc_51 .card {
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	padding: 5px 20px 20px 20px; 
+	margin-top: 40px;
+	width: 70%;
+	height: 23%;
+}
+
 .etc51_table{
 	border-collapse: collapse;
 	border: 1.8px solid var(--main-color);
@@ -24,7 +34,8 @@
 	height: 80px;
 	border: 1.8px solid var(--main-color);
 	padding-left: 20px;
-	text-align: left;	
+	text-align: left;
+	background-color: #f1f3f5;	
 }
 
 .etc51_table td{
@@ -42,7 +53,7 @@
 </style>
 
 <div class="etc_51">
-	<div class="etc_51_main">
+	<div class="etc_51_main card">
 		<div>
 			<p><i class="bi bi-bank"></i>&nbsp;글로벌인 도서관</p>
 		</div>
@@ -59,6 +70,9 @@
 				</tr>
 			</table>
 		</div>
+	</div>
+	
+	<div class="etc_51_main card">	
 		<div>
 			<p><i class="bi bi-bank"></i>&nbsp;신길 도서관</p>
 		</div>
@@ -75,6 +89,9 @@
 				</tr>
 			</table>
 		</div>
+	</div>	
+	
+	<div class="etc_51_main card">	
 		<div>
 			<p><i class="bi bi-bank"></i>&nbsp;대림 도서관</p>
 		</div>
@@ -90,6 +107,6 @@
 					<td>매주 월요일</td>
 				</tr>
 			</table>
-		</div>
+		</div>	
 	</div>
 </div>

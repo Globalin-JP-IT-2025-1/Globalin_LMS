@@ -381,7 +381,7 @@
 	border: 1px solid #333;
 	padding: 10px;
 	text-align: left;
-	background-color: var(--sub-color);
+	background-color: #f1f3f5;
 }
 
 .lib_table td {
