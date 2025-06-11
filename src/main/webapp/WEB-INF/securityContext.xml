@@ -9,51 +9,70 @@
 	<security:http auto-config="true" use-expressions="true">
 	    <!-- 로그인 설정 -->
 	    <security:form-login 
-	        login-page="/private/auth/login" 
-	        default-target-url="/" 
-	        authentication-failure-url="/"
-	        username-parameter="username"
-	        password-parameter="password" />
+	        login-page="/public/auth/login" 
+	        default-target-url="/?login=true" 
+	        authentication-failure-handler-ref="customLoginFailureHandler" 
+	        authentication-success-handler-ref="customLoginSuccessHandler"/>
     
-	    <!-- 로그아웃 설정 -->
-	    <security:logout logout-url="/logout" logout-success-url="/login?logout=true" />
-	    
-	    <!-- CSRF 보호 비활성화 -->
-		<security:csrf disabled="true"/> 
+	    <!-- 로그아웃 관련 설정 --> <!-- 세션 관리 : 무효화  -->
+		<security:logout 
+			logout-url="/private/auth/logout" 
+			success-handler-ref="customLogoutSuccessHandler" invalidate-session="false" />
 		
+	    <!-- CSRF 보호 : 비활성화 -->
+		<security:csrf disabled="true"/>
+		
+		<!-- jwt 필터 -->
 		<security:custom-filter ref="jwtAuthenticationFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+		
 		<!-- 접근 권한 설정 -->
 		<security:intercept-url pattern="/" access="permitAll"/>
 		<security:intercept-url pattern="/public/**" access="permitAll" />
 		<security:intercept-url pattern="/private/**" access="hasRole('ROLE_USER')" />
-		<security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" /> <!-- hasRole('ADMIN') and isAuthenticated() -->
 		
 		<!-- <security:intercept-url pattern="/members/{membersId}" access="hasRole('ROLE_ADMIN') or @memberService.canAccess(#membersId)" /> -->
+		
 	</security:http>
 	
-	
-	
-    <bean id="noopPasswordEncoder"
-      class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
-      
-	<security:authentication-manager>
-        <security:authentication-provider>
-            <security:user-service>
-                <security:user name="admin" password="admin123" authorities="ROLE_ADMIN" />
-                <security:user name="user" password="user123" authorities="ROLE_USER" />
-            </security:user-service>
-            <security:password-encoder ref="noopPasswordEncoder"/>
-        </security:authentication-provider>
-    </security:authentication-manager>
+	<!-- login/out 핸들러 Bean 등록 -->
+	<bean id="customLoginSuccessHandler" class="com.library.security.CustomLoginSuccessHandler"/> <!-- redirect:/?login=true -->
+	<bean id="customLoginFailureHandler" class="com.library.security.CustomLoginFailureHandler"/> <!-- redirect:/public/auth/login?status=-1 -->
+	<bean id="customLogoutSuccessHandler" class="com.library.security.CustomLogoutSuccessHandler"/> <!-- redirect:/?logout=true -->
     
-	<!-- Spring Security 관련 설정 -->
-	<!-- JWT 인증 필터 Bean 등록 -->
+	<!-- UserDetailsService Bean 등록 -->
+	<bean id="userDetailsService" class="com.library.security.CustomUserDetailsService"/>
+	
+	<!-- PasswordEncoder Bean 등록 -->
+	<bean id="passwordEncoder" 
+		class="org.springframework.security.crypto.factory.PasswordEncoderFactories" 
+		factory-method="createDelegatingPasswordEncoder"/>
+	
+    
+    <!-- username & password 기반 인증 Bean 등록  -->
+    <bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+		<constructor-arg>
+			<bean class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+				<property name="userDetailsService" ref="userDetailsService" />
+				<property name="passwordEncoder" ref="passwordEncoder" />
+			</bean>
+		</constructor-arg>
+	</bean>
+	
+	<security:authentication-manager>
+	    <security:authentication-provider>
+	        <security:user-service>
+	            <security:user name="user" password="{noop}password" authorities="ROLE_USER"/>
+	            <security:user name="admin" password="{noop}password" authorities="ROLE_ADMIN"/>
+	        </security:user-service>
+	    </security:authentication-provider>
+	</security:authentication-manager>
+	
+	
+	<!-- jwt 기반 인증 필터 Bean 등록 -->
     <bean id="jwtAuthenticationFilter" class="com.library.security.JwtAuthenticationFilter">
         <constructor-arg ref="jwtUtil" />
         <constructor-arg ref="userDetailsService" />
     </bean>
-    
-	<!-- UserDetailsService Bean 등록 -->
-	<bean id="userDetailsService" class="com.library.security.CustomUserDetailsService"/>
 	
 </beans>
