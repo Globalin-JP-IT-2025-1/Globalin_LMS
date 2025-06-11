@@ -11,7 +11,7 @@ import com.library.model.PageInfo;
 import lombok.AllArgsConstructor;
 
 @Controller
-@RequestMapping("/etc")
+@RequestMapping("/public/etc")
 @AllArgsConstructor
 public class EtcController {
 	private PageInfo pageInfo;
@@ -23,7 +23,7 @@ public class EtcController {
 
 	@GetMapping("/{number}")
 	public String showEtcPage(@PathVariable("number") String number, Model model) {
-		System.out.println("✅ EtcController - /etc/" + number + " - GET 요청 정상 처리!");
+		System.out.println("✅ EtcController - /public/etc/" + number + " - GET 요청 정상 처리!");
 
 		pageInfo = PageInfo.builder()
 				.pageTitleCode(number)
