@@ -12,7 +12,7 @@
 	display: grid;
 	grid-template-areas: "a b" "c c";
 	gap: 50px;
-	padding: 0 40px; /* 좌우 공간 확보 */
+	padding: 20px 40px 90px; 
 }
 
 

@@ -147,20 +147,12 @@
 	display: flex;
 }
 
-.h_submenu {
-	width: 200px;
-	background-color: white;
-}
 
 .h_submenu ul {
 	display: flex;
 	flex-direction: column;
 }
 
-.h_submenu a {
-	text-decoration: none;
-	color: inherit;
-}
 
 .menu_e_toggle {
 	all: unset;
@@ -173,24 +165,13 @@
 	all: unset;
 	cursor: pointer;
 	height: 100%;
-	width: 50px;
+	width: 30px;
 	text-align: center;
 }
 
 .menu_e_toggle:hover, .menu_a_toggle:hover {
 	background-color: var(--main-color);
 	color: white;
-}
-
-.h_submenu_item {
-	padding: 5px;
-	height: 30px;
-	cursor: pointer;
-}
-
-.h_submenu_item:hover {
-	background-color: var(--sub-color);
-	font-weight: bold;
 }
 
 .menu_e_blank {
@@ -218,6 +199,8 @@
 /* ✅ 부트스트랩 메뉴/서브메뉴 세련된 스타일 */
 .navbar-main {
   background-color: var(--main-color);
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 
@@ -227,12 +210,16 @@
   color: white;
 }
 
+
+
 .navbar-main .nav-link:hover,
 .navbar-main .nav-item:hover,
 .navbar-main .menu_a_toggle:hover {
  	background-color: var(--sub-color);
 	color: var(--main-color);
 }
+
+
 
 #h_submenu {
   position: absolute;
@@ -252,12 +239,16 @@
   color: var(--main-color);
   text-decoration: none;
   display: block;
-  padding: 4px 0;
-  margin-bottom: 15px;
+  margin-bottom: 17px;
+  margin-left: 5px;
   text-align: center;
+ 
 }
 
-.nav-item {
+.navbar-nav .nav-item {
+	height: 50px;
+	padding: 0 7px;
+	flex: 1;
 	text-align: center;
 }
 
@@ -265,6 +256,10 @@
   background-color: var(--sub-color);
   border-radius: 5px;
   padding-left: 4px;
+}
+
+#h_submenu li {
+  width: 240px;
 }
 
 #logoutBtn {

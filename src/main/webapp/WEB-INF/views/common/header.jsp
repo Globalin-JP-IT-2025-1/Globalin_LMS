@@ -65,10 +65,10 @@
 </div>
 
 <!-- 메인 메뉴 바 -->
-<nav class="navbar navbar-expand-lg navbar-main border-top border-bottom py-2">
+<nav class="navbar navbar-expand-lg navbar-main border-top border-bottom">
   <div class="container">
     <div class="collapse navbar-collapse show">
-      	<ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center gap-3">
+      	<ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center">
 	        <li class="nav-item">
 	          <button class="btn btn-link nav-link fw-bold menu_e_toggle" id="menu_1_toggle"><spring:message code="menu.1.title" /></button>
 	        </li>
@@ -78,13 +78,17 @@
 	        <li class="nav-item">
 	          <button class="btn btn-link nav-link fw-bold menu_e_toggle" id="menu_3_toggle"><spring:message code="menu.4.title" /></button>
 	        </li>
-	        <li class="nav-item">
+	        <li class="nav-item">	
 	          <button class="btn btn-link nav-link fw-bold menu_e_toggle" id="menu_4_toggle"><spring:message code="menu.5.title" /></button>
 	        </li>
 	        <li class="nav-item">
-	          <button class="btn btn-link nav-link fw-bold menu_e_toggle" id="menu_5_toggle"><spring:message code="menu.3.title" /></button>
+	          <button class="btn btn-link nav-link fw-bold menu_e_toggle" id="menu_5_toggle" style="margin-left: 5px;"><spring:message code="menu.3.title" /></button>
+	        </li>
+	        <li class="nav-item">
+        		<button class="btn btn-light border-white text-white menu_a_toggle" id="menu_a_toggle">∨</button>
 	        </li>
    		</ul>
+
       	<div class="position-absolute w-100 hidden shadow-sm" id="h_submenu">
 		  <div class="container py-4">
 		    <div class="row row-cols-1 row-cols-md-5 g-4">
@@ -129,9 +133,7 @@
 		    </div>
 		  </div>
 		</div>
-     <div class="d-flex">
-        <button class="btn btn-light border-white text-white menu_a_toggle" id="menu_a_toggle">∨</button>
-     </div>
+
     </div>
   </div>
 </nav>
