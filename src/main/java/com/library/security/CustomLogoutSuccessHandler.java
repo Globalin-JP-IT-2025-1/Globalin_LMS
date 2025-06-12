@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -17,11 +15,12 @@ import org.springframework.stereotype.Component;
 import com.library.service.BlacklistedTokenService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
-	private static final Logger logger = LoggerFactory.getLogger(CustomLogoutSuccessHandler.class);
 	private final BlacklistedTokenService blacklistedTokenService;
 
 	// 로그아웃 처리 (액세스 토큰 처리 + 세션 처리)
@@ -32,7 +31,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 		String requestUri = request.getRequestURI();
 		String membersId = requestUri.replaceAll(".*/private/auth/logout/", ""); // 경로에서 ID 추출
 
-		logger.info("✅ CustomLogoutHandler - /private/auth/logout/{} - POST 요청 처리!", membersId);
+		log.info("✅ CustomLogoutHandler - /private/auth/logout/{} - POST 요청 처리!", membersId);
 
 		String baToken = "";
 
@@ -61,7 +60,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 		
 		response.sendRedirect("/?logout=true");

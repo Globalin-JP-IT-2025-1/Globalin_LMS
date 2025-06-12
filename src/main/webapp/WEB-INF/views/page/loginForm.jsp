@@ -6,12 +6,16 @@
 </style>
 
 <!-- 로그인 폼 -->
-<ul id="loginForm">
-	<li>id : <input type="text" id="username" placeholder="아이디 입력" maxlength="10">
-	<li>password : <input type="text" id="password" placeholder="비밀번호 입력" maxlength="20"></li> <!-- 테스트 후 password로 변경 -->
-</ul>
+<form action="/public/auth/login" method="post">
+	<ul id="loginForm">
+		<li>id : <input type="text" name="username" id="username" placeholder="아이디 입력" maxlength="10">
+		<li>password : <input type="text" name="password" id="password" placeholder="비밀번호 입력" maxlength="20"></li> <!-- 테스트 후 password로 변경 -->
+		<li><input type="checkbox" id="acceptAutoLogin"> 자동 로그인 </li>
+	</ul>
+	<input type="submit" value="로그인">
+</form>
 
-<button class="loginbtn" onclick="loginProc()">로그인</button> <!-- POST /public/login -->
+<!-- <button class="loginbtn" onclick="loginProc()">로그인</button> --> <!-- POST /public/login -->
 
 <script type="text/javascript">
 // 로그인 요청

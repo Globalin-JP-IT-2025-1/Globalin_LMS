@@ -9,12 +9,13 @@
 	<security:http auto-config="true" use-expressions="true">
 	    <!-- 로그인 설정 -->
 	    <security:form-login 
-	        login-page="/public/auth/login" 
+	        login-page="/public/auth/login?status=0" 
 	        default-target-url="/?login=true" 
+	        login-processing-url="/public/auth/login"
 	        authentication-failure-handler-ref="customLoginFailureHandler" 
 	        authentication-success-handler-ref="customLoginSuccessHandler"/>
     
-	    <!-- 로그아웃 관련 설정 --> <!-- 세션 관리 : 무효화  -->
+	    <!-- 로그아웃 관련 설정 -->
 		<security:logout 
 			logout-url="/private/auth/logout" 
 			success-handler-ref="customLogoutSuccessHandler" invalidate-session="false" />
@@ -22,18 +23,34 @@
 	    <!-- CSRF 보호 : 비활성화 -->
 		<security:csrf disabled="true"/>
 		
-		<!-- jwt 필터 -->
-		<security:custom-filter ref="jwtAuthenticationFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+		<!-- 커스텀 필터 체인 -->
+        <security:custom-filter ref="jwtAuthenticationFilter" position="PRE_AUTH_FILTER"/> <!-- JWT 사전 인증 (PRE_AUTH_FILTER를 되살리고 싶은 경우: before="FORM_LOGIN_FILTER") -->
+        <!-- <security:custom-filter ref="basicFilter" position="BASIC_AUTH_FILTER"/> 내부 관리자 인증 : Basic 인증 -->
+        <!-- <security:custom-filter ref="tokenFilter" position="BEARER_TOKEN_AUTH_FILTER"/> API 요청 : JWT 인증 -->
+		<!-- <security:custom-filter ref="jwtAuthorizationFilter" before="FILTER_SECURITY_INTERCEPTOR"/> JWT 인가 (최종 결정 직전) -->
 		
 		<!-- 접근 권한 설정 -->
 		<security:intercept-url pattern="/" access="permitAll"/>
 		<security:intercept-url pattern="/public/**" access="permitAll" />
-		<security:intercept-url pattern="/private/**" access="hasRole('ROLE_USER')" />
-		<security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" /> <!-- hasRole('ADMIN') and isAuthenticated() -->
+		<security:intercept-url pattern="/private/**" access="hasRole('USER')" /> <!-- hasRole('USER') and isAuthenticated() -->
+		<security:intercept-url pattern="/admin/**" access="hasRole('ADMIN')" />
 		
 		<!-- <security:intercept-url pattern="/members/{membersId}" access="hasRole('ROLE_ADMIN') or @memberService.canAccess(#membersId)" /> -->
 		
 	</security:http>
+	
+	<!-- JWT 인증 필터 Bean 등록 -->
+    <bean id="jwtAuthenticationFilter" class="com.library.security.JwtAuthenticationFilter">
+        <!-- <constructor-arg ref="jwtUtil" /> -->
+        <!-- <constructor-arg ref="userDetailsService" /> -->
+    </bean>
+	
+	<!-- JWT 인가 필터 Bean 등록 -->
+	<!-- <bean id="jwtAuthorizationFilter" class="com.library.security.JwtAuthorizationFilter"/> -->
+	
+	<!-- 사용자 인증 필터 Bean 등록 -->
+	<!-- <bean id="basicAuthFilter" class="com.library.security.BasicAuthFilter"/> -->
+	<!-- <bean id="tokenAuthFilter" class="com.library.security.TokenAuthFilter"/> -->
 	
 	<!-- login/out 핸들러 Bean 등록 -->
 	<bean id="customLoginSuccessHandler" class="com.library.security.CustomLoginSuccessHandler"/> <!-- redirect:/?login=true -->
@@ -47,16 +64,15 @@
 	<bean id="passwordEncoder" 
 		class="org.springframework.security.crypto.factory.PasswordEncoderFactories" 
 		factory-method="createDelegatingPasswordEncoder"/>
-	
     
-    <!-- username & password 기반 인증 Bean 등록  -->
-    <bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
-		<constructor-arg>
-			<bean class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
-				<property name="userDetailsService" ref="userDetailsService" />
-				<property name="passwordEncoder" ref="passwordEncoder" />
-			</bean>
-		</constructor-arg>
+    <!-- 인증 관리자 -->
+	<bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+	    <constructor-arg>
+	        <bean class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+	            <property name="userDetailsService" ref="userDetailsService"/>
+	            <property name="passwordEncoder" ref="passwordEncoder"/>
+	        </bean>
+	    </constructor-arg>
 	</bean>
 	
 	<security:authentication-manager>
@@ -67,12 +83,5 @@
 	        </security:user-service>
 	    </security:authentication-provider>
 	</security:authentication-manager>
-	
-	
-	<!-- jwt 기반 인증 필터 Bean 등록 -->
-    <bean id="jwtAuthenticationFilter" class="com.library.security.JwtAuthenticationFilter">
-        <constructor-arg ref="jwtUtil" />
-        <constructor-arg ref="userDetailsService" />
-    </bean>
 	
 </beans>

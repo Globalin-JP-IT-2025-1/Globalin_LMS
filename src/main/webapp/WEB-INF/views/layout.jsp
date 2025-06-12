@@ -4,6 +4,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
+<!-- 회원 정보 -->
+<c:set var="memberInfo" value="${sessionScope.mInfo}" />
 
 <!-- 페이지 타이틀 & URI 설정 -->
 <c:choose>

@@ -21,12 +21,19 @@ public class HomeController {
 	}
 	
 	@RequestMapping
-    public String showHome(@RequestParam(value="logout", required = false) boolean logout, Model model) {
+    public String showHome(@RequestParam(value="logout", required = false) boolean logout, 
+    		@RequestParam(value="login", required = false) boolean login,
+    		Model model) {
     	System.out.println("✅ HomeController - / - GET 요청 정상 처리!");
     	
     	if (logout) {
     		model.addAttribute("alertType", "success");
     		model.addAttribute("alertMessage", "로그아웃 성공하였습니다");
+    	}
+    	
+    	if (login) {
+    		model.addAttribute("alertType", "success");
+    		model.addAttribute("alertMessage", "로그인 성공하였습니다");
     	}
     	
     	setPageInfo(model);

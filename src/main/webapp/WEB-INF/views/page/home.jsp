@@ -88,7 +88,7 @@
 	    <div class="home_3_item" onclick="location.href='/public/books/loan'">
 	    	<i class="bi bi-graph-up-arrow"></i>대출 베스트
     	</div>
-	    <div class="home_3_item" onclick="location.href='/private/members/${membersId}/book-like'">
+	    <div class="home_3_item" onclick="location.href='/private/members/${empty memberInfo ? 0 : memberInfo.membersId}/book-like'">
 	    	<i class="bi bi-bookmark-heart"></i>관심도서 목록
     	</div>
 	  </div>

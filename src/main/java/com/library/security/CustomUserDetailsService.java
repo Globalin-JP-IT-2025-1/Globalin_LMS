@@ -11,6 +11,7 @@ import com.library.model.Member;
 
 import lombok.RequiredArgsConstructor;
 
+// 사용자 정보 조회 (스프링 시큐리티)
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -23,6 +24,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) {
+		System.out.println("CustomUserDetailsService - 진입 성공");
+		
 		if (username.equals(adminUsername)) {
 			return new AdminLogin(adminUsername, adminPassword);
 		}

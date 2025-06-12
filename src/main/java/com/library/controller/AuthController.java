@@ -35,19 +35,26 @@ public class AuthController {
     	
     	if (status == -1) {
     		model.addAttribute("alertType", "error");
-    		model.addAttribute("alertType", "로그인 실패하였습니다. <br> 다시 시도해주세요.");
-    	} else if (status == 1) {
+    		model.addAttribute("alertMessage", "로그인 실패하였습니다. <br> 다시 시도해주세요.");
+    	} else if (status == 0) {
     		model.addAttribute("alertType", "info");
-    		model.addAttribute("alertType", "로그인 하시기 바랍니다.");
+    		model.addAttribute("alertMessage", "로그인 하시기 바랍니다.");
     	}
+    	
         return "layout";
     }
 	
-    // 로그인 처리
-    // @PostMapping("/public/auth/login") --> Spring Security로 이전
+    // 로그인 처리 --> Spring Security로 이전
+//    @PostMapping("/public/auth/login")
+//    public String loginProc(HttpServletRequest request, HttpServletResponse response) {
+//    	
+//    }
     
-    // 로그아웃 처리
-    // @PostMapping("/private/auth/logout/{membersId}") --> Spring Security로 이전
+    // 로그아웃 처리 --> Spring Security로 이전
+//    @PostMapping("/private/auth/logout/{membersId}") 
+//    public String logoutProc(HttpServletRequest request, HttpServletResponse response) {
+//    	
+//    }
    
     
 }

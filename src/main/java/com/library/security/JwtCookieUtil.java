@@ -6,7 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 public class JwtCookieUtil {
 	
     public static String getJwtFromCookie(HttpServletRequest request) {
+    	
         Cookie[] cookies = request.getCookies();
+        
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("aToken".equals(cookie.getName())) {
@@ -14,7 +16,9 @@ public class JwtCookieUtil {
                 }
             }
         }
+        
         return null;
+        
     }
     
 }

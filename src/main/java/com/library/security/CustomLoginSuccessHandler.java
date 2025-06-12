@@ -6,12 +6,14 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import com.library.model.Member;
+import com.library.model.MemberInfo;
 import com.library.service.AuthService;
 import com.library.service.MemberService;
 import com.library.service.RefreshTokenService;
@@ -52,6 +54,24 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 	    cookie.setPath("/"); // 전체 도메인에서 쿠키 사용 가능
 	    cookie.setMaxAge(600); // 쿠키 유효기간: 10분 (초 단위)
 	    response.addCookie(cookie);
+	    
+	    // 리프레시 토큰: 쿠키에 저장
+	    Cookie cookie2 = new Cookie("rToken", tokens.get("rToken"));
+	    cookie2.setHttpOnly(true); // JavaScript 접근 불가 (XSS 방지)
+	    cookie2.setSecure(true); // HTTPS에서만 쿠키 전송 (보안 강화)
+	    cookie2.setPath("/"); // 전체 도메인에서 쿠키 사용 가능
+	    cookie2.setMaxAge(604800); // 쿠키 유효기간: 7일 (초 단위)
+ 	    response.addCookie(cookie2);
+ 	    
+ 	    // 회원 정보: 세션에 저장
+ 	    MemberInfo memberInfo = MemberInfo.builder()
+			.membersId(member.getMembersId())
+			.username(username)
+			.name(member.getName())
+			.build();
+ 	    
+ 	    HttpSession session = request.getSession();
+ 	    session.setAttribute("mInfo", memberInfo);
 	    
 	    refreshTokenService.insertRefreshToken(member.getMembersId(), ipAddress, tokens.get("rToken"));
     	
