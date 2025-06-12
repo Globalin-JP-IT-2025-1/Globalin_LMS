@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -153,5 +154,28 @@ public class PrivateMemberController {
     	return ResponseEntity.ok().build(); // 200
     }
     
+    // 회원별 관심 도서 목록
+    @PreAuthorize("#membersId == authentication.principal.id")
+    @GetMapping("/{membersId}/book-like")
+    public String getMemberBookLikes(@PathVariable("membersId") int membersId, Model model) {
+    	System.out.println("✅ PrivateMemberController - /private/members/" + membersId + "/book-like - GET 요청 정상 처리!");
+    	
+    	if (membersId == 0) {
+    		return "redirect:/pulbic/auth/login?status=0";
+    	}
+    	
+    	Member member = memberService.getMemberById(membersId);
+    	
+    	model.addAttribute("member", member);
+    	
+    	pageInfo = PageInfo.builder()
+    			.pageTitleCode("31")
+    			.pagePath("page/editForm_member.jsp")
+    			.build();
+    	
+    	setPageInfo(model);
+    	
+    	return "layout";
+    }
     
 }

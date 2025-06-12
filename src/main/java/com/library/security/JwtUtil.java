@@ -10,8 +10,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,12 +20,12 @@ import com.library.service.MemberService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 // JWT 생성 및 검증
+@Slf4j
 @Component
 public class JwtUtil {
-	private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
-	
 	private final long ACCESS_EXPIRATION_TIME = 600000; // 10분
 	private final long REFRESH_EXPIRATION_TIME = 604800000; // 7일
 	
@@ -108,7 +106,7 @@ public class JwtUtil {
 			return true; // 검증 성공
 			
 	    } catch (Exception e) {
-	    	logger.error("토큰 검증 실패: {}", e.getMessage());
+	    	log.error("토큰 검증 실패: {}", e.getMessage());
 	        return false; // 검증 실패
 	    }
 	}
@@ -142,7 +140,7 @@ public class JwtUtil {
 	        return Integer.parseInt(membersId);
 	        
 	    } catch (Exception e) {
-	    	logger.error("membersId를 추출하는 중 오류 발생: {}", e.getMessage());
+	    	log.error("membersId를 추출하는 중 오류 발생: {}", e.getMessage());
 	        return -1; // 오류 발생 시 기본값 반환
 	    }
 	}

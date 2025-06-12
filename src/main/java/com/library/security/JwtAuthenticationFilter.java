@@ -4,42 +4,29 @@ import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.library.model.MemberInfo;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+// JWT 인증 필터
+@Slf4j
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends GenericFilterBean {
-    private final JwtUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
-		/* System.out.println("✅ JWT 필터 실행 중..."); */
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
     	
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String token = httpRequest.getHeader("Authorization");
+    	
 
-        if (token != null && jwtUtil.isValidToken(token)) {
-            String username = jwtUtil.extractUsername(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
-        }
-
-        try {
-			chain.doFilter(request, response);
-		} catch (IOException | ServletException e) {
-			e.printStackTrace();
-		}
+        chain.doFilter(request, response);
     }
 }
 

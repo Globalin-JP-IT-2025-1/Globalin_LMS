@@ -50,7 +50,7 @@
             <span>|</span>
           </c:otherwise>
         </c:choose>
-        <a href="/etc/71" class="fw-semibold"><spring:message code="menu.7.con1" /></a>
+        <a href="/public/etc/71" class="fw-semibold"><spring:message code="menu.7.con1" /></a>
       </div>
       <c:if test="${not empty h_membersId}">
         <div class="mt-1 px-3 py-1 bg-light rounded">
