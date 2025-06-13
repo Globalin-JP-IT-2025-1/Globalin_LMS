@@ -145,7 +145,7 @@
 	<script
 		src="${pageContext.request.contextPath}/resources/static/js/layout.js"></script>
 
-	<script>
+	<script type="text/javascript">
 		window.onload = function() {
 			var alertType = "${alertType}";
 			var alertMessage = "${alertMessage}";

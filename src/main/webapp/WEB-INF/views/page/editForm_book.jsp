@@ -23,7 +23,7 @@
 <button onclick="cancelEdit()">수정취소</button>
 <button onclick="updateBookInfo(${book.booksId})">수정하기</button>
 
-<script>
+<script type="text/javascript">
 function openIsbnPopup() {
     window.open('/page/searchBook.jsp', 'isbnSearch', 'width=500,height=250');
 }

@@ -20,7 +20,7 @@
 </ul>
 <button onclick="resetPassword()">확인</button>
 
-<script>
+<script type="text/javascript">
 	// 비밀번호 재발급 요청
 	function resetPassword() {
 		// 폼 데이터 가져오기

@@ -19,7 +19,7 @@
 </ul>
 <button onclick="checkMember()">확인</button>
 
-<script>
+<script type="text/javascript">
 	// 회원 가입 여부 확인 요청
 	function checkMember() {
 		// 폼 데이터 가져오기

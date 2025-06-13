@@ -19,7 +19,7 @@
 <button onclick="cancelAdd()">취소</button>
 <button onclick="insertBook()">등록하기</button>
 
-<script>
+<script type="text/javascript">
 function openIsbnPopup() {
     // /page/searchBook.jsp 팝업 띄우기 (ISBN 자동입력 구현은 여기서 fetch/연동 필요)
     window.open('/page/searchBook.jsp', 'isbnSearch', 'width=500,height=250');

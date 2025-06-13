@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.library.mapper.CardnumSerialMapper;
 import com.library.mapper.MemberMapper;
 import com.library.model.CardnumSerial;
 import com.library.model.Member;
@@ -24,6 +25,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class MemberService {
 	private final MemberMapper memberMapper;
+	private final CardnumSerialMapper cardnumSerialMapper;
 	private final BlacklistedTokenService blacklistedTokenService;
 	private final PasswordEncoder passwordEncoder;
 	
@@ -56,7 +58,7 @@ public class MemberService {
 		return memberMapper.getMemberByEmail(email);
 	}
 	
-	// 회원 정보 수정
+	// 회원 정보 수정 (password, email, mobile, zipcode, address, addressDetail) - 유저
 	public int updateMemberInfo(Member member) {
 		if (member.getPassword() != null) {
 			// 비밀번호 암호화
@@ -67,19 +69,42 @@ public class MemberService {
 		return memberMapper.updateMemberInfo(member);
 	}
 	
-	// 회원 탈퇴
-	@Transactional
-	public int updateMemberLeave(int membersId, Map<String, String> tokens) {
-		Member member = memberMapper.getMemberById(membersId);
-		
-		// 회원 정보 수정
+	// 회원 정보 수정 (status, overdue) - 시스템 (도서 연체 관리)
+//	public int updateMemberOverdue(Member member) {
+//		
+//		
+//		return memberMapper.updateMemberOverdue(member);
+//	}
+	
+	// 회원 정보 수정 (status, leaveDate) - 시스템 (회원 탈퇴)
+	public int updateMemberLeave(Member member) {
 		LocalDateTime leaveDate = LocalDateTime.now();
 		Timestamp tsLeaveDate = Timestamp.valueOf(leaveDate);
 		
 		member.setStatus(3); // 탈퇴회원으로 상태 변경
 		member.setLeaveDate(tsLeaveDate); // 탈퇴날짜 추가
 		
-		memberMapper.updateMemberLeave(member);
+		return memberMapper.updateMemberLeave(member);
+	}
+	
+	// 회원 정보 수정 (status, cardnum) - 관리자
+	@Transactional
+	public int updateMemberGrade(int membersId, String cardNum) {
+		Member member = memberMapper.getMemberById(membersId);
+
+		member.setStatus(1); // 정회원
+		member.setCardNum(cardNum);
+
+		return memberMapper.updateMemberGrade(member);
+	}
+
+	// 회원 탈퇴
+	@Transactional
+	public int updateMemberLeave(int membersId, Map<String, String> tokens) {
+		Member member = memberMapper.getMemberById(membersId);
+		
+		// 회원 정보 수정
+		updateMemberLeave(member);
 		
 		// 탈퇴 회원의 토큰을 블랙리스트에 추가
 		// access token
@@ -91,29 +116,20 @@ public class MemberService {
 		return 1;
 	}
 	
-	// 회원 등급 수정
-	@Transactional
-	public int updateMemberGrade(int membersId, String cardNum) {
-		Member member = memberMapper.getMemberById(membersId);
-
-		member.setStatus(1); // 정회원
-		member.setCardNum(cardNum);
-
-		return memberMapper.updateMemberGrade(member);
-	}
-	
-	// 회원 삭제
+	// 회원 삭제 - 관리자
 	public int deleteMember(int membersId) {
 		return memberMapper.deleteMember(membersId);
 	}
 	
-	// 회원 등록
+	// 회원 등록 - 유저
 	public int insertMember(Member member) {
 		LocalDateTime now = LocalDateTime.now();
         Timestamp joinDate = Timestamp.valueOf(now);
         
 		member.setStatus(0); // 준회원
+		member.setAutoLogin(0);
 		member.setCardNum(null);
+		member.setOverdue(0);
 		member.setJoinDate(joinDate); // 가입 날짜 설정
 		member.setLeaveDate(null);
 		
@@ -144,7 +160,7 @@ public class MemberService {
 	// 회원카드 번호 생성기 (15자리)
 	public String generateCardNumber() {
 		
-		CardnumSerial cardnumSerial = memberMapper.getCardnumSerial();
+		CardnumSerial cardnumSerial = cardnumSerialMapper.getCardnumSerial();
 		
 		// 오늘날짜
 		LocalDateTime currentDateReal = LocalDateTime.now();

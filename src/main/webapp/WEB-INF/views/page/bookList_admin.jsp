@@ -83,6 +83,6 @@
 	</table>
 </div>
 
-<script>
+<script type="text/javascript">
 
 </script>

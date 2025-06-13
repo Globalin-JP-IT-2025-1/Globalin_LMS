@@ -22,7 +22,7 @@
 	<!-- 환경 설정 파일 : 내부 -->
 	<util:properties id="dsProperties" location="classpath:datasource.properties" />
 	<util:properties id="appProperties" location="classpath:application.properties" />
-
+	
 	<!-- OracleDB DataSource -->
 	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="#{dsProperties['db.driver']}" />

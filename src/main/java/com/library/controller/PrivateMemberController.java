@@ -95,10 +95,12 @@ public class PrivateMemberController {
     		return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 (회원 없음)
     	}
     	
+    	member.setPassword(requestData.get("email"));
     	member.setPassword(requestData.get("password"));
     	member.setMobile(requestData.get("mobile"));
     	member.setZipcode(requestData.get("zipcode"));
     	member.setAddress(requestData.get("address"));
+    	member.setAddressDetail(requestData.get("addressDetail"));
     	
     	int result = memberService.updateMemberInfo(member);
     	

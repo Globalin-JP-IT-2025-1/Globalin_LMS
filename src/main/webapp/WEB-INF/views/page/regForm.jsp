@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="key" value="${apiKey}" />
 
 <!-- Bootstrap CSS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <!-- Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCqFS0zt7GHORgwR0lM7muaNSnA0swh4&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places"></script>
 
 <style>
     /* 주소 찾기 모달창 */
@@ -67,7 +67,7 @@
     <div class="mb-3 col-6 d-flex gap-2">
     	<div class="col-3 d-flex align-items-center">이메일</div>
         <div class="input-group d-flex align-items-center">
-            <input type="text" id="emailBox1" class="form-control" placeholder="이메일" maxlength="30">
+            <input type="text" id="emailBox1" class="form-control" placeholder="이메일 입력" maxlength="30">
             <i class="bi bi-at"></i>
             <select id="emailBox2" class="form-select">
 	            <option value="gmail.com" selected>gmail.com</option>
@@ -122,13 +122,14 @@
 <div class="container d-flex flex-column justify-content-center align-items-center d-none"> <!-- 테스트시: d-none 해제 -->
 	<h3>서버 송신용</h3>
 	<ol>
-		<li>username : <input type="text" id="regForm-username"></li><!-- 테스트 후 hidden로 변경하기 -->
-		<li>password : <input type="text" id="regForm-password"></li><!-- 테스트 후 hidden로 변경하기 -->
-		<li>name : <input type="text" id="regForm-name"></li><!-- 테스트 후 hidden로 변경하기 -->
-		<li>email : <input type="text" id="regForm-email"></li><!-- 테스트 후 hidden으로 변경하기 -->
-		<li>mobile : <input type="text" id="regForm-mobile"></li><!-- 테스트 후 hidden으로 변경하기 -->
-		<li>zipcode : <input type="text" id="regForm-zipcode"></li><!-- 테스트 후 hidden으로 변경하기 -->
-		<li>address : <input type="text" id="regForm-address"></li><!-- 테스트 후 hidden으로 변경하기 -->
+		<li>username : <input type="text" id="regForm-username" value="" readonly></li>
+		<li>password : <input type="text" id="regForm-password" value="" readonly></li>
+		<li>name : <input type="text" id="regForm-name" value="" readonly></li>
+		<li>email : <input type="text" id="regForm-email" value="" readonly></li>
+		<li>mobile : <input type="text" id="regForm-mobile" value="" readonly></li>
+		<li>zipcode : <input type="text" id="regForm-zipcode" value="" readonly></li>
+		<li>address : <input type="text" id="regForm-address" value="" readonly></li>
+		<li>addressDetail : <input type="text" id="regForm-address" value="" readonly></li>
 	</ol>
 	
 	<h3>서버 수신용</h3>
@@ -174,13 +175,13 @@ function testInsertMember() {
 	var mobile = document.getElementById("regForm-mobile").value;
 	var zipcode = document.getElementById("regForm-zipcode").value;
 	var address = document.getElementById("regForm-address").value;
+	var addressDetail = document.getElementById("regForm-addressDetail").value;
 	
 	alert(" username: " + username + " password: " + password 
 			+ " name: " + name + " email: " + email + " mobile: " + mobile
-			+ " zipcode: " + zipcode + " address: " + address);
+			+ " zipcode: " + zipcode + " address: " + address + " addressDetail: " + addressDetail);
 	
 	alert("회원가입 요청데이터 테스트 완료");
-
 }
 
 
@@ -198,7 +199,8 @@ function insertMember() {
         email: document.getElementById("regForm-email").value,
         mobile: document.getElementById("regForm-mobile").value,
         zipcode: document.getElementById("regForm-zipcode").value,
-        address: document.getElementById("regForm-address").value
+        address: document.getElementById("regForm-address").value,
+        addressDetail: document.getElementById("regForm-addressDetail").value
     };
 
     Swal.fire({
@@ -294,6 +296,12 @@ function vailFormData() {
 	    document.getElementById("addressBox").focus();
 	    return;
 	}
+	
+	if (document.getElementById("addressDetailBox").value.trim() === "") {
+	    alert("상세 주소가 비어있습니다");
+	    document.getElementById("addressDetailBox").focus();
+	    return;
+	}
     
 	// 비밀번호 일치 여부
 	if (document.getElementById("pwMatchStatus").value < 0) {
@@ -306,14 +314,12 @@ function vailFormData() {
 
 // 요청 데이터 값 검사
 function vailRequestData() {
-	
 	// 자릿수 검사 : 8자 이상
 	if (!/.{8,}/.test(document.getElementById("regForm-password").value)) {
 	    alert("비밀번호는 8자 이상이어야 합니다.");
 	    document.getElementById("passwordBox").focus();
 	    return;
 	}
-
 }
 
 // 서버 송신용 input 채우기
@@ -334,31 +340,24 @@ document.getElementById("zipcodeBox").addEventListener("blur", function () {
 });
 
 document.getElementById("addressBox").addEventListener("blur", function () {
-    document.getElementById("regForm-address").value = this.value + " " + document.getElementById("addressDetailBox").value;
+    document.getElementById("regForm-address").value = this.value;
 });
 
 document.getElementById("addressDetailBox").addEventListener("blur", function () {
-    document.getElementById("regForm-address").value = document.getElementById("addressBox").value + " " + this.value;
+    document.getElementById("regForm-address").value = this.value;
 });
 
 
-
 // 이메일 합치기 + 값 검사
-document.getElementById("emailBox1").addEventListener("input", combineEmail);
-document.getElementById("emailBox2").addEventListener("change", combineEmail);
-
-function combineEmail() {
-    let value1 = document.getElementById("emailBox1").value;
-    let value2 = document.getElementById("emailBox2").value;
+document.getElementById("emailBox1").addEventListener("input", function() {
+	let value1 = this.value;
 
     // 특수문자 포함 여부 확인 (영문, 숫자만 허용)
     if (/[^a-zA-Z0-9]/.test(value1)) {
         alert("이메일은 영문과 숫자만 사용할 수 있습니다");
         document.getElementById("emailBox1").value = "";
     }
-
-    document.getElementById("regForm-email").value = value1 + "@" + value2;
-}
+});
 
 // 연락처 합치기 + 값 검사
 document.getElementById("mobileBox1").addEventListener("input", combineMobile);
@@ -479,26 +478,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // 초기화 함수
 function initForm() {
-    document.getElementById("username").value = "";
+    document.getElementById("regForm-username").value = "";
     document.getElementById("usernameBox").value = "";
-    document.getElementById("password").value = "";
+    document.getElementById("regForm-password").value = "";
     document.getElementById("passwordBox").value = "";
     document.getElementById("confirmPasswordBox").value = "";
-    document.getElementById("name").value = "";
+    document.getElementById("regForm-name").value = "";
     document.getElementById("nameBox").value = "";
-    document.getElementById("mobile").value = "";
+    document.getElementById("regForm-mobile").value = "";
     document.getElementById("mobileBox1").value = "010";
     document.getElementById("mobileBox2").value = "";
     document.getElementById("mobileBox3").value = "";
-    document.getElementById("email").value = "";
+    document.getElementById("regForm-email").value = "";
     document.getElementById("emailBox1").value = "";
     document.getElementById("emailBox2").selectedIndex = 0;
-    document.getElementById("zipcode").value = "";
+    document.getElementById("regForm-zipcode").value = "";
     document.getElementById("zipcodeBox").value = "";
-    document.getElementById("address").value = "";
+    document.getElementById("regForm-address").value = "";
     document.getElementById("addressBox").value = "";
     document.getElementById("addressDetailBox").value = "";
 }
 
 </script>
-

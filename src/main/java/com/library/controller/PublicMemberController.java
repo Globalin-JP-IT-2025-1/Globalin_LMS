@@ -2,6 +2,8 @@ package com.library.controller;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,14 +18,17 @@ import com.library.model.PageInfo;
 import com.library.service.EmailService;
 import com.library.service.MemberService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/public/members")
-@AllArgsConstructor
+@RequiredArgsConstructor
+@PropertySource("classpath:application.properties")
 public class PublicMemberController {
     private final MemberService memberService;
     private final EmailService emailService;
+    @Value("${google.maps.api.key}")
+    private String apiKey;
     private PageInfo pageInfo;
     
     public void setPageInfo(Model model) {
@@ -104,6 +109,8 @@ public class PublicMemberController {
     	
     	setPageInfo(model);
     	
+    	model.addAttribute("apiKey", apiKey);
+    	
     	return "layout";
     }
     
@@ -118,6 +125,7 @@ public class PublicMemberController {
     			.mobile(requestData.get("mobile"))
     			.zipcode(requestData.get("zipcode"))
     			.address(requestData.get("address"))
+    			.addressDetail(requestData.get("addressDetail"))
     			.build();
     	
     	if (memberService.insertMember(member) < 0) {

@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<c:set var="memberList" value="${memberList}" />
 <fmt:formatDate value="${joinDate.time}" pattern="yyyy-MM-dd" />
 <fmt:formatDate value="${leaveDate.time}" pattern="yyyy-MM-dd" />
 
@@ -46,16 +47,18 @@
 		<tr>
 			<th>NO</th>
 			<th>MEMBERS_ID</th>
-			<th>회원 상태<br>STATUS</th>
-			<th>회원 카드 번호<br>CARD_NUM</th>
-			<th>이메일<br>EMAIL</th>
-			<!-- <th>비밀번호<br>PASSWORD</th> --> <!-- 테스트 후 삭제 -->
-			<th>성함<br>NAME</th>
-			<th>연락처<br>MOBILE</th>
-			<th>우편번호<br>ZIPCODE</th>
-			<th>주소<br>ADDRESS</th>
-			<th>가입날짜<br>JOIN_DATE</th>
-			<th>탈퇴날짜<br>LEAVE_DATE</th>
+			<th>회원 상태</th>
+			<th>회원 카드 번호</th>
+			<th>회원 카드 번호</th>
+			<th>이메일</th>
+			<th>비밀번호</th> <!-- 테스트 후 삭제 -->
+			<th>이름</th>
+			<th>연락처</th>
+			<th>우편번호</th>
+			<th>주소</th>
+			<th>상세 주소</th>
+			<th>가입날짜</th>
+			<th>탈퇴날짜</th>
 			<th>삭제</th>
 			<th>등급 변경</th>
 			<th>수정 폼</th> <!-- 테스트 후 삭제 -->
@@ -68,12 +71,14 @@
 				<td>${member.membersId}</td>
 				<td>${member.status}</td>
 				<td>${member.cardNum}</td>
+				<td>${member.overdue}</td>
 				<td>${member.email}</td>
-				<%-- <td>${member.password}</td> --%>
+				<td>${member.password}</td>
 				<td>${member.mobile}</td>
 				<td>${member.name}</td>
 				<td>${member.zipcode}</td>
 				<td>${member.address}</td>
+				<td>${member.addressDetail}</td>
 				<td>${member.joinDate}</td>
 				<td>${member.leaveDate}</td>
 		        <td><button onclick="deleteMember(${member.membersId})">삭제</button></td>
@@ -85,30 +90,7 @@
 	</table>
 </div>
 
-<!-- <template id="my-template">
-  <swal-title>회원카드 발급하기</swal-title>
-  <swal-icon type="info" color="#3085d6"></swal-icon>
-  <swal-button type="confirm">카드번호 발급</swal-button>
-  <swal-button type="cancel">취소</swal-button>
-  <swal-param name="allowEscapeKey" value="false" />
-  <swal-param
-    name="customClass"
-    value='{ "popup": "my-popup" }' />
-  <swal-function-param
-    name="didOpen"
-    value="popup => console.log(popup)" />
-</template>
-
-<button data-swal-toast-template="#my-template">
-	회원카드 등록
-</button> -->
-
-<script>
-/* Swal.mixin({
-	  toast: true
-	}).bindClickHandler("data-swal-toast-template"); */
-
-
+<script type="text/javascript">
 function deleteMember(membersId) {
 	Swal.fire({
         title: "회원 삭제",

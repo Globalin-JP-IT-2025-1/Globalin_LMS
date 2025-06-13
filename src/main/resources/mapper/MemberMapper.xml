@@ -22,15 +22,10 @@
         SELECT * FROM MEMBERS WHERE EMAIL = #{email}
     </select>
     
-    <!-- 회원 카드번호 시리얼 조회 -->
-    <select id="getCardnumSerial" resultType="com.library.model.CardnumSerial">
-        SELECT * FROM MEMBERS CARDNUM_SERIAL
-    </select>
-
-    <!-- 회원 정보 수정 : 유저 / 내 정보 / 정보 수정(비밀번호, 모바일, 우편번호, 주소) -->
+    <!-- 회원 정보 수정 : 유저 / 내 정보 / 정보 수정(비밀번호, 모바일, 우편번호, 주소, 상세주소) -->
     <update id="updateMemberInfo" parameterType="com.library.model.Member">
         UPDATE MEMBERS 
-        SET PASSWORD = #{password}, MOBILE = #{mobile}, ZIPCODE = #{zipcode}, ADDRESS = #{address} 
+        SET PASSWORD = #{password}, MOBILE = #{mobile}, ZIPCODE = #{zipcode}, ADDRESS = #{address}, ADDRESS_DETAIL = #{addressDetail} 
         WHERE MEMBERS_ID = #{membersId}
     </update>
     
@@ -48,21 +43,18 @@
         WHERE MEMBERS_ID = #{membersId}
     </update>
     
-    <!-- 회원 카드번호 시리얼 업데이트 -->
-    <update id="updateCardnumSerial" parameterType="com.library.model.CardnumSerial">
-        UPDATE CARDNUM_SERIAL 
-        SET CURRENT_DATE = #{currentDate}, SERIAL = #{serial}
-        WHERE CARDNUM_SERIAL_ID = #{cardnumSerialId}
-    </update>
     
     <!-- 회원 등록 -->
     <insert id="insertMember" parameterType="com.library.model.Member">
 	    <selectKey keyProperty="membersId" resultType="java.lang.Integer" order="BEFORE">
 	        SELECT SQ_MEMBERS.NEXTVAL FROM DUAL
 	    </selectKey>
-        INSERT INTO MEMBERS (MEMBERS_ID, STATUS, CARD_NUM, USERNAME, PASSWORD, NAME, EMAIL, MOBILE, ZIPCODE, ADDRESS, JOIN_DATE, LEAVE_DATE) 
-        VALUES (#{membersId}, #{status}, #{cardNum}, #{username}, #{password}, #{name}, #{email}, #{mobile}, #{zipcode}, #{address}, #{joinDate}, #{leaveDate})
+        INSERT INTO MEMBERS (MEMBERS_ID, STATUS, CARD_NUM, OVERDUE, AUTO_LOGIN, 
+        	USERNAME, PASSWORD, NAME, EMAIL, MOBILE, ZIPCODE, ADDRESS, ADDRESS_DETAIL, JOIN_DATE, LEAVE_DATE) 
+        VALUES (#{membersId}, #{status}, #{cardNum}, #{overdue}, #{autoLogin},
+        	#{username}, #{password}, #{name}, #{email}, #{mobile}, #{zipcode}, #{address}, #{addressDetail}, #{joinDate}, #{leaveDate})
     </insert>
+
 
     <!-- 회원 삭제 -->
     <delete id="deleteMember" parameterType="int">

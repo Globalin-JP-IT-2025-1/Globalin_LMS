@@ -11,3 +11,4 @@ target/
 
 datasource.properties
 application.properties
+config.properties
