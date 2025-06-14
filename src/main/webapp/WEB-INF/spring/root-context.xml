@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
+        http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+	
+	<!-- 전역 설정 : 데이터베이스, 트랜잭션, MyBatis, 메시지 소스 -->
+	
+    <!-- 빈 자동 등록 -->
+    <context:component-scan base-package="com.library" />
+
+    <!-- 환경 설정 -->
+    <context:property-placeholder location="classpath:application.properties"/><!-- controller에는 별도로 어노테이션으로 표기할 것 -->
+    <util:properties id="dsProperties" location="classpath:datasource.properties" />
+    <util:properties id="appProperties" location="classpath:application.properties" /> 
+
+    <!-- 데이터베이스 설정 -->
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+        <property name="driverClassName" value="#{dsProperties['db.driver']}" />
+        <property name="jdbcUrl" value="#{dsProperties['db.url']}" />
+        <property name="username" value="#{dsProperties['db.username']}" />
+        <property name="password" value="#{dsProperties['db.password']}" />
+    	
+    	<!-- HikariCP 커넥션 풀 설정 -->
+	    <property name="maximumPoolSize" value="10"/>
+	    <property name="idleTimeout" value="30000"/>
+	    <property name="connectionTimeout" value="20000"/>
+	    <property name="poolName" value="HikariCP-Pool"/>
+    </bean>
+
+    <!-- 트랜잭션 관리 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- MyBatis 설정 -->
+    <!-- MyBatis 매퍼 자동 스캔 -->
+	<mybatis:scan base-package="com.library.mapper" />
+	
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 메시지 소스 설정 (messages.properties) : 다국어, 메뉴 관리 -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:messages" />
+        <property name="defaultEncoding" value="UTF-8" />
+    </bean>
+</beans>

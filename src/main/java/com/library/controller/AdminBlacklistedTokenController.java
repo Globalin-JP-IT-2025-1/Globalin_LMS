@@ -34,7 +34,7 @@ public class AdminBlacklistedTokenController {
 
     	pageInfo = PageInfo.builder()
 			.pageTitleCode("94")
-			.pagePath("page/blacklistedTokenList.jsp")
+			.pagePath("page/9-admin/blacklistedTokenList.jsp")
 			.build();
     	
     	model.addAttribute("alertType", "success");

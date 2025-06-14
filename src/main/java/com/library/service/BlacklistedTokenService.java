@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.library.mapper.BlacklistedTokenMapper;
 import com.library.model.BlacklistedToken;
-import com.library.security.JwtUtil;
+import com.library.util.JwtUtil;
 
 import lombok.AllArgsConstructor;
 
