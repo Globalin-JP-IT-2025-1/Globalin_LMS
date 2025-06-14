@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd 
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
+		   http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+	
+	<!-- 웹 계층 설정 : JSON 변환, 인터셉터, Redis -->
+
+	<!-- JSON 변환 설정 -->
+	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+	
+    <!-- Interceptor 등록 : header에 jwt 추가 -->
+    <!-- <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/private/**"/>
+            <mvc:mapping path="/admin/**"/>
+            <bean class="com.library.security.JwtHeaderInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors> -->
+    
+    <!-- Redis 연결 설정 -->
+    <bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+	    <property name="hostName" value="localhost"/>
+	    <property name="port" value="6379"/>
+	</bean>
+	
+	<!-- RedisTemplate 설정 (트랜잭션 활성화) -->
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+	    <constructor-arg ref="redisConnectionFactory"/>
+	    <property name="enableTransactionSupport" value="true"/>
+	</bean>
+	
+  <!--   
+    Mail 관련 설정
+	<bean id="mailSender" class = "org.springframework.mail.javamail.JavaMailSenderImpl">
+	   <property name="host" value="#{appProperties['spring.mail.host']}" />
+	   <property name="port" value="#{appProperties['spring.mail.port']}" />
+	   <property name="username" value="#{appProperties['spring.mail.username']}" />
+	   <property name="password" value="#{appProperties['spring.mail.password']}" />
+	   <property name="javaMailProperties">
+	      <props>
+	            <prop key="mail.transport.protocol">smtp</prop>
+	            <prop key="mail.smtp.auth">true</prop>
+	            <prop key="mail.smtp.starttls.enable">true</prop>
+	            <prop key="mail.debug">true</prop>
+	      </props>
+	   </property>
+	</bean> -->
+	
+</beans>

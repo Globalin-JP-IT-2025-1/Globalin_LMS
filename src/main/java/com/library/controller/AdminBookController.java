@@ -36,7 +36,7 @@ public class AdminBookController {
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("92")
-    			.pagePath("page/bookList_admin.jsp")
+    			.pagePath("page/9-admin/bookList_admin.jsp")
     			.build();
     	
     	setPageInfo(model);
@@ -49,7 +49,7 @@ public class AdminBookController {
     public String showAddBook(Model model) {
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("95")
-    			.pagePath("page/addForm_book.jsp")
+    			.pagePath("page/2-book/addForm_book.jsp")
     			.build();
     	
     	setPageInfo(model);
@@ -62,7 +62,7 @@ public class AdminBookController {
     public String showEditBook(Model model) {
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("96")
-    			.pagePath("page/editForm_book.jsp")
+    			.pagePath("page/2-book/editForm_book.jsp")
     			.build();
     	
     	setPageInfo(model);
@@ -70,31 +70,6 @@ public class AdminBookController {
     	return "layout";
     }
     
-	/*
-	 * // 도서 추가 요청
-	 * 
-	 * @PostMapping public ResponseEntity<Void> addBook() {
-	 * 
-	 * 
-	 * return ResponseEntity.ok().build(); // 200 }
-	 * 
-	 * // 도서 수정 요청
-	 * 
-	 * @PutMapping("/{booksId}") public ResponseEntity<Void> editBook() {
-	 * 
-	 * 
-	 * return ResponseEntity.ok().build(); // 200 }
-	 * 
-	 * // 도서 삭제 요청
-	 * 
-	 * @PutMapping("/{booksId}") public ResponseEntity<Void> deleteBook() {
-	 * 
-	 * 
-	 * return ResponseEntity.ok().build(); // 200 }
-	 */
-    
-    
-    
-    
+	
     
 }

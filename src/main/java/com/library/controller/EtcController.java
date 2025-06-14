@@ -27,7 +27,7 @@ public class EtcController {
 
 		pageInfo = PageInfo.builder()
 				.pageTitleCode(number)
-				.pagePath("page/etc-" + number + ".jsp")
+				.pagePath("page/8-etc/etc-" + number + ".jsp")
 				.build();
 
 		setPageInfo(model);

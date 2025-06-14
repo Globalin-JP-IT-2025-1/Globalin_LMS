@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.library.model.Member;
 import com.library.model.PageInfo;
+import com.library.service.CardNumberService;
 import com.library.service.MemberService;
 
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AdminMemberController {
     private final MemberService memberService;
+    private final CardNumberService cardnumberService;
     private PageInfo pageInfo;
     
     public void setPageInfo(Model model) {
@@ -41,7 +43,7 @@ public class AdminMemberController {
 
     	pageInfo = PageInfo.builder()
 			.pageTitleCode("91")
-			.pagePath("page/memberList.jsp")
+			.pagePath("page/9-admin/memberList.jsp")
 			.build();
     	
     	model.addAttribute("alertType", "success");
@@ -52,10 +54,10 @@ public class AdminMemberController {
         return "layout";
     }
 
-    // 회원 등급 수정 (준회원 -> 정회원) --> 진행중
+    // 정회원으로 회원 등급 수정 --> 진행중
     @PutMapping("/{membersId}/upgrade")
     public ResponseEntity<Void> updateMemberGrade(@PathVariable("membersId") int membersId, @RequestBody Map<String, String> requestData) {
-        int result = memberService.updateMemberGrade(membersId, requestData.get("cardNumber"));
+        int result = memberService.updateMemberCardnum(membersId, requestData.get("cardNumber"));
         
         System.out.println(membersId + ", " + result + ", " + requestData.get("cardNumber")); // 디버깅용
         
@@ -69,7 +71,7 @@ public class AdminMemberController {
     // 회원카드 발급 --> 진행중
     @GetMapping("/cardnumber")
     public ResponseEntity<String> gMemberGrade() {
-        String cardnum = memberService.generateCardNumber();
+        String cardnum = cardnumberService.generateCardNumber();
         
         System.out.println(cardnum); // 디버깅용
         

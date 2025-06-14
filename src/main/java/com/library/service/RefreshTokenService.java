@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.library.mapper.RefreshTokenMapper;
 import com.library.model.RefreshToken;
-import com.library.security.JwtUtil;
+import com.library.util.JwtUtil;
 
 import lombok.AllArgsConstructor;
 

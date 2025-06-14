@@ -6,7 +6,7 @@ public class BCryptTest {
     public static void main(String[] args) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        String[] passwords = {"library123"};
+        String[] passwords = {"testtest3", "testtest2", "testtest11", "testtest1", "testtest13"};
 
         for (String password : passwords) {
             String hashedPassword = encoder.encode(password);

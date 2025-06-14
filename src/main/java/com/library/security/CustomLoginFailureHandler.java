@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Component
 public class CustomLoginFailureHandler implements AuthenticationFailureHandler {
 	
@@ -23,7 +22,6 @@ public class CustomLoginFailureHandler implements AuthenticationFailureHandler {
 		System.out.println("✅ CustomLoginFailureHandler - /public/auth/login - POST 요청 정상 처리!");
 		
 		System.out.println("로그인 실패 : " + exception.getMessage());
-		/* log.error("로그인 실패 : " + exception.getMessage()); */
 		
 		response.sendRedirect("/public/auth/login?status=-1");
 	}
