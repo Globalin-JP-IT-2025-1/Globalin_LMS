@@ -5,8 +5,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -26,8 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class JwtUtil {
-	private final long ACCESS_EXPIRATION_TIME = 600000; // 10분
-	private final long REFRESH_EXPIRATION_TIME = 604800000; // 7일
+	private final long ACCESS_EXPIRATION_TIME = 1800000; // 30분
+	private final long REFRESH_EXPIRATION_TIME = 1296000000; // 15일
 	
 	@Value("${jwt.secret}")
     private String secretKey;
@@ -47,30 +45,33 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(decodedKey);
     }	
 
-	// JWT 생성
-	public Map<String, String> generateTokens(String username, String name, String membersId) {
-		Map<String, String> tokens = new HashMap<>();
-		
+	// 토큰 생성
+    // 액세스 토큰 생성
+	public String generateAccessToken(String username, String name, String membersId) {
 		String accessToken = Jwts.builder()
 				.setSubject(username)
 				.claim("name", name)
 	            .claim("membersId", membersId)
 				.setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME)) // 10분
-				.signWith(key, SignatureAlgorithm.HS256).compact();
+				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME)) // 30분
+				.signWith(key, SignatureAlgorithm.HS256)
+				.compact();
 
+		return accessToken;
+	}
+	
+	// 리프레시 토큰 생성
+	public String generateRefreshToken(String username, String name, String membersId) {
 		String refreshToken = Jwts.builder()
 				.setSubject(username)
 				.claim("name", name)
-	            .claim("membersId", membersId)
+	            .claim("membersId", String.valueOf(membersId))
 				.setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME)) // 7일
-				.signWith(key, SignatureAlgorithm.HS256).compact();
+				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME)) // 15일
+				.signWith(key, SignatureAlgorithm.HS256)
+				.compact();
 		
-		tokens.put("aToken", accessToken);
-		tokens.put("rToken", refreshToken);
-		
-		return tokens;
+		return refreshToken;
 	}
 
 	// 토큰 검증
@@ -80,26 +81,25 @@ public class JwtUtil {
         Timestamp currentDate = Timestamp.valueOf(now);
 		
 		try {
-			// 무결성 검사 : 시크릿 키를 사용해 토큰을 파싱하고 검증
+			// 1) 무결성 검사 : 시크릿 키를 사용해 토큰을 파싱하고 검증
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			
 			Timestamp expiresDate = extractExpiresDate(token);
 			
-			// 유효시간 검사 : 현재 시간 - 리프레시 토큰 유효기간 < 0
-			if ((currentDate.getTime() - expiresDate.getTime()) < 0) {
+			// 2) 유효시간 검사 : 현재 시간 < 리프레시 토큰 유효기간 이어야 통과
+			if (currentDate.getTime() > expiresDate.getTime()) {
 				return false;
 			}
 			
-			// 해당 회원이 유효한지 (탈퇴 회원(status: 3)이거나 조회되지 않거나)
+			// 3) 블랙리스트 검사
+			if (blacklistedTokenService.isBlacklistedToken(token)) {
+				return false;
+			}
+			
+			// 4) 해당 회원이 유효한지 (탈퇴 회원(status: 3)이거나 조회되지 않거나)
 			int membersId =  extractMembersId(token);
 			Member member = memberService.getMemberById(membersId);
 			if (member.getStatus() == 3 || member == null) {
-				return false;
-			}
-			
-			// 블랙리스트 검사
-			int bToken = blacklistedTokenService.getBlacklistedTokenByToken(token);
-			if (bToken < 0) {
 				return false;
 			}
 			
@@ -109,6 +109,7 @@ public class JwtUtil {
 	    	log.error("토큰 검증 실패: {}", e.getMessage());
 	        return false; // 검증 실패
 	    }
+		
 	}
 
 	// 토큰에서 Username 추출

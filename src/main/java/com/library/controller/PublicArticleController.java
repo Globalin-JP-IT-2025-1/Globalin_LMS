@@ -3,11 +3,12 @@ package com.library.controller;
 import java.util.List;
 import java.util.Map;
 
-import javax.websocket.server.PathParam;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.library.model.Article;
@@ -15,7 +16,9 @@ import com.library.model.PageInfo;
 import com.library.service.ArticleService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @RequestMapping("/private/articles")
 @AllArgsConstructor
@@ -30,8 +33,11 @@ public class PublicArticleController {
     
     // 카테고리별 게시글 목록 조회
     @GetMapping("/{category}")
-    public String getArticlesByCategory(@PathParam("category") String category, Model model) {
-    	System.out.println("✅ ArticleController - /private/articles/" + category + " - GET 요청 정상 처리!");
+    public String getArticlesByCategory(@PathVariable("category") String category, HttpServletRequest request, Model model) {
+		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
 		
 		List<Article> articleList = articleService.getAllArticlesByCategory(category);
 		
@@ -49,8 +55,11 @@ public class PublicArticleController {
 
     // 게시글 상세 조회 - faq 제외
     @GetMapping("/{articlesId}")
-    public String getArticlesRequest(@PathParam("articlesId") int articlesId, Model model) {
-    	System.out.println("✅ ArticleController - /private/articles/" + articlesId + " - GET 요청 정상 처리!");
+    public String getArticlesRequest(@PathVariable("articlesId") int articlesId, HttpServletRequest request, Model model) {
+		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
 		
 		Map<String, Object> articleWithReply = articleService.getArticleWithReply(articlesId);
 		

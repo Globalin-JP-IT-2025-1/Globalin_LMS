@@ -93,62 +93,14 @@
     </c:if>
     
     <div class="mb-3 col-6 d-flex justify-content-center align-items-center gap-2">
-        <button class="mb-3 btn btn-secondary" onclick="leaveMember()">탈퇴</button>
-		<button class="mb-3 btn btn-primary" onclick="editFormMember()">수정</button>
+    	<form action="/private/members/${member.membersId}" method="post">
+    		<input type="hidden" name="_method" value="PUT">
+        	<input class="d-none" type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        	<input class="d-none" type="text"name="membersId" id="membersId" value="${member.membersId}" readonly>
+        	<input class="mb-3 btn btn-secondary" type="submit" value="탈퇴">
+        </form>
+		<button class="mb-3 btn btn-primary" onclick="window.load.href='/private/members/${member.membersId}/edit'">수정</button>
     </div>
 </div>
 
-<!-- 서버 통신용 -->
-<div class="container d-flex flex-column justify-content-center align-items-center d-none"> <!-- 테스트시: d-none 해제 -->
-	<h3>서버 수신용</h3>
-	<ul>
-		<li>members_id : <input type="text" id="membersIdBox" value="${member.membersId}"></li>
-		<!--  <li>status : <input type="text" id="status"></li> -->
-		<!-- <li>card_num : <input type="text" id="cardNum"></li> -->
-	</ul>
-</div>
-
-
-<script type="text/javascript">
-var membersId = document.getElementById("membersIdBox").value;
-
-// 수정 폼으로 이동
-function editFormMember() {
-    location.href = `/private/members/${membersId}/edit`;
-}
-
-// 탈퇴 요청
-function leaveMember() {
-	Swal.fire({
-        title: "회원 탈퇴",
-        text: "정말로 탈퇴 하시겠습니까?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "탈퇴",
-        cancelButtonText: "취소"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch(`/private/members/${membersId}/leave`, { 
-            	method: "PATCH"
-            })
-            .then(response => {
-                if (response.ok) {
-                    Swal.fire("탈퇴 완료", "탈퇴가 완료 되었습니다.", "success").then(() => {
-                    	location.href = "/"; // 홈으로 이동
-                    });
-                } else {
-                    Swal.fire("오류 발생", "탈퇴를 실패했습니다.", "error");
-                }
-            })
-            .catch(error => {
-                Swal.fire("오류 발생", "서버 오류가 발생했습니다.", "error");
-                console.error("Error:", error);
-            });
-        }
-    });
-}
-
-</script>
 

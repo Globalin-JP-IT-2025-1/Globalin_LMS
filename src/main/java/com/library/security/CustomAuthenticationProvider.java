@@ -13,6 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 	private final CustomUserDetailsService userDetailService;
@@ -25,8 +28,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-	    System.out.println("CustomAuthenticationProvider - 인증 시도: " + authentication.getName());
-
+		log.info("### {} - 인증 시도.. : {}", 
+				this.getClass().getSimpleName(), 
+				authentication.getName());
+	    
 	    String username = authentication.getName();
 	    String password = authentication.getCredentials().toString();
 
@@ -41,7 +46,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	        throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
 	    }
 
-	    System.out.println("CustomAuthenticationProvider - 인증 성공! : " + username);
+	    log.info("### {} - 인증 성공! : {}", 
+				this.getClass().getSimpleName(), 
+				authentication.getName());
 	    
 	    if (username.equals("admin")) {
 	    	return new UsernamePasswordAuthenticationToken(

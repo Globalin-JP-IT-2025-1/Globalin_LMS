@@ -13,8 +13,11 @@ import org.springframework.stereotype.Service;
 import com.library.model.Member;
 import com.library.service.MemberService;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 // 사용자 정보 조회 (스프링 시큐리티)
+@Slf4j
 @Service
 @Primary
 public class CustomUserDetailsService implements UserDetailsService {
@@ -29,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    	System.out.println("CustomUserDetailsService - 진입 !!");
+    	log.info("### {} - 진입", this.getClass().getSimpleName());
     	
     	if (username.equals("admin")) {
     		System.out.println("CustomUserDetailsService - admin : " + adminPassword);

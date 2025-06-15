@@ -17,20 +17,24 @@
 		<security:intercept-url pattern="/private/**" access="hasRole('USER')" />
 		<security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/> <!-- authenticated, hasRole('ROLE_ADMIN') : 테스트 성공 -->
 		
+		<!-- HTTP 기본 인증(Basic Authentication) 활성화 -->
 		<security:http-basic />
+		
 	    <!-- 로그인 설정 -->
 	    <security:form-login 
 	        login-page="/public/auth/login?status=0" 
-    		default-target-url="/?login=true"
+    		default-target-url="/?status=0"
 	        login-processing-url="/public/auth/login"
 	        authentication-success-handler-ref="customLoginSuccessHandler"
 	        authentication-failure-handler-ref="customLoginFailureHandler" />
     
 	    <!-- 로그아웃 관련 설정 -->
-		<!-- <security:logout 
-			logout-url="/private/auth/logout/2" 
-			success-handler-ref="customLogoutSuccessHandler" /> --> <!-- 나중에 추가: invalidate-session="false" -->
-		
+		<security:logout 
+			logout-url="/private/auth/logout" 
+			invalidate-session="true" 
+			delete-cookies="un, fn, id" 
+			success-handler-ref="customLogoutSuccessHandler" />
+			
 	    <!-- CSRF 보호 : 비활성화 -->
 		<!-- <security:csrf disabled="true"/> -->
 		
@@ -60,15 +64,7 @@
 	<bean id="customLoginFailureHandler" class="com.library.security.CustomLoginFailureHandler"/> <!-- redirect:/public/auth/login?status=-1 -->
 	<bean id="customLogoutSuccessHandler" class="com.library.security.CustomLogoutSuccessHandler"/> <!-- redirect:/?logout=true -->
     
-	<!-- UserDetailsService Bean 등록 -->
-	<bean id="userDetailsService" class="com.library.security.CustomUserDetailsService"/>
-	
-	<!-- PasswordEncoder Bean 등록 -->
-	<bean id="passwordEncoder" 
-		class="org.springframework.security.crypto.factory.PasswordEncoderFactories" 
-		factory-method="createDelegatingPasswordEncoder"/>
-    
-    <!-- 인증 관리자 -->
+    <!-- 인증 관리자 : 여러 인증 제공자 중 하나 선택하여 위임 -->
 	<bean id="authenticationManager" 
 			class="org.springframework.security.authentication.ProviderManager">
 	    <constructor-arg>
@@ -87,11 +83,27 @@
 	    </constructor-arg>
 	</bean>
 	
-	<!-- 테스트 유저 -->
+	<!-- UserDetailsService Bean 등록 -->
+	<bean id="userDetailsService" class="com.library.security.CustomUserDetailsService"/>
+	
+	<!-- PasswordEncoder Bean 등록 -->
+	<!-- password 인코딩용 -->
+	<bean id="passwordEncoder" 
+		class="org.springframework.security.crypto.factory.PasswordEncoderFactories" 
+		factory-method="createDelegatingPasswordEncoder"/>
+	
+	<!-- refreshToken 인코딩용 -->
+	<!-- <bean id="sha256PasswordEncoder"
+	      class="org.springframework.security.crypto.password.MessageDigestPasswordEncoder">
+	    <constructor-arg value="SHA-256"/>
+	</bean> -->
+	
+	
+	<!-- 테스트 유저 : userDetailService와 충돌하므로 주의 -->
 	<!-- <security:user-service id="userDetailsService">
 		<security:user name="admin"
 			password="{noop}admin123"
 			authorities="ROLE_ADMIN" />
 	</security:user-service> -->
-	
+		
 </beans>

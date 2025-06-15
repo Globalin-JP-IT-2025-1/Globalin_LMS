@@ -1,5 +1,7 @@
 package com.library.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.library.model.PageInfo;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @AllArgsConstructor
 public class AuthController {
@@ -21,8 +25,11 @@ public class AuthController {
 	
 	// 로그인 폼 --> ok!!
     @GetMapping("/public/auth/login")
-    public String showLoginForm(@RequestParam(value="status", defaultValue = "1") Integer status, Model model) {
-    	System.out.println("✅ AuthController - /public/auth/login - GET 요청 정상 처리!");
+    public String showLoginForm(@RequestParam(value="status", defaultValue = "1") Integer status, HttpServletRequest request, Model model) {
+    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("61")
@@ -51,7 +58,7 @@ public class AuthController {
 //    public String loginProc() {}
     
     // 로그아웃 처리 --> Spring Security로 이전
-//    @PostMapping("/private/auth/logout/{membersId}") 
+//    @PostMapping("/private/auth/logout") 
 //    public String logoutProc() {}
    
     

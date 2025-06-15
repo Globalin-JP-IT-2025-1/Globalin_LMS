@@ -54,7 +54,7 @@
     </div>
 
     <div class="text-end">
-      <div class="d-flex justify-content-end gap-2 align-items-center h_mini_menu">
+		<div class="d-flex justify-content-end gap-2 align-items-center h_mini_menu">
         <a href="/" class="fw-semibold"><spring:message code="menu.0.title" /></a>
         <span>|</span>
         <c:choose>
@@ -65,8 +65,9 @@
             <span>|</span>
           </c:when>
           <c:otherwise>
-            <form action="/private/auth/logout/${h_membersId}" method="post" class="d-inline">
-              <input type="submit" value="<spring:message code='h.minimenu.logout' />" id="logoutBtn" class="btn btn-link p-0 fw-semibold">
+            <form action="/private/auth/logout" method="post" class="d-inline">
+            	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				<input type="submit" value="<spring:message code='h.minimenu.logout' />" id="logoutBtn" class="btn btn-link p-0 fw-semibold">
             </form>
             <span>|</span>
           </c:otherwise>

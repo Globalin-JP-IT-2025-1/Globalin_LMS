@@ -17,7 +17,6 @@
 	</properties>
 
 	<dependencies>
-
 		<!-- Spring 관련 -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -126,7 +125,6 @@
 		    <version>1.13.23.RELEASE</version>
 		</dependency>
 		
-		
 		<!-- JSTL (JSP 태그 지원) -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -194,19 +192,35 @@
 		    <version>3.4.1</version>
 		</dependency>
 		
-		<!-- slf4j-api -->
+		<!-- slf4j-api : 로그 모니터링 -->
 		<dependency>
 		    <groupId>org.slf4j</groupId>
 		    <artifactId>slf4j-api</artifactId>
 		    <version>1.7.36</version>
 		</dependency>
 		
+		<!-- logback : 로그 기록 -->
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>1.2.11</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-core</artifactId>
+		    <version>1.2.11</version>
+		</dependency>
+		
+		
+		<!-- HttpServlet -->
 		<dependency>
 		    <groupId>javax.servlet</groupId>
 		    <artifactId>javax.servlet-api</artifactId>
 		    <version>3.1.0</version>
 		    <scope>provided</scope>
 		</dependency>
+		
 		
 		<!-- Email 관련 -->
 		<dependency>
