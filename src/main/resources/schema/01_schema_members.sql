@@ -39,6 +39,18 @@ INSERT INTO MEMBERS (
     STATUS, CARD_NUM, LOAN_COUNT,
     JOIN_DATE, LEAVE_DATE
 ) VALUES (
+    0,  'admin', '{bcrypt}$2a$10$xFP4Nsk0kAag4QsQ1FnMzeh3TyJMjf96q5VKNg5fKv410DRnUtj1e', 
+    '관리자', 'globlainlibrary@gmail.com', '02-0000-0000', '12345', '서울특별시 영등포구 가나다로 1', '글로벌인 도서관', 
+    9, NULL, 0,
+    TO_DATE('2025-06-01', 'YYYY-MM-DD'), NULL
+);
+
+INSERT INTO MEMBERS (
+    MEMBERS_ID, USERNAME, PASSWORD, 
+    NAME, EMAIL, MOBILE, ZIPCODE, ADDRESS, ADDRESS_DETAIL, 
+    STATUS, CARD_NUM, LOAN_COUNT,
+    JOIN_DATE, LEAVE_DATE
+) VALUES (
     SQ_MEMBERS.NEXTVAL,  'test1', '{bcrypt}$2a$10$ua44FxKRU5WTtchn7IbiJ.iQkDcVWnMlbwVjoQM/WJnXO1EgnT5ou', 
     '가길동', 'test1@test.com', '010-1234-5678', '12345', '서울시 강남구 가나다로 1', '삼성아파트 1401호', 
     3, NULL, 0,

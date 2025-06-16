@@ -5,11 +5,11 @@
 
 	<!-- 게시글 목록 전체 조회 - 관리자 -->
 	<select id="getAllArticles" resultType="com.library.model.Article">
-		SELECT * FROM ARTICLE
+		SELECT * FROM ARTICLES
 	</select>
 	
 	<!-- 카테고리별 게시글 목록 전체 조회 -->
 	<select id="getAllArticlesByCategory" resultType="com.library.model.Article" parameterType="String">
-		SELECT * FROM ARTICLE WHERE CATECORY = #{category}
+		SELECT * FROM ARTICLES WHERE CATEGORY = #{category}
 	</select>
 </mapper>
