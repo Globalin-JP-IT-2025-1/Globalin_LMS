@@ -35,7 +35,7 @@ public class AdminBookController {
 		model.addAttribute("bookList", bookList);
     	
     	pageInfo = PageInfo.builder()
-    			.pageTitleCode("92")
+    			.pageTitleCode("93")
     			.pagePath("page/9-admin/bookList_admin.jsp")
     			.build();
     	

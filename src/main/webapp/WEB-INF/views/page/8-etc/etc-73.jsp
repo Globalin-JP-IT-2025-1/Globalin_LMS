@@ -6,7 +6,7 @@
 <style>
 .etc_73 {
 	/* width: 300px; */
-	height: 500px;
+	height: 566px;
 	overflow: auto; /* 또는 overflow-y: scroll; */
 	border: 1px solid #ccc;
 	font-family: '맑은 고딕', sans-serif;
@@ -16,6 +16,8 @@
 	margin: auto;
 	background-color: #ffffff;
 	color: #333;
+	margin-bottom: 80px;
+	
 }
 
 .etc_73 table {

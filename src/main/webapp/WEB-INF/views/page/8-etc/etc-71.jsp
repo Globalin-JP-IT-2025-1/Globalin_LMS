@@ -15,7 +15,7 @@
   background-color: #ffffff;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
   padding: 30px 30px;
-  width: 235px;
+  width: 300px;
   min-height: 240px;
   transition: all 0.2s ease-in-out;
   display: flex;
