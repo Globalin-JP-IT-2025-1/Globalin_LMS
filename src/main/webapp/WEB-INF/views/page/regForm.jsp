@@ -2,6 +2,9 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+<style>
+@import "bootstrap/scss/";
+</style>
 
 <!-- 회원 등록 요청 -->
 <ul class="regForm">
