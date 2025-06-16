@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -22,21 +23,54 @@
 
 	<div class="home_2_bg">
 		<div class="home_2">
-			<div class="home_2_1">
-				<p>회원 로그인</p>
-				<div class="h2_1_div1">
-					<input type="text" id="username" placeholder="아이디">
-					<input type="text" id="password" placeholder="비밀번호">
-				</div>
-				<div class="h2_1_div2">
-					<button class="loginbtn" onclick="loginProc()">로그인</button>
-				</div>
-				<div class="h2_1_div3">
-					<a href="#">회원가입</a>&nbsp;|
-					<a href="#">가입여부 확인</a>&nbsp;|
-					<a href="#">비밀번호 재발급</a>
-				</div>
-			</div>
+	        <c:choose>	
+	        	<c:when test="${empty h_membersId}">					
+					<div class="home_2_1">
+						<p>회원 로그인</p>
+						<form action="/public/auth/login" method="post">
+						
+							<div class="h2_1_div1" id="loginForm">
+								<input type="text" name="username" id="username" placeholder="아이디 입력" maxlength="10"/>
+								<input type="text" name="password" id="password" placeholder="비밀번호 입력" maxlength="20"/>
+								<div><input type="checkbox" id="acceptAutoLogin"> 자동 로그인 </div>	
+								<div><input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden=""/></div>
+							</div>
+							<div class="h2_1_div2">
+								<input type="submit" class="loginbtn" value="로그인"/>
+							</div>
+						</form>
+						<div class="h2_1_div3">
+							<a href="#">회원가입</a>&nbsp;|
+							<a href="#">가입여부 확인</a>&nbsp;|
+							<a href="#">비밀번호 재발급</a>
+						</div>
+					</div>
+				</c:when>
+	          	<c:otherwise>
+	          	<div class="home_2_1">
+					<div class="h2_1_div4">
+			          <a href="/private/members/${h_membersId}" id="mypage" class="fw-bold text-decoration-none">
+			            <c:out value="${h_name}" />(<c:out value="${h_username}" />)</a>
+			          <spring:message code="h.welcome.message1" />
+			        </div>
+			         
+						<div class="h2_1_div5">
+							<form action="/private/auth/logout" method="post" class="d-inline">
+				            	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
+								<input type="submit" value="<spring:message code='h.minimenu.logout' />" class="logoutbtn">
+				            </form>
+						</div>
+						<div class="h2_1_div6">
+							<button onclick="location.href='/private/members/${h_membersId}'"><spring:message code='menu.3.con1' /></button>
+							<button onclick="location.href='/private/members/${h_membersId}/edit'">정보 수정</button>
+						</div>
+						<div class="h2_1_div7">
+							<a href="/private/members/${membersId}book-history"><i class="bi bi-bookmarks"></i><spring:message code='menu.3.con2' /></a>&nbsp;|
+							<a href="/private/members/${membersId}book-req"><i class="bi bi-pencil-square"></i><spring:message code='menu.3.con4' /></a>
+						</div>
+					</div>
+				</c:otherwise>
+	        </c:choose>
 			
 			<div class="home_2_2">
 			  <div class="h2_2_top">

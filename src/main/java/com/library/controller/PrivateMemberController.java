@@ -260,6 +260,12 @@ public class PrivateMemberController {
     	
     	return "layout";
     }
+    
+    
+    //아이디 중복확인
+    
+    //이메일 중복확인
+    
    
     
 }
