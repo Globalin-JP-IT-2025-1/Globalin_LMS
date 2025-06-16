@@ -100,7 +100,6 @@ all: unset;
     border-radius: 0 8px 8px 0;
     position: absolute;
     right: 2px;
-	transition: background 0.2s ease-in-out;
 }
 
 #searchBtn:hover {
@@ -146,6 +145,52 @@ all: unset;
 	width: 97%;
 }
 
+.home_2_1 .h2_1_div4 {
+	text-align: center;
+	margin: 40px 10px 0 10px;
+}
+
+.h2_1_div4 >a {
+	font-size: 1.8em;
+}
+
+.h2_1_div4 >a:hover {
+	text-decoration: underline !important;
+}
+
+.home_2_1 .h2_1_div5 {
+	text-align: center;
+	margin: 0px 10px 20px 0;
+}
+
+.home_2_1 .h2_1_div6 {
+	text-align: center;
+	margin: 35px 20px 35px 20px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.home_2_1 .h2_1_div6 >button {
+	width: 150px;
+	height: 50px;
+	border: 0 solid;
+	border-radius: 10px;
+	background-color: var(--sub-color);
+	font-size: 1.3em;
+}
+
+
+.home_2_1 .h2_1_div7 {
+	text-align: center;
+	margin: 10px 0 10px 0;
+}
+
+.h2_1_div7 >a:hover {
+	text-decoration: underline;
+}
+
+
+
 .h2_1_div2 .loginbtn{
 	all: unset;
 	width: 92%;
@@ -158,6 +203,27 @@ all: unset;
 	margin-top: 20px;
 	margin-left: 10px;
 }
+
+.h2_1_div5 .logoutbtn{
+	all: unset;
+	width: 92%;
+	font-size: 1.8em;
+	border-radius: 15px;
+	padding: 5px;
+	background-color: var(--main-color);
+	text-align: center;
+	color: white;
+	margin-top: 20px;
+	margin-left: 10px;
+	cursor: pointer;	
+}
+
+.logoutbtn:hover {
+	background: linear-gradient(45deg, #0059b3, #0073e6);
+	
+}
+
+
 
 .home_2_1 .h2_1_div3{
 	margin-left: 10px;

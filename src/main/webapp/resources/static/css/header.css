@@ -103,7 +103,7 @@
 .h_mini_menu a:hover,
 .h_member_info a:hover {
 	color: inherit;
-	text-decoration: underline;
+	text-decoration: underline !important;
 }
 
 .h_member_info {

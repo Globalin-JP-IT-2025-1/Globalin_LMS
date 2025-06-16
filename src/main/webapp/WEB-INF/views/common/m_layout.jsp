@@ -23,9 +23,9 @@
 	<div class="m_content">
 		<div class="m_submenu_content">
 			<div class="m_submenu_content_tx">
-				<div class="m_submenu_item" id="mSubmenu1"><a href="${pageSubTitle1Uri}">${pageSubTitle1}</a></div>
-				<div class="m_submenu_item" id="mSubmenu2"><a href="${pageSubTitle2Uri}">${pageSubTitle2}</a></div>
-				<div class="m_submenu_item" id="mSubmenu3"><a href="${pageSubTitle3Uri}">${pageSubTitle3}</a></div>
+				<div class="m_submenu_item" id="mSubmenu1" onclick="location.href='${pageSubTitle1Uri}'">${pageSubTitle1}</div>
+				<div class="m_submenu_item" id="mSubmenu2" onclick="location.href='${pageSubTitle2Uri}'">${pageSubTitle2}</a></div>
+				<div class="m_submenu_item" id="mSubmenu3" onclick="location.href='${pageSubTitle3Uri}'">${pageSubTitle3}</a></div>
 				<c:if test="${not empty pageSubTitle4}">
 				    <div class="m_submenu_item" id="mSubmenu4">
 				        <a href="${pageSubTitle4Uri}">${pageSubTitle4}</a>

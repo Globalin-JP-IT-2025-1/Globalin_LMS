@@ -33,8 +33,8 @@
 
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/static/css/header.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <div class="container-fluid border-bottom py-4 bg-white">
   <div class="container d-flex justify-content-between align-items-center">
@@ -75,11 +75,10 @@
         <a href="/public/etc/71" class="fw-semibold"><spring:message code="menu.7.con1" /></a>
       </div>
       <c:if test="${not empty h_membersId}">
-        <div class="mt-1 px-3 py-1 bg-light rounded">
-          <a href="/private/members/${h_membersId}" id="mypage" class="fw-bold text-decoration-none">
-            <c:out value="${h_name}" />(<c:out value="${h_username}" />)
-          </a>
-          <spring:message code="h.welcome.message" />
+        <div class="mt-1 px-3 py-1 rounded h_member_info">
+	        <a href="/private/members/${h_membersId}" id="mypage" class="fw-bold text-decoration-none">
+	          <c:out value="${h_name}" />(<c:out value="${h_username}" />)</a>
+	        <spring:message code="h.welcome.message2" />
         </div>
       </c:if>
     </div>

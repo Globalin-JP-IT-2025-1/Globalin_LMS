@@ -23,19 +23,20 @@
 </style>
 <div class="login">
 <!-- 로그인 폼 -->
-	<form action="/public/auth/login" method="post">
-	
-			<div class="card">
-				<div id="loginForm">
-					<div>id : <input type="text" name="username" id="username" placeholder="아이디 입력" maxlength="10"></div>
-					<div>password : <input type="text" name="password" id="password" placeholder="비밀번호 입력" maxlength="20"></div> <!-- 테스트 후 password로 변경 -->
-					<div><input type="checkbox" id="acceptAutoLogin"> 자동 로그인 </div>
-					<div><input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" />csrf token</div>
-				</div>
-				<div>
-					<input type="submit" value="로그인">
-				</div>
+	<div class="card">
+
+		<form action="/public/auth/login" method="post">
+		
+			<div id="loginForm">
+				<div>id : <input type="text" name="username" id="username" placeholder="아이디 입력" maxlength="10"></div>
+				<div>password : <input type="text" name="password" id="password" c></div> <!-- 테스트 후 password로 변경 -->
+				<div><input type="checkbox" id="acceptAutoLogin"> 자동 로그인 </div>
+				<div><input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" />csrf token</div>
 			</div>
-			
-	</form>
+			<div>
+				<input type="submit" value="로그인">
+			</div>			
+		</form>
+	</div>
+	
 </div>

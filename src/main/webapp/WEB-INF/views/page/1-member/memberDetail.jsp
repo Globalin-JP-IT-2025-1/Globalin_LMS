@@ -44,7 +44,7 @@
         			${member.cardNum}
         		</c:when>
         		<c:otherwise>
-        			<p class="text-success">도서관 방문 후 도서 이용이 가능합니다</p>
+        			<p class="text-success">도서관에 방문하여 대출증을 만들면, 정회원으로 전환하실 수 있습니다.</p>
         		</c:otherwise>
         	</c:choose>
         </div>
