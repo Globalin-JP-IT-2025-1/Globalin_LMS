@@ -17,7 +17,6 @@
 	</properties>
 
 	<dependencies>
-
 		<!-- Spring 관련 -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -75,6 +74,12 @@
 		    <version>${spring.security.version}</version>
 		</dependency>
 		
+		<dependency>
+	        <groupId>org.springframework.security</groupId>
+	        <artifactId>spring-security-taglibs</artifactId>
+	        <version>${spring.security.version}</version>
+	    </dependency>
+		
 		<!-- jwt 관련 -->
 		<dependency>
 		    <groupId>io.jsonwebtoken</groupId>
@@ -94,15 +99,15 @@
 		    <version>0.11.5</version>
 		</dependency>
 		
-		<!-- Redis 관련 : Refresh Token 블랙리스트 관리  -->
-		<!-- <dependency>
+		<!-- Redis 관련 : 비밀번호 오류 횟수 관리  -->
+		<dependency>
 		    <groupId>org.springframework.data</groupId>
 		    <artifactId>spring-data-redis</artifactId>
 		    <version>1.8.23.RELEASE</version>
-		</dependency> -->
+		</dependency>
 		
 		<!-- Jedis 클라이언트 : java-redis 통신 -->
-		<!-- <dependency>
+		<dependency>
 		    <groupId>redis.clients</groupId>
 		    <artifactId>jedis</artifactId>
 		    <version>2.9.0</version>
@@ -118,8 +123,7 @@
 		    <groupId>org.springframework.data</groupId>
 		    <artifactId>spring-data-commons</artifactId>
 		    <version>1.13.23.RELEASE</version>
-		</dependency> -->
-		
+		</dependency>
 		
 		<!-- JSTL (JSP 태그 지원) -->
 		<dependency>
@@ -188,19 +192,35 @@
 		    <version>3.4.1</version>
 		</dependency>
 		
-		<!-- slf4j-api -->
+		<!-- slf4j-api : 로그 모니터링 -->
 		<dependency>
 		    <groupId>org.slf4j</groupId>
 		    <artifactId>slf4j-api</artifactId>
 		    <version>1.7.36</version>
 		</dependency>
 		
+		<!-- logback : 로그 기록 -->
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>1.2.11</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-core</artifactId>
+		    <version>1.2.11</version>
+		</dependency>
+		
+		
+		<!-- HttpServlet -->
 		<dependency>
 		    <groupId>javax.servlet</groupId>
 		    <artifactId>javax.servlet-api</artifactId>
 		    <version>3.1.0</version>
 		    <scope>provided</scope>
 		</dependency>
+		
 		
 		<!-- Email 관련 -->
 		<dependency>

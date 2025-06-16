@@ -82,13 +82,13 @@
 	    <div class="home_3_item" onclick="location.href='/public/etc/53'">
 	    	<i class="bi bi-book"></i>대출/반납
     	</div>
-	    <div class="home_3_item" onclick="location.href='/private/articles?type=req'">
+	    <div class="home_3_item" onclick="location.href='/private/articles/req'">
 	    	<i class="bi bi-pencil"></i> 희망도서 신청
     	</div>
 	    <div class="home_3_item" onclick="location.href='/public/books/loan'">
 	    	<i class="bi bi-graph-up-arrow"></i>대출 베스트
     	</div>
-	    <div class="home_3_item" onclick="location.href='/private/members/${empty memberInfo ? 0 : memberInfo.membersId}/book-like'">
+	    <div class="home_3_item" onclick="location.href='/private/members/${h_membersId}/book-like'">
 	    	<i class="bi bi-bookmark-heart"></i>관심도서 목록
     	</div>
 	  </div>

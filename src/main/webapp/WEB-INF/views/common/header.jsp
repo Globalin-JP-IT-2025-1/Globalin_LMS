@@ -2,18 +2,39 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ page import="javax.servlet.http.Cookie" %>
+<%
+    Cookie[] cookies = request.getCookies();
+    String un = "";
+    String fn = "";
+    String id = "";
+
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if ("un".equals(cookie.getName())) {
+                un = cookie.getValue();
+            } else if ("fn".equals(cookie.getName())) {
+                fn = cookie.getValue();
+            } else if ("id".equals(cookie.getName())) {
+            	id = cookie.getValue();
+            }
+        }
+    }
+    
+    request.setAttribute("h_membersId", id);
+    request.setAttribute("h_username", un);
+    request.setAttribute("h_name", fn);
+%>
+
+<c:set var="h_membersId" value="${h_membersId}" /> 
+<c:set var="h_username" value="${h_username}" /> 
+<c:set var="h_name" value="${h_name}" />
 
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/static/css/header.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/resources/static/css/header.css">
-<c:set var="h_membersId" value="${sessionScope.currentMember.membersId}" /> 
-<c:set var="h_username" value="${sessionScope.currentMember.username}" /> 
-<c:set var="h_name" value="${sessionScope.currentMember.name}" />
-<!-- 최상단 header 구조 - 부트스트랩 스타일 적용 -->
 
 <div class="container-fluid border-bottom py-4 bg-white">
   <div class="container d-flex justify-content-between align-items-center">
@@ -33,19 +54,20 @@
     </div>
 
     <div class="text-end">
-      <div class="d-flex justify-content-end gap-2 align-items-center h_mini_menu">
+		<div class="d-flex justify-content-end gap-2 align-items-center h_mini_menu">
         <a href="/" class="fw-semibold"><spring:message code="menu.0.title" /></a>
         <span>|</span>
         <c:choose>
           <c:when test="${empty h_membersId}">
-            <a href="/public/auth/login" class="fw-semibold"><spring:message code="menu.6.con1" /></a>
+            <a href="/public/auth/login?status=1" class="fw-semibold"><spring:message code="menu.6.con1" /></a>
             <span>|</span>
             <a href="/public/members/register" class="fw-semibold"><spring:message code="menu.6.con4" /></a>
             <span>|</span>
           </c:when>
           <c:otherwise>
-            <form action="/private/auth/logout/${h_membersId}" method="post" class="d-inline">
-              <input type="submit" value="<spring:message code='h.minimenu.logout' />" id="logoutBtn" class="btn btn-link p-0 fw-semibold">
+            <form action="/private/auth/logout" method="post" class="d-inline">
+            	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				<input type="submit" value="<spring:message code='h.minimenu.logout' />" id="logoutBtn" class="btn btn-link p-0 fw-semibold">
             </form>
             <span>|</span>
           </c:otherwise>
@@ -102,8 +124,8 @@
 		      </div>
 		      <div class="col">
 		        <ul class="list-unstyled">
-		          <li><a href="/public/articles/notice"><spring:message code="menu.2.con1" /></a></li>
-		          <li><a href="/public/articles/fnq"><spring:message code="menu.2.con2" /></a></li>
+		          <li><a href="/public/articles/not"><spring:message code="menu.2.con1" /></a></li>
+		          <li><a href="/public/articles/faq"><spring:message code="menu.2.con2" /></a></li>
 		          <li><a href="/public/articles/qna"><spring:message code="menu.2.con3" /></a></li>
 		          <li><a href="/private/articles/req"><spring:message code="menu.2.con4" /></a></li>
 		        </ul>

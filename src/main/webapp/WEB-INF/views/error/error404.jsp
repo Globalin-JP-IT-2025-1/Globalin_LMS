@@ -10,7 +10,7 @@
 
 404 Error
 
-<a href="/">home으로 이동</a>
+<a href="${pageContext.request.contextPath}/">홈으로 돌아가기</a>
 
 </body>
 </html>

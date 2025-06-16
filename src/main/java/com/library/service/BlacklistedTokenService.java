@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.library.mapper.BlacklistedTokenMapper;
 import com.library.model.BlacklistedToken;
-import com.library.security.JwtUtil;
+import com.library.util.JwtUtil;
 
 import lombok.AllArgsConstructor;
 
@@ -22,9 +22,15 @@ public class BlacklistedTokenService {
 		return blacklistedTokenMapper.getAllBlacklistedTokens();
 	}
 	
-	// 블랙리스트 토큰 조회
-	public int getBlacklistedTokenByToken(String token) {
-		return blacklistedTokenMapper.getBlacklistedTokenByToken(token);
+	// 블랙리스트 토큰 인지 확인
+	public boolean isBlacklistedToken(String token) {
+		List<BlacklistedToken> list = getAllBlacklistedTokens();
+		for (BlacklistedToken bt : list) {
+			if (token.equals(bt.getToken())) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	// 탈퇴 & 로그아웃 회원 토큰 추가

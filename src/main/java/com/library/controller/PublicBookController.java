@@ -33,7 +33,7 @@ public class PublicBookController {
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("11")
-    			.pagePath("page/bookList_total.jsp")
+    			.pagePath("page/2-book/bookList_total.jsp")
     			.build();
     	
     	setPageInfo(model);
@@ -49,7 +49,7 @@ public class PublicBookController {
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("12")
-    			.pagePath("page/bookList_class.jsp")
+    			.pagePath("page/2-book/bookList_class.jsp")
     			.build();
     	
     	setPageInfo(model);
@@ -65,7 +65,7 @@ public class PublicBookController {
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("13")
-    			.pagePath("page/bookList_loan.jsp")
+    			.pagePath("page/2-book/bookList_loan.jsp")
     			.build();
     	
     	setPageInfo(model);
@@ -82,7 +82,7 @@ public class PublicBookController {
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("14")
-    			.pagePath("page/bookList_like.jsp")
+    			.pagePath("page/2-book/bookList_like.jsp")
     			.build();
     	
     	setPageInfo(model);

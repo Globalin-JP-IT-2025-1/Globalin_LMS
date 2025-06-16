@@ -20,10 +20,12 @@ public class CustomLoginFailureHandler implements AuthenticationFailureHandler {
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
-		System.out.println("✅ CustomLoginFailureHandler - /public/auth/login - POST 요청 정상 처리!");
+		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), // 클래스
+				request.getRequestURI(), // URI
+				request.getMethod()); // HTTP 메서드
 		
-		System.out.println("로그인 실패 : " + exception.getMessage());
-		/* log.error("로그인 실패 : " + exception.getMessage()); */
+		log.error("### 로그인 실패 : " + exception.getMessage());
 		
 		response.sendRedirect("/public/auth/login?status=-1");
 	}

@@ -6,13 +6,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.library.service.BlacklistedTokenService;
+import com.library.service.AuthService;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,49 +20,49 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
-	private final BlacklistedTokenService blacklistedTokenService;
-
-	// 로그아웃 처리 (액세스 토큰 처리 + 세션 처리)
+	private final AuthService authService;
+	
+	// 로그아웃 처리
 	@Override
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 			throws IOException, ServletException {
 		
-		String requestUri = request.getRequestURI();
-		String membersId = requestUri.replaceAll(".*/private/auth/logout/", ""); // 경로에서 ID 추출
-
-		log.info("✅ CustomLogoutHandler - /private/auth/logout/{} - POST 요청 처리!", membersId);
-
-		String baToken = "";
-
-		try {
-			// 액세스 토큰: 쿠키에서 가져온 후 저장 후 삭제
+		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), // 클래스
+				request.getRequestURI(), // URI
+				request.getMethod()); // HTTP 메서드
+		
+		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+		log.info("### {} - {} 로그아웃 성공!", 
+				this.getClass().getSimpleName(), // 클래스 
+				userDetails.getUsername()); // 인증된 사용자의 username
+		
+		// 1) 쿠키에서 회원 정보 제거 --> 시큐리티에서 알아서 해줌.
+		
+		// 2) 쿠키에서 액세스 토큰 제거
+		// 관리자의 경우 토큰 제외
+		if (!userDetails.getUsername().equals("admin")) {
 			Cookie[] cookies = request.getCookies();
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("aToken")) {
-					baToken = cookie.getValue(); // 토큰 저장
+			if (cookies != null) {
+				String aToken = "";
+				for (Cookie c : cookies) {
+					if (c.getName().equals("aToken")) {
+						aToken = c.getValue();
+						
+						c.setMaxAge(0);
+						c.setPath("/");
+						response.addCookie(c);
+					} 
 				}
-				cookie.setMaxAge(0); // 쿠키 만료시간 0 설정
-				cookie.setPath("/"); // 같은 path로 설정
-				response.addCookie(cookie); // 덮어쓰기
+				
+				if (aToken != null) {
+					// 유효성 검사 후 유효하면 블랙리스트에 올리기
+					authService.insertBlacklistedToken(aToken, 0);
+				}
 			}
-
-			// 블랙리스트에 저장
-			blacklistedTokenService.insertBlacklistedToken(baToken, 0);
-
-			// 세션에서 회원 정보 제거
-			HttpSession session = request.getSession(false);
-
-			if (session != null) {
-				session.removeAttribute("currentMember"); // 세션에서 제거
-				session.invalidate(); // 세션 무효화
-				System.out.println("✅ 로그아웃 완료 - 세션 정보 삭제됨!");
-			}
-
-		} catch (Exception e) {
-			log.error(e.getMessage());
 		}
 		
-		response.sendRedirect("/?logout=true");
+		response.sendRedirect("/?status=3"); // 로그아웃 성공(3) : 메인 페이지로 이동
 		
 	}
 
