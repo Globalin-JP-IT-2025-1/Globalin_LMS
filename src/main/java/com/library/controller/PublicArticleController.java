@@ -39,9 +39,9 @@ public class PublicArticleController {
 				request.getRequestURI(),
 				request.getMethod());
 		
-//		List<Article> articleList = articleService.getAllArticlesByCategory("not");
-//		
-//		model.addAttribute("articleList", articleList);
+		List<Article> articleList = articleService.getAllArticlesByCategory("not");
+		
+		model.addAttribute("articleList", articleList);
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("21")
@@ -61,9 +61,9 @@ public class PublicArticleController {
 				request.getRequestURI(),
 				request.getMethod());
 		
-//		List<Article> articleList = articleService.getAllArticlesByCategory("not");
-//		
-//		model.addAttribute("articleList", articleList);
+		List<Article> articleList = articleService.getAllArticlesByCategory("faq");
+		
+		model.addAttribute("articleList", articleList);
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("22")
