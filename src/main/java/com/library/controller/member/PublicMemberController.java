@@ -1,4 +1,4 @@
-package com.library.controller;
+package com.library.controller.member;
 
 import java.util.Map;
 
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.model.Member;
 import com.library.model.PageInfo;
@@ -40,7 +41,7 @@ public class PublicMemberController {
 
     // 회원가입 폼 --> ok
     @GetMapping("/register")
-    public String showRegForm(@RequestParam(value = "status", defaultValue = "1") Integer status, Model model) {
+    public String showRegForm(Model model) {
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("64")
     			.pagePath("page/1-member/regForm.jsp")
@@ -50,29 +51,30 @@ public class PublicMemberController {
     	
     	model.addAttribute("apiKey", apiKey);
     	
-    	if (status == -1) {
-    		model.addAttribute("alertType", "fail");
-    		model.addAttribute("alertMessage", "회원가입 실패 하였습니다. 다시 시도 해주세요.");
-    	}
-    	
     	return "layout";
     }
     
-    // 회원 등록 --> ok
+    // 회원 등록 처리 --> ok
     @PostMapping
-    public String insertMember(@ModelAttribute Member member) {
+    public String insertMember(@ModelAttribute Member member, RedirectAttributes redirectAttributes) {
     	
     	try {
-    		memberService.insertMember(member);
+    		memberService.insertMember(member); // 회원 등록
+    		// emailService.sendRegister(member); // 메일 보내기
     	} catch (Exception e) {
     		e.printStackTrace();
-    		return "redirect:/public/members/register?status=-1"; // 실패(-1): 회원 가입 폼으로 이동
+    		
+    		redirectAttributes.addAttribute("alertType", "fail");
+    		redirectAttributes.addAttribute("alertMessage", "회원가입 실패 하였습니다");
+    		redirectAttributes.addAttribute("member", member); // 입력 내용 반환
+    		
+    		return "redirect:/public/members/register"; // 실패: 회원 가입 폼으로 이동
     	}
     	
-    	// 메일 보내기
-		// emailService.sendRegister(member);
+    	redirectAttributes.addAttribute("alertType", "success");
+    	redirectAttributes.addAttribute("alertMessage", "회원가입 성공 하였습니다");
     	
-    	return "redirect:/public/auth/login?status=2"; // 성공(2): 로그인 폼으로 이동
+    	return "redirect:/public/auth/login"; // 성공: 로그인 폼으로 이동
     }
     
     // 회원 가입 여부 확인 폼

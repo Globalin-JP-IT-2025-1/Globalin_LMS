@@ -1,23 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-
-<!-- 도서 추가 폼 -->
-<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+    pageEncoding="UTF-8"%>>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<ul class="addBookForm">
-    <li>분류(종류) : <input type="text" id="category" maxlength="50"></li>
-    <li>제목 : <input type="text" id="title" maxlength="200"></li>
-    <li>저자 : <input type="text" id="author" maxlength="100"></li>
-    <li>출판사 : <input type="text" id="publisher" maxlength="100"></li>
-    <li>
-        ISBN : <input type="text" id="isbn" maxlength="50">
-        <button type="button" onclick="openIsbnPopup()">ISBN으로 도서 가져오기</button>
-    </li>
-    <li>책 이미지 : <input type="text" id="imageLink" maxlength="300"></li>
-</ul>
+<!-- 도서 추가 폼 -->
+<form action="/admin/books" method="post">
+	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" />
+	<ul class="addBookForm">
+	    <li>분류(종류) : <input type="text" name id="category" maxlength="50"></li>
+	    <li>제목 : <input type="text" id="title" maxlength="200"></li>
+	    <li>저자 : <input type="text" id="author" maxlength="100"></li>
+	    <li>출판사 : <input type="text" id="publisher" maxlength="100"></li>
+	    <li>
+	        ISBN : <input type="text" id="isbn" maxlength="50">
+	        <a href="#" onclick="openIsbnPopup()">ISBN으로 도서 가져오기</a>
+	    </li>
+	    <li>책 이미지 : <input type="text" id="imageLink" maxlength="300"><a href="#"></a></li>
+	</ul>
+	<input type="submit" value="등록">
+</form>
 <button onclick="cancelAdd()">취소</button>
-<button onclick="insertBook()">등록하기</button>
 
 <script type="text/javascript">
 function openIsbnPopup() {
@@ -48,7 +49,7 @@ function insertBook() {
         cancelButtonText: "취소"
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch(`/books`, {
+            fetch(``, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(book)

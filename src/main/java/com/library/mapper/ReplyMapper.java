@@ -9,10 +9,10 @@ import com.library.model.Reply;
 @Mapper
 public interface ReplyMapper {
 	
-	// 게시글별 댓글 전체 조회
+	// 게시글별 댓글 목록 조회
 	public List<Reply> getAllRepliesByArticlesId(int articlesId);
 	
-	// 회원별 댓글 전체 조회 --> 현재 보여줄 메뉴가 없음
+	// 회원별 댓글 목록 조회 --> 현재 보여줄 메뉴가 없음
 //	public List<Reply> getAllRepliesByMembersId(int membersId);
 
 	// 댓글 등록

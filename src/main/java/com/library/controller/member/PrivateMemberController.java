@@ -1,4 +1,4 @@
-package com.library.controller;
+package com.library.controller.member;
 
 import java.util.List;
 
