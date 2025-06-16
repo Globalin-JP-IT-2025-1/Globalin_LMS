@@ -9,8 +9,8 @@ import com.library.model.Article;
 @Mapper
 public interface ArticleMapper {
 	
-	// 게시글 목록 전체 조회 --> 보여줄 메뉴가 없음.
-//	List<Article> getAllArticles();
+	// 게시글 목록 전체 조회 - 관리자
+	List<Article> getAllArticles();
 	
 	// 카테고리별 게시글 목록 조회
 	List<Article> getAllArticlesByCategory(String category);
@@ -25,9 +25,12 @@ public interface ArticleMapper {
     int insertArticle(Article article);
     
     // 게시글 수정
-    int updateArticle(Article article);
+    int updateArticleInfo(Article article);
+    int updateArticleDisable(int articlesId);
+    int updateArticleEnable(int articlesId);
     
     // 게시글 삭제
     int deleteArticleById(int articleId);
+
     
 }

@@ -1,14 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="articleList" value="${articleList}" />
-<%-- <c:set var="authorList" value="${authorList}" />
- --%>
+<c:set var="authorList" value="${authorList}" />
+
 <!-- 게시글 목록 조회 - 공지사항 -->
+
+<!-- <h2>[공지사항] 게시글 목록 조회</h2> -->
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center">
@@ -33,14 +34,13 @@
             </tr>
         </thead>
         <tbody>
-            <c:forEach var="i" begin="0" end="${fn:length(articleList)-1}" step="1">
+            <c:forEach var="i" begin="0" end="${fn:length(articleList) - 1}" step="1">
             	
                 <tr onclick="location.href='/public/articles/not/${articleList[i].articlesId}'">
                     <td>${i + 1}</td>
                     <td>${articleList[i].title}</td>
                     
-<%--                     <td>${authorList[i].name}(${authorList[i].username})</td> --%>
-                    <td>관리자(admin)</td>
+                    <td>${authorList[i].name}(${authorList[i].username})</td>
                     <td>${articleList[i].viewCount}</td>
                              
                 </tr>

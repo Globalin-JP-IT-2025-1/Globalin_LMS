@@ -1,4 +1,4 @@
-package com.library.controller;
+package com.library.controller.admin;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 @Controller
 @RequestMapping("/admin/tokens")
 @AllArgsConstructor
-public class AdminBlacklistedTokenController {
+public class AdminTokenController {
     private final BlacklistedTokenService tokenBlacklistService;
     private PageInfo pageInfo;
     

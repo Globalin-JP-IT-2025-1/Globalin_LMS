@@ -12,4 +12,7 @@
 	<select id="getAllArticlesByCategory" resultType="com.library.model.Article" parameterType="String">
 		SELECT * FROM ARTICLES WHERE CATEGORY = #{category}
 	</select>
+	
+	
+	
 </mapper>

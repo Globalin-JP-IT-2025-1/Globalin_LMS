@@ -69,8 +69,9 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 			Map<String, String> tokens = authService.generateTokens(username, fullname, String.valueOf(membersId));
 	        String aToken = tokens.get("aToken");
 	        String rToken = tokens.get("rToken");
-	
-	        response.setHeader("Authorization", "Bearer " + aToken);
+	        
+	        // 헤더에 추가
+	        response.setHeader(SecurityConstants.TOKEN_HEADER, SecurityConstants.TOKEN_PREFIX + aToken); // "Authorization", "Bearer "
 	        response.setHeader("Refresh-Token", rToken);
 	        
 	        // 쿠키 생성 및 response에 추가
