@@ -34,7 +34,7 @@ public class PublicArticleController {
     	model.addAttribute("pagePath", pageInfo.getPagePath());
     }
     
-    // not 목록 조회
+    // not 목록 조회 --> ok
     @GetMapping("/not")
     public String getListNot(HttpServletRequest request, Model model) {
 		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
@@ -101,7 +101,7 @@ public class PublicArticleController {
     	return "layout";
     }
     
-    // not 상세 조회
+    // not 상세 조회 --> test 중
     @GetMapping("/not/{articlesId}")
     public String getDetailNot(@PathVariable("articlesId") int articlesId, HttpServletRequest request, Model model) {
 		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
@@ -110,11 +110,11 @@ public class PublicArticleController {
 				request.getMethod());
 		
 		try {
-//			Map<String, Object> articleWithAuthorAndReplies = articleService.getArticleWithAuthorAndReplies(articlesId);
-//			model.addAttribute("article", articleWithAuthorAndReplies.get("article")); // 게시글 상세 정보
-//			model.addAttribute("a_author", articleWithAuthorAndReplies.get("a_author")); // 작성자 정보
-//			model.addAttribute("replyList", articleWithAuthorAndReplies.get("replyList")); // 댓글 리스트
-//			model.addAttribute("r_authorList", articleWithAuthorAndReplies.get("r_authorList")); // 댓글 작성자 리스트
+			Map<String, Object> articleWithAuthorAndReplies = articleService.getArticleWithAuthorAndReplies(articlesId);
+			model.addAttribute("article", articleWithAuthorAndReplies.get("article")); // 게시글 상세 정보
+			model.addAttribute("a_author", articleWithAuthorAndReplies.get("a_author")); // 작성자 정보
+			model.addAttribute("replyList", articleWithAuthorAndReplies.get("replyList")); // 댓글 리스트
+			model.addAttribute("r_authorList", articleWithAuthorAndReplies.get("r_authorList")); // 댓글 작성자 리스트
 			
 		} catch (Exception e) {
 			e.printStackTrace();
