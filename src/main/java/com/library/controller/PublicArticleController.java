@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/private/articles")
+@RequestMapping("/public/articles")
 @AllArgsConstructor
 public class PublicArticleController {
     private final ArticleService articleService;
@@ -31,21 +31,65 @@ public class PublicArticleController {
     	model.addAttribute("pagePath", pageInfo.getPagePath());
     }
     
-    // 카테고리별 게시글 목록 조회
-    @GetMapping("/{category}")
-    public String getArticlesByCategory(@PathVariable("category") String category, HttpServletRequest request, Model model) {
+    // 공지사항 목록 조회
+    @GetMapping("/not")
+    public String getAllArticlesNot(HttpServletRequest request, Model model) {
 		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
 				this.getClass().getSimpleName(), 
 				request.getRequestURI(),
 				request.getMethod());
 		
-		List<Article> articleList = articleService.getAllArticlesByCategory(category);
-		
-		model.addAttribute("articleList", articleList);
+//		List<Article> articleList = articleService.getAllArticlesByCategory("not");
+//		
+//		model.addAttribute("articleList", articleList);
     	
     	pageInfo = PageInfo.builder()
-    			.pageTitleCode("24")
-    			.pagePath("page/3-article/articleList_" + category + ".jsp")
+    			.pageTitleCode("21")
+    			.pagePath("page/3-article/articleList_not.jsp")
+    			.build();
+        	
+        setPageInfo(model);
+    	
+        return "layout";
+    }
+    
+    // 자주 묻는 질문 목록 조회
+    @GetMapping("/faq")
+    public String getAllArticlesFaq(HttpServletRequest request, Model model) {
+		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
+		
+//		List<Article> articleList = articleService.getAllArticlesByCategory("not");
+//		
+//		model.addAttribute("articleList", articleList);
+    	
+    	pageInfo = PageInfo.builder()
+    			.pageTitleCode("22")
+    			.pagePath("page/3-article/articleList_faq.jsp")
+    			.build();
+        	
+        setPageInfo(model);
+    	
+        return "layout";
+    }
+    
+    // Q&A 목록 조회
+    @GetMapping("/qna")
+    public String getAllArticlesQna(HttpServletRequest request, Model model) {
+		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
+		
+//		List<Article> articleList = articleService.getAllArticlesByCategory("qna");
+//		
+//		model.addAttribute("articleList", articleList);
+    	
+    	pageInfo = PageInfo.builder()
+    			.pageTitleCode("23")
+    			.pagePath("page/3-article/articleList_qna.jsp")
     			.build();
         	
         setPageInfo(model);
@@ -53,30 +97,55 @@ public class PublicArticleController {
         return "layout";
     }
 
-    // 게시글 상세 조회 - faq 제외
-    @GetMapping("/{articlesId}")
-    public String getArticlesRequest(@PathVariable("articlesId") int articlesId, HttpServletRequest request, Model model) {
+    // 공지사항 상세 조회
+    @GetMapping("/not/{articlesId}")
+    public String getArticleNot(@PathVariable("articlesId") int articlesId, HttpServletRequest request, Model model) {
 		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
 				this.getClass().getSimpleName(), 
 				request.getRequestURI(),
 				request.getMethod());
 		
-		Map<String, Object> articleWithReply = articleService.getArticleWithReply(articlesId);
-		
-		model.addAttribute("article", articleWithReply.get("article"));
-		if (articleWithReply.containsKey("reply")) {
-			model.addAttribute("reply", articleWithReply.get("reply"));
-		}
+//		Map<String, Object> articleWithReply = articleService.getArticleWithReply(articlesId);
+//		
+//		model.addAttribute("article", articleWithReply.get("article"));
+//		if (articleWithReply.containsKey("reply")) {
+//			model.addAttribute("reply", articleWithReply.get("reply"));
+//		}
     	
     	pageInfo = PageInfo.builder()
-    			.pageTitleCode("24")
-    			.pagePath("page/3-article/articleDetail.jsp")
+    			.pageTitleCode("22")
+    			.pagePath("page/3-article/articleDetail_not.jsp")
     			.build();
         	
         setPageInfo(model);
     	
         return "layout";
     }
-
+    
+    // Q&A 상세 조회
+    @GetMapping("/qna/{articlesId}")
+    public String getArticleQna(@PathVariable("articlesId") int articlesId, HttpServletRequest request, Model model) {
+		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
+		
+//		Map<String, Object> articleWithReply = articleService.getArticleWithReply(articlesId);
+//		
+//		model.addAttribute("article", articleWithReply.get("article"));
+//		if (articleWithReply.containsKey("reply")) {
+//			model.addAttribute("reply", articleWithReply.get("reply"));
+//		}
+    	
+    	pageInfo = PageInfo.builder()
+    			.pageTitleCode("23")
+    			.pagePath("page/3-article/articleDetail_qna.jsp")
+    			.build();
+        	
+        setPageInfo(model);
+    	
+        return "layout";
+    }
+    
     
 }

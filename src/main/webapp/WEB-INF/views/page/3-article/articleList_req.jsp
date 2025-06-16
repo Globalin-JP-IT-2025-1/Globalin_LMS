@@ -5,7 +5,16 @@
 
 <!-- 게시글 목록 조회 - 희망도서 신청 -->
 
-<sec:authorize access="hasRole('USER')">
+
+<h2>희망도서 신청 목록</h2>
+
+
+
+
+
+
+<!-- 시큐리티 taglib 예시 -->
+<%-- <sec:authorize access="hasRole('USER')">
     <sec:authentication property="principal" var="principal" />
     <P>${principal}</P>
     <h2>${principal.username} 회원님 환영합니다!!!</h2>
@@ -13,4 +22,4 @@
         <sec:csrfInput/>
         <button type="submit">로그아웃</button>
     </form>
-</sec:authorize>
+</sec:authorize> --%>
