@@ -4,26 +4,24 @@
 <mapper namespace="com.library.mapper.BlacklistedTokenMapper">
 	<!-- 차단된 토큰 목록 조회 : 관리자 -->
 	<select id="getAllBlacklistedTokens" resultType="com.library.model.BlacklistedToken">
-		SELECT * FROM blacklisted_token
-	</select>
-	
-	<!-- 차단된 토큰 조회 : 회원 로그인 or 브라우저 접속 시 -->
-	<select id="getBlacklistedTokenByToken" resultType="com.library.model.BlacklistedToken" parameterType="String">
-		SELECT * FROM blacklisted_token WHERE token = #{token}
+		SELECT * FROM BLACKLISTED_TOKEN
 	</select>
 
 	<!-- 차단된 토큰 추가 : 회원 탈퇴 시 -->
 	<insert id="insertBlacklistedToken" parameterType="com.library.model.BlacklistedToken">
 		<selectKey keyProperty="blacklistedTokenId" resultType="java.lang.Integer" order="BEFORE">
-		    SELECT sq_blacklisted_token.nextval FROM DUAL
+		    SELECT SQ_BLACKLISTED_TOKEN.NEXTVAL FROM DUAL
 		</selectKey>
-		INSERT INTO blacklisted_token (blacklisted_token_id, type, token, expires_date) 
-		VALUES (#{blacklistedTokenId}, #{type}, #{token}, #{expiresDate})
+		INSERT INTO BLACKLISTED_TOKEN (
+			BLACKLISTED_TOKEN_ID, TYPE, TOKEN, EXPIRES_DATE
+		) VALUES (
+			#{blacklistedTokenId}, #{type}, #{token}, #{expiresDate}
+		)
 	</insert>
 	
 	<!-- 만료된 토큰 수동 삭제 : 관리자 -->
 	<delete id="deleteBlacklistedToken" parameterType="int">
-		DELETE FROM blacklisted_token WHERE blacklisted_token_id = #{blacklistedTokenId}
+		DELETE FROM BLACKLISTED_TOKEN WHERE BLACKLISTED_TOKEN_ID = #{blacklistedTokenId}
 	</delete>
 	
 </mapper>

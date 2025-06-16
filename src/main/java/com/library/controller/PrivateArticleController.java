@@ -2,6 +2,8 @@ package com.library.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +14,9 @@ import com.library.model.PageInfo;
 import com.library.service.ArticleService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @RequestMapping("/private/articles")
 @AllArgsConstructor
@@ -27,8 +31,11 @@ public class PrivateArticleController {
     
     // 희망 도서 신청 전체 목록 조회
     @GetMapping("/req")
-    public String getArticlesRequest(Model model) {
-    	System.out.println("✅ ArticleController - /private/articles/req - GET 요청 정상 처리!");
+    public String getArticlesRequest(HttpServletRequest request, Model model) {
+    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
 		
 		List<Article> articleList = articleService.getAllArticlesByCategory("req");
 		

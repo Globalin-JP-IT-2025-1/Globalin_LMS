@@ -9,9 +9,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,16 +24,16 @@ import com.library.model.BookHistory;
 import com.library.model.BookLike;
 import com.library.model.Member;
 import com.library.model.PageInfo;
-import com.library.model.RefreshToken;
 import com.library.service.ArticleService;
-import com.library.service.BlacklistedTokenService;
+import com.library.service.AuthService;
 import com.library.service.MemberBookHistoryService;
 import com.library.service.MemberBookLikeService;
 import com.library.service.MemberService;
-import com.library.service.RefreshTokenService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @RequestMapping("/private/members")
 @RequiredArgsConstructor
@@ -44,8 +43,7 @@ public class PrivateMemberController {
     private final MemberBookHistoryService memberBookHistoryService;
     private final MemberBookLikeService memberBookLikeService;
     private final ArticleService articleService;
-    private final RefreshTokenService refreshTokenService;
-    private final BlacklistedTokenService blacklistedTokenService;
+    private final AuthService authService;
     
     @Value("${google.maps.api.key}")
     private String apiKey;
@@ -60,8 +58,11 @@ public class PrivateMemberController {
 	// @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @GetMapping("/{membersId}")
     public String getMemberById(@RequestParam(value = "status", defaultValue = "1") Integer status, 
-    							@PathVariable("membersId") int membersId, Model model) {
-    	System.out.println("✅ PrivateMemberController - /private/members/" + membersId + " - GET 요청 정상 처리!");
+    							@PathVariable("membersId") int membersId, HttpServletRequest request, Model model) {
+    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
     	
     	Member member = memberService.getMemberById(membersId);
     	//Map<String, Integer> bookOverdueInfo = memberBookHistoryService.getTotalOverdue(membersId);
@@ -91,8 +92,11 @@ public class PrivateMemberController {
     // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @GetMapping("/{membersId}/edit")
     public String showEditMemberInfo(@RequestParam(value = "status", defaultValue = "1") Integer status, 
-    								@PathVariable("membersId") int membersId, Model model) {
-    	System.out.println("✅ PrivateMemberController - /private/members/" + membersId + "/edit - GET 요청 정상 처리!");
+    								@PathVariable("membersId") int membersId, HttpServletRequest request, Model model) {
+    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
     	
     	Member member = memberService.getMemberById(membersId);
     	
@@ -119,8 +123,11 @@ public class PrivateMemberController {
     // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @PutMapping("/{membersId}")
     public String updateMemberInfo(@PathVariable("membersId") int membersId, 
-    		@ModelAttribute Member member) {
-    	System.out.println("✅ PrivateMemberController - /private/members/" + membersId + " - PUT 요청 정상 처리!");
+    		@ModelAttribute Member member, HttpServletRequest request) {
+    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
     	
     	member.setMembersId(membersId);
     	
@@ -137,54 +144,62 @@ public class PrivateMemberController {
     // 리프레시 토큰 처리 -> 로그아웃 처리(액세스 토큰, 세션) -> 회원 정보 수정
     // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @PutMapping("/{membersId}/leave")
-    public ResponseEntity<Void> leaveMember(@PathVariable("membersId") int membersId, 
+    @Transactional
+    public String leaveMember(@PathVariable("membersId") int membersId, 
     		HttpServletRequest request, HttpServletResponse response, HttpSession session) {
     	
-    	System.out.println("✅ PrivateMemberController - /private/members/" + membersId + "/leave - PUT 요청 정상 처리!");
+    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), // 클래스
+				request.getRequestURI(), // URI
+				request.getMethod()); // HTTP 메서드
     	
-    	String baToken = "";
-    	String brToken = "";
-    	
-    	// ip 주소 얻기
-    	String ipAddress = request.getRemoteAddr();
-    	
-    	try {
-    		// 액세스 토큰: 쿠키에서 가져온 후 저장 후 삭제
-        	Cookie[] cookies = request.getCookies();
-        	for (Cookie cookie : cookies) {
-    			if (cookie.getName().equals("aToken")) {
-    				baToken = cookie.getValue(); // 토큰 저장
+		// 1) 액세스 토큰 & 리프레시 토큰 : 쿠키에서 가져오기 -> 블랙리스트 올리기 -> 쿠키에서 삭제
+    	// 2) 회원 정보 : 쿠키에서 가져오기 -> 삭제
+    	Cookie[] cookies = request.getCookies();
+    	if (cookies != null) {
+    		String aToken = "";
+    		String rToken = "";
+    		
+    		for (Cookie c : cookies) {
+    			if (c.getName().equals("aToken") ||
+    				c.getName().equals("rToken") ||
+    				c.getName().equals("un") ||  
+    				c.getName().equals("fn") ||  
+    				c.getName().equals("id")) {
+    				
+    				if (c.getName().equals("aToken")) {
+    					aToken = c.getValue(); // 토큰 저장
+    				}
+    				if (c.getName().equals("rToken")) {
+    					rToken = c.getValue(); // 토큰 저장
+    				}
+    					
+    				c.setMaxAge(0); // 쿠키 만료시간 0 설정
+        			c.setPath("/"); // 같은 path로 설정
+        			
+        			response.addCookie(c); // 덮어쓰기
     			}
-    			cookie.setMaxAge(0); // 쿠키 만료시간 0 설정
-    			cookie.setPath("/"); // 같은 path로 설정
-    			response.addCookie(cookie); // 덮어쓰기
     		}
-        	
-        	// 리프레시 토큰: DB에서 가져온 후 저장 후 삭제
-        	RefreshToken rToken = refreshTokenService.getRefreshTokenByMembersIdAndIpAddress(membersId, ipAddress);
-        	brToken = rToken.getRefreshToken();
-        	refreshTokenService.deleteRefreshToken(rToken.getRefreshTokenId());
-        	
-        	// 블랙리스트에 저장
-        	blacklistedTokenService.insertBlacklistedToken(baToken, 0);
-        	blacklistedTokenService.insertBlacklistedToken(brToken, 1);
-        	
-        	// 세션에서 회원 정보 제거
-        	session.removeAttribute("currentMember");
-        	
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400
+    		
+    		// 비교용 rToken 삭제
+    		authService.deleteRefreshTokens(membersId);
+    		
+    		// 블랙리스트에 저장
+    		authService.insertBlacklistedToken(aToken, 0);
+    		authService.insertBlacklistedToken(rToken, 1);
     	}
     	
-    	return ResponseEntity.ok().build(); // 200
+    	return "redirect:/?status=4"; // 회원 탈퇴 성공(4) : 홈으로 이동
     }
     
     // 회원별 도서 이용 정보 목록 조회
     // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @GetMapping("/{membersId}/book-history")
-    public String showMemberBookHistory(@PathVariable("membersId") int membersId, Model model) {
-    	System.out.println("✅ PrivateMemberController - /private/members/" + membersId + "/book-history - GET 요청 정상 처리!");
+    public String showMemberBookHistory(@PathVariable("membersId") int membersId, HttpServletRequest request, Model model) {
+    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
     	
     	List<BookHistory> bookHistoryList = memberBookHistoryService.getAllBookHistory(membersId);
     	
@@ -203,8 +218,11 @@ public class PrivateMemberController {
     // 회원별 관심 도서 목록 조회
     // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @GetMapping("/{membersId}/book-like")
-    public String showMemberBookLike(@PathVariable("membersId") int membersId, Model model) {
-    	System.out.println("✅ PrivateMemberController - /private/members/" + membersId + "/book-like - GET 요청 정상 처리!");
+    public String showMemberBookLike(@PathVariable("membersId") int membersId, HttpServletRequest request, Model model) {
+    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
     	
     	List<BookLike> bookLikeList = memberBookLikeService.getAllBookLikes(membersId);
     	
@@ -223,8 +241,11 @@ public class PrivateMemberController {
     // 회원별 희망 도서 신청 조회
     // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @GetMapping("/{membersId}/book-req")
-    public String showMemberBookReq(@PathVariable("membersId") int membersId, Model model) {
-    	System.out.println("✅ PrivateMemberController - /private/members/" + membersId + "/book-req - GET 요청 정상 처리!");
+    public String showMemberBookReq(@PathVariable("membersId") int membersId, HttpServletRequest request, Model model) {
+    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
     	
     	List<Article> bookReqList = articleService.getArticlesReqByMembersId(membersId);
     	

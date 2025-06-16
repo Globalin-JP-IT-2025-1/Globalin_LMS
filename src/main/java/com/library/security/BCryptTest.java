@@ -9,8 +9,8 @@ public class BCryptTest {
         String[] passwords = {"testtest3", "testtest2", "testtest11", "testtest1", "testtest13"};
 
         for (String password : passwords) {
-            String hashedPassword = encoder.encode(password);
-            System.out.println(password + " -> " + hashedPassword);
+            String encPassword = encoder.encode(password);
+            System.out.println(password + " -> " + encPassword);
         }
     }
 }
