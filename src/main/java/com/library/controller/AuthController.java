@@ -33,8 +33,7 @@ public class AuthController {
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("61")
-    			.pagePath("page/loginForm.jsp")
-				/* .pagePath("page/0-auth/loginForm.jsp") */
+				.pagePath("page/0-auth/loginForm.jsp")
     			.build();
     	
     	setPageInfo(model);
