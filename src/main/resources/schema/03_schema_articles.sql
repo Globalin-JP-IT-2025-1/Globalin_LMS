@@ -86,16 +86,19 @@ INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_D
 VALUES (SQ_ARTICLES.NEXTVAL, 0, 'req', '희망도서 신청 기간은 언제인가요?', '희망도서 신청은 매월 1일부터 15일까지 가능합니다.', TO_DATE('2025-06-07', 'YYYY-MM-DD'), TO_DATE('2025-06-07', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'req', '신청 도서의 배송 기간은 얼마인가요?', '희망도서 신청 후 배송까지는 약 7일 정도 소요됩니다.', TO_DATE('2025-06-08', 'YYYY-MM-DD'), TO_DATE('2025-06-08', 'YYYY-MM-DD'), 0);
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'req', '희망도서 신청 시 신청서를 어떻게 작성하나요?', '희망도서 신청서는 홈페이지에서 작성할 수 있습니다. 자세한 안내를 참고해 주세요.', TO_DATE('2025-06-08', 'YYYY-MM-DD'), TO_DATE('2025-06-08', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'req', '희망도서 신청 시 도서 목록을 어떻게 볼 수 있나요?', '희망도서 목록은 홈페이지에서 확인하실 수 있습니다.', TO_DATE('2025-06-09', 'YYYY-MM-DD'), TO_DATE('2025-06-09', 'YYYY-MM-DD'), 0);
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'req', '희망도서 신청에 대한 자주 묻는 질문', '희망도서 신청과 관련된 자주 묻는 질문은 홈페이지 FAQ를 참조해 주세요.', TO_DATE('2025-06-09', 'YYYY-MM-DD'), TO_DATE('2025-06-09', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'req', '도서 신청 후 취소 방법은?', '희망도서 신청 후 취소는 불가능합니다. 신중히 신청해 주세요.', TO_DATE('2025-06-10', 'YYYY-MM-DD'), TO_DATE('2025-06-10', 'YYYY-MM-DD'), 0);
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'req', '도서 신청 후 변경 사항은 어떻게 처리되나요?', '도서 신청 후에는 변경이 불가능합니다. 신중히 신청해 주세요.', TO_DATE('2025-06-10', 'YYYY-MM-DD'), TO_DATE('2025-06-10', 'YYYY-MM-DD'), 0);
 
 
 -- 자주 묻는 질문(faq)
+INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '서비스 장애 시 어떻게 해야 하나요?', '서비스 장애 발생 시 고객센터로 문의해 주세요.', TO_DATE('2025-06-05', 'YYYY-MM-DD'), TO_DATE('2025-06-05', 'YYYY-MM-DD'), 0);
+
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
 VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '회원가입은 어떻게 하나요?', '회원가입 방법에 대해 안내드립니다.', TO_DATE('2025-06-01', 'YYYY-MM-DD'), TO_DATE('2025-06-01', 'YYYY-MM-DD'), 0);
 
@@ -106,25 +109,22 @@ INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_D
 VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '회원 정보를 수정하려면 어떻게 하나요?', '회원 정보 수정 방법에 대해 안내드립니다.', TO_DATE('2025-06-03', 'YYYY-MM-DD'), TO_DATE('2025-06-03', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '구매한 도서 환불은 어떻게 하나요?', '도서 환불 방법을 안내드립니다.', TO_DATE('2025-06-04', 'YYYY-MM-DD'), TO_DATE('2025-06-04', 'YYYY-MM-DD'), 0);
-
-INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '서비스 장애 시 어떻게 해야 하나요?', '서비스 장애 발생 시 고객센터로 문의해 주세요.', TO_DATE('2025-06-05', 'YYYY-MM-DD'), TO_DATE('2025-06-05', 'YYYY-MM-DD'), 0);
-
-INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
 VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '아이디를 잊어버렸어요. 어떻게 찾을 수 있나요?', '아이디 찾기 기능을 통해 이메일로 아이디를 찾을 수 있습니다.', TO_DATE('2025-06-06', 'YYYY-MM-DD'), TO_DATE('2025-06-06', 'YYYY-MM-DD'), 0);
+
+INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '비밀번호를 변경하고 싶어요. 어떻게 하나요?', '비밀번호는 "내 정보" 페이지에서 "비밀번호 변경" 메뉴를 통해 변경할 수 있습니다.', TO_DATE('2025-06-06', 'YYYY-MM-DD'), TO_DATE('2025-06-06', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
 VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '회원 탈퇴 후 재가입이 가능한가요?', '회원 탈퇴 후 30일 이내에는 재가입이 불가능합니다.', TO_DATE('2025-06-07', 'YYYY-MM-DD'), TO_DATE('2025-06-07', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '결제 시 카드 정보가 유출될 위험이 있나요?', '카드 정보는 안전하게 암호화 처리되므로 유출 위험은 없습니다.', TO_DATE('2025-06-08', 'YYYY-MM-DD'), TO_DATE('2025-06-08', 'YYYY-MM-DD'), 0);
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '내 정보 수정은 어떻게 하나요?', '회원 정보 수정은 "내 정보" 페이지에서 가능합니다. 개인정보를 최신 상태로 유지해 주세요.', TO_DATE('2025-06-08', 'YYYY-MM-DD'), TO_DATE('2025-06-08', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '배송 중 주소를 변경할 수 있나요?', '배송이 시작되면 주소 변경이 불가능합니다. 배송 전 주소를 정확히 확인해주세요.', TO_DATE('2025-06-09', 'YYYY-MM-DD'), TO_DATE('2025-06-09', 'YYYY-MM-DD'), 0);
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '회원 가입 후 확인 메일이 오지 않아요. 어떻게 하나요?', '가입 후 확인 메일이 오지 않으면 스팸 메일함을 확인하거나, 메일을 재발송해 보세요.', TO_DATE('2025-06-09', 'YYYY-MM-DD'), TO_DATE('2025-06-09', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '결제 오류가 발생했어요. 어떻게 해야 하나요?', '결제 오류가 발생한 경우, 고객센터로 문의하여 해결 방법을 확인할 수 있습니다.', TO_DATE('2025-06-10', 'YYYY-MM-DD'), TO_DATE('2025-06-10', 'YYYY-MM-DD'), 0);
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'faq', '아이디와 비밀번호를 동시에 잊어버렸어요. 어떻게 해야 하나요?', '아이디와 비밀번호를 모두 잊어버린 경우, 이메일을 통해 계정 복구 절차를 진행할 수 있습니다.', TO_DATE('2025-06-10', 'YYYY-MM-DD'), TO_DATE('2025-06-10', 'YYYY-MM-DD'), 0);
 
 
 -- QNA
@@ -132,7 +132,7 @@ INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_D
 VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '회원가입 시 이메일 인증이 안돼요. 어떻게 해야 하나요?', '이메일 인증이 안 될 경우, 이메일 주소를 확인하고 다시 시도해 보세요.', TO_DATE('2025-06-01', 'YYYY-MM-DD'), TO_DATE('2025-06-01', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '결제 방법에 대해 궁금해요.', '결제 방법은 카드 결제와 계좌 이체 두 가지 방법이 있습니다.', TO_DATE('2025-06-02', 'YYYY-MM-DD'), TO_DATE('2025-06-02', 'YYYY-MM-DD'), 0);
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '이메일 인증을 받지 못했어요. 어떻게 해야 하나요?', '이메일 인증 메일이 오지 않으면 스팸메일함을 확인하거나, 인증 메일을 재발송해 보세요.', TO_DATE('2025-06-07', 'YYYY-MM-DD'), TO_DATE('2025-06-07', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
 VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '회원 탈퇴를 하려면 어떻게 하나요?', '회원 탈퇴 방법에 대해 안내드립니다.', TO_DATE('2025-06-03', 'YYYY-MM-DD'), TO_DATE('2025-06-03', 'YYYY-MM-DD'), 0);
@@ -141,21 +141,21 @@ INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_D
 VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '도서 목록을 어떻게 조회하나요?', '도서 목록을 검색하는 방법에 대해 안내드립니다.', TO_DATE('2025-06-04', 'YYYY-MM-DD'), TO_DATE('2025-06-04', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '배송 상태를 어떻게 확인하나요?', '배송 상태 확인 방법에 대해 안내드립니다.', TO_DATE('2025-06-05', 'YYYY-MM-DD'), TO_DATE('2025-06-05', 'YYYY-MM-DD'), 0);
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '회원가입 시 이메일 인증이 안돼요. 어떻게 해야 하나요?', '이메일 인증이 안 될 경우, 이메일 주소를 확인하고 다시 시도해 보세요.', TO_DATE('2025-06-06', 'YYYY-MM-DD'), TO_DATE('2025-06-06', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
 VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '회원가입 시 이메일 인증이 안돼요. 어떻게 해야 하나요?', '이메일 인증이 안 될 경우, 이메일 주소를 확인하고 다시 시도해 보세요.', TO_DATE('2025-06-06', 'YYYY-MM-DD'), TO_DATE('2025-06-06', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '배송료는 얼마인가요?', '배송료는 구매 금액에 따라 다릅니다. 30,000원 이상은 무료 배송입니다.', TO_DATE('2025-06-07', 'YYYY-MM-DD'), TO_DATE('2025-06-07', 'YYYY-MM-DD'), 0);
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '이메일 인증을 받지 못했어요. 어떻게 해야 하나요?', '이메일 인증 메일이 오지 않으면 스팸메일함을 확인하거나, 인증 메일을 재발송해 보세요.', TO_DATE('2025-06-07', 'YYYY-MM-DD'), TO_DATE('2025-06-07', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '환불은 어떻게 진행되나요?', '환불은 결제 후 7일 이내에 처리됩니다. 환불 절차에 대한 자세한 내용은 홈페이지에서 확인할 수 있습니다.', TO_DATE('2025-06-08', 'YYYY-MM-DD'), TO_DATE('2025-06-08', 'YYYY-MM-DD'), 0);
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '내 프로필을 수정할 수 있나요?', '프로필 수정은 설정에서 가능합니다. 개인 정보를 업데이트해 주세요.', TO_DATE('2025-06-08', 'YYYY-MM-DD'), TO_DATE('2025-06-08', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '배송 추적이 가능한가요?', '배송 추적은 배송이 시작된 후 가능합니다. 주문 내역에서 추적 번호를 확인할 수 있습니다.', TO_DATE('2025-06-09', 'YYYY-MM-DD'), TO_DATE('2025-06-09', 'YYYY-MM-DD'), 0);
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '비밀번호를 잊어버렸어요. 어떻게 복구하나요?', '비밀번호 복구는 이메일을 통해 진행할 수 있습니다. 이메일을 확인해 주세요.', TO_DATE('2025-06-09', 'YYYY-MM-DD'), TO_DATE('2025-06-09', 'YYYY-MM-DD'), 0);
 
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
-VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '주문을 취소하고 싶어요.', '주문 취소는 배송 전까지 가능합니다. 배송 이후에는 취소가 불가능합니다.', TO_DATE('2025-06-10', 'YYYY-MM-DD'), TO_DATE('2025-06-10', 'YYYY-MM-DD'), 0);
+VALUES (SQ_ARTICLES.NEXTVAL, 0, 'qna', '계정에 문제가 생겼어요. 어떻게 해결하나요?', '계정 관련 문제는 고객센터에 문의하여 해결하실 수 있습니다.', TO_DATE('2025-06-10', 'YYYY-MM-DD'), TO_DATE('2025-06-10', 'YYYY-MM-DD'), 0);
 
 

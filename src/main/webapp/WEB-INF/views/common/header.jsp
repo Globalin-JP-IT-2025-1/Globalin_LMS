@@ -66,7 +66,7 @@
           </c:when>
           <c:otherwise>
             <form action="/private/auth/logout" method="post" class="d-inline">
-            	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" />
+            	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
 				<input type="submit" value="<spring:message code='h.minimenu.logout' />" id="logoutBtn" class="btn btn-link p-0 fw-semibold">
             </form>
             <span>|</span>
@@ -75,7 +75,7 @@
         <a href="/public/etc/71" class="fw-semibold"><spring:message code="menu.7.con1" /></a>
       </div>
       <c:if test="${not empty h_membersId}">
-        <div class="mt-1 px-3 py-1 rounded h_member_info">
+        <div class="mt-1 px-3 py-1 h_member_info">
 	        <a href="/private/members/${h_membersId}" id="mypage" class="fw-bold text-decoration-none">
 	          <c:out value="${h_name}" />(<c:out value="${h_username}" />)</a>
 	        <spring:message code="h.welcome.message2" />
