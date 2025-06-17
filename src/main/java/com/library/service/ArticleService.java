@@ -75,7 +75,7 @@ public class ArticleService {
 
 		// 작성자 가져오기
 		Member member = memberService.getMemberById(article.getAuthorId());
-		articleWithAuthor.put("author", member);
+		articleWithAuthor.put("a_author", member);
 		
 		
 		return articleWithAuthor;

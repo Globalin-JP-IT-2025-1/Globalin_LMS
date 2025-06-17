@@ -13,6 +13,11 @@
 		SELECT * FROM ARTICLES WHERE CATEGORY = #{category}
 	</select>
 	
+	<!-- 게시글 상세 조회 -->
+	<select id="getArticleById" resultType="com.library.model.Article" parameterType="int">
+		SELECT * FROM ARTICLES WHERE ARTICLES_ID = #{articlesId}
+	</select>
+	
 	
 	
 </mapper>
