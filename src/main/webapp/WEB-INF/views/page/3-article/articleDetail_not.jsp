@@ -11,11 +11,13 @@
 
 <ul>
 	<li>제목 : ${article.title}</li>
-	<li>작성자 : ${author.name} ($author.username)</li>
+	<li>작성자 : ${a_author.name} (${a_author.username})</li>
 	<li>작성날짜 : ${article.updateDate}</li>
 	<li>내용 : ${article.content}</li>
 
 </ul>
+<br>
+<b>댓글 작성</b>
 <br>
 <!-- 댓글 작성 폼 -->
 <form action="/private/replies/{articlesId}" method="post">
@@ -31,7 +33,7 @@
 <c:if test="${fn:length(replyList) > 0}">
 <ul>
 	<c:forEach var="i" begin="0" end="${fn:length(replyList) - 1}" step="1">
-		<li>${replyList[i].content} - ${r_AuthorList[i].name}(${r_AuthorList[i].username}) / <fmt:formatDate value="${replyList[i].updateDate}" pattern="MM-dd hh:mm" /> </li>
+		<li>${replyList[i].content} - ${r_authorList[i].name}(${r_authorList[i].username}) / <fmt:formatDate value="${replyList[i].updateDate}" pattern="MM-dd hh:mm" /> </li>
 	</c:forEach>
 </ul>
 </c:if>
