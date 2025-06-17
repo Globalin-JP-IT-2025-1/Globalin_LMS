@@ -1,8 +1,8 @@
 package com.library.security;
 
 import java.util.Arrays;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,10 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Primary
 public class CustomUserDetailsService implements UserDetailsService {
 	private final MemberService memberService;
-	
-	@Value("${admin.password}")
-	private String adminPassword; // 관리자 pw
-	
+
 	public CustomUserDetailsService(MemberService memberService) {
         this.memberService = memberService;
     }
@@ -34,32 +31,27 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     	log.info("### {} - 진입", this.getClass().getSimpleName());
     	
-    	if (username.equals("admin")) {
-    		System.out.println("CustomUserDetailsService - admin : " + adminPassword);
-    		return new CustomUserDetails(
-    				"admin", 
-    				adminPassword, 
-    				Arrays.asList(
-	                    new SimpleGrantedAuthority("ROLE_ADMIN"), // 권한 범위만 설정
-	                    new SimpleGrantedAuthority("ROLE_USER")
-    				),
-    				"admin",
-    				0
-    		);
-    	} else {
-    		Member member = memberService.getMemberByUsername(username);
-	        if (member == null) {
-	            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username);
-	        }
-	        System.out.println("CustomUserDetailsService - " + member.getUsername() + ", " + member.getPassword());
-	        return new CustomUserDetails(
-	        		member.getUsername(), 
-	        		member.getPassword(), 
-	        		Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")),
-	        		member.getName(),
-	        		member.getMembersId()
-	        );
+    	Member member = memberService.getMemberByUsername(username);
+    	if (member == null) {
+    		throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username);
     	}
+    	
+    	System.out.println("CustomUserDetailsService - " + member.getUsername() + " : " + member.getPassword());
+    	
+    	List<SimpleGrantedAuthority> authorities = 
+    		    username.equals("admin") ? 
+    		    Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER")) : 
+    		    Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+
+    		return new CustomUserDetails(
+    		    member.getUsername(),
+    		    member.getPassword(),
+    		    authorities,
+    		    member.getName(),
+    		    member.getMembersId(),
+    		    member.getStatus()
+    		);
+
     }
 
 }

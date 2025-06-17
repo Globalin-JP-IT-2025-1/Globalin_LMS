@@ -2,8 +2,16 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.membersId" var="h_membersId" />
+	<sec:authentication property="principal.username" var="h_username" />
+	<sec:authentication property="principal.fullname" var="h_fullname" />
+	<sec:authentication property="principal.status" var="h_status" />
+</sec:authorize>
 
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/static/css/home.css">
@@ -50,7 +58,7 @@
 	          	<div class="home_2_1">
 					<div class="h2_1_div4">
 			          <a href="/private/members/${h_membersId}" id="mypage" class="fw-bold text-decoration-none">
-			            <c:out value="${h_name}" />(<c:out value="${h_username}" />)</a>
+			            <c:out value="${h_fullname}" />(<c:out value="${h_username}" />)</a>
 			          <spring:message code="h.welcome.message1" />
 			        </div>
 			         
@@ -65,8 +73,8 @@
 							<button onclick="location.href='/private/members/${h_membersId}/edit'">정보 수정</button>
 						</div>
 						<div class="h2_1_div7">
-							<a href="/private/members/${membersId}book-history"><i class="bi bi-bookmarks"></i><spring:message code='menu.3.con2' /></a>&nbsp;|
-							<a href="/private/members/${membersId}book-req"><i class="bi bi-pencil-square"></i><spring:message code='menu.3.con4' /></a>
+							<a href="/private/members/${h_membersId}book-history"><i class="bi bi-bookmarks"></i><spring:message code='menu.3.con2' /></a>&nbsp;|
+							<a href="/private/members/${h_membersId}book-req"><i class="bi bi-pencil-square"></i><spring:message code='menu.3.con4' /></a>
 						</div>
 					</div>
 				</c:otherwise>

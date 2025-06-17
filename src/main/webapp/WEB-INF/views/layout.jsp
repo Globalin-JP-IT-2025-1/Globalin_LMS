@@ -4,9 +4,6 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
-<!-- 회원 정보 -->
-<c:set var="memberInfo" value="${sessionScope.mInfo}" />
-
 <!-- 페이지 타이틀 & URI 설정 -->
 <c:choose>
 	<c:when test="${pageTitleCode eq '0'}">
@@ -138,21 +135,24 @@
 
 	<script
 		src="${pageContext.request.contextPath}/resources/static/js/layout.js"></script>
-
-	<script type="text/javascript">
-		window.onload = function() {
-			var alertType = "${alertType}";
-			var alertMessage = "${alertMessage}";
-			if (alertMessage && alertMessage.trim() !== "") {
-				Swal.fire({
-					icon : alertType,
-					title : '알림',
-					text : alertMessage,
-					confirmButtonText : '확인'
-				});
-			}
-		};
-	</script>
+	
+	<!-- alert -->
+	<c:if test="${not empty alertType}">
+		<script type="text/javascript">
+			window.onload = function() {
+				var alertType = "${alertType}";
+				var alertMessage = "${alertMessage}";
+				if (alertMessage && alertMessage.trim() !== "") {
+					Swal.fire({
+						icon : alertType,
+						title : '알림',
+						text : alertMessage,
+						confirmButtonText : '확인'
+					});
+				}
+			};
+		</script>
+	</c:if>
 
 </body>
 </html>

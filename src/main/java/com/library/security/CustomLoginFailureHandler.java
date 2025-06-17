@@ -27,7 +27,7 @@ public class CustomLoginFailureHandler implements AuthenticationFailureHandler {
 		
 		log.error("### 로그인 실패 : " + exception.getMessage());
 		
-		response.sendRedirect("/public/auth/login?status=-1");
+		response.sendRedirect("/public/auth/login"); // 로그인 페이지
 	}
 
 }

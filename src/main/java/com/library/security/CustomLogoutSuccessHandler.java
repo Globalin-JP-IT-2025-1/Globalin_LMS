@@ -62,7 +62,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 			}
 		}
 		
-		response.sendRedirect("/?status=3"); // 로그아웃 성공(3) : 메인 페이지로 이동
+		response.sendRedirect("/"); // 메인 페이지로 이동
 		
 	}
 

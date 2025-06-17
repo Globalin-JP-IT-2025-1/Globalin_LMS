@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.model.Article;
 import com.library.model.BookHistory;
@@ -57,8 +57,7 @@ public class PrivateMemberController {
     // 회원 정보 조회 --> OK
 	// @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @GetMapping("/{membersId}")
-    public String getMemberById(@RequestParam(value = "status", defaultValue = "1") Integer status, 
-    							@PathVariable("membersId") int membersId, HttpServletRequest request, Model model) {
+    public String getMemberById(@PathVariable("membersId") int membersId, HttpServletRequest request, Model model) {
     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
 				this.getClass().getSimpleName(), 
 				request.getRequestURI(),
@@ -74,15 +73,7 @@ public class PrivateMemberController {
 			.pageTitleCode("31")
 			.pagePath("page/1-member/memberDetail.jsp")
 			.build();
-    	
-    	if (status == 1) {
-	    	model.addAttribute("alertType", "success");
-	    	model.addAttribute("alertMessage", member.getName() + " 님의 정보 조회를 완료하였습니다.");
-    	} else if (status == 2) {
-    		model.addAttribute("alertType", "success");
-    		model.addAttribute("alertMessage", member.getName() + " 님의 정보 수정을 완료하였습니다.");
-    	}
-    	
+
     	setPageInfo(model);
     	
         return "layout";
@@ -91,8 +82,8 @@ public class PrivateMemberController {
     // 회원 정보 수정 폼으로 이동 --> ok
     // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @GetMapping("/{membersId}/edit")
-    public String showEditMemberInfo(@RequestParam(value = "status", defaultValue = "1") Integer status, 
-    								@PathVariable("membersId") int membersId, HttpServletRequest request, Model model) {
+    public String showEditMemberInfo(@PathVariable("membersId") int membersId, 
+    		HttpServletRequest request, Model model) {
     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
 				this.getClass().getSimpleName(), 
 				request.getRequestURI(),
@@ -108,12 +99,7 @@ public class PrivateMemberController {
     			.build();
     	
 		model.addAttribute("apiKey", apiKey);
-    	
-    	if (status == -1) {
-    		model.addAttribute("alertType", "fail");
-    		model.addAttribute("alertMessage", "회원 정보 수정을 실패 하였습니다. 다시 시도 해주세요.");
-    	}
-    	
+
     	setPageInfo(model);
     	
     	return "layout";
@@ -122,8 +108,8 @@ public class PrivateMemberController {
     // 회원 정보 수정 --> OK
     // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @PutMapping("/{membersId}")
-    public String updateMemberInfo(@PathVariable("membersId") int membersId, 
-    		@ModelAttribute Member member, HttpServletRequest request) {
+    public String updateMemberInfo(@PathVariable("membersId") int membersId, @ModelAttribute Member member, 
+    		HttpServletRequest request, RedirectAttributes redirectAttributes) {
     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
 				this.getClass().getSimpleName(), 
 				request.getRequestURI(),
@@ -133,11 +119,17 @@ public class PrivateMemberController {
     	
     	try {
     		memberService.updateMemberInfo(member);
+    		
     	} catch (Exception e) {
-    		return "redirect:/private/members/" + membersId + "/edit?status=-1"; // 실패(-1): 회원 정보 수정 폼으로
+    		redirectAttributes.addAttribute("alertType", "fail");
+    		redirectAttributes.addAttribute("alertMessage", "회원 정보 수정 실패 하였습니다!");
+    		
+    		return "redirect:/private/members/" + membersId + "/edit"; // 실패: 회원 정보 수정 폼으로
     	}
+    	redirectAttributes.addAttribute("alertType", "success");
+    	redirectAttributes.addAttribute("alertMessage", "회원 정보 수정 성공 하였습니다!");
     	
-    	return "redirect:/private/members/" + membersId + "?status=2"; // 성공(2): 회원 정보 조회로
+    	return "redirect:/private/members/" + membersId; // 성공: 회원 정보 조회로
     }
  
     // 회원 탈퇴 처리
@@ -146,7 +138,8 @@ public class PrivateMemberController {
     @PutMapping("/{membersId}/leave")
     @Transactional
     public String leaveMember(@PathVariable("membersId") int membersId, 
-    		HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    		HttpServletRequest request, HttpServletResponse response, HttpSession session,
+    		RedirectAttributes redirectAttributes) {
     	
     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
 				this.getClass().getSimpleName(), // 클래스
@@ -162,10 +155,7 @@ public class PrivateMemberController {
     		
     		for (Cookie c : cookies) {
     			if (c.getName().equals("aToken") ||
-    				c.getName().equals("rToken") ||
-    				c.getName().equals("un") ||  
-    				c.getName().equals("fn") ||  
-    				c.getName().equals("id")) {
+    				c.getName().equals("rToken")) {
     				
     				if (c.getName().equals("aToken")) {
     					aToken = c.getValue(); // 토큰 저장
@@ -189,13 +179,17 @@ public class PrivateMemberController {
     		authService.insertBlacklistedToken(rToken, 1);
     	}
     	
-    	return "redirect:/?status=4"; // 회원 탈퇴 성공(4) : 홈으로 이동
+    	redirectAttributes.addAttribute("alertType", "success");
+    	redirectAttributes.addAttribute("alertMessage", "회원 탈퇴 성공 하였습니다!");
+    	
+    	return "redirect:/"; // 회원 탈퇴 성공 : 홈으로 이동
     }
     
     // 회원별 도서 이용 정보 목록 조회
     // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @GetMapping("/{membersId}/book-history")
-    public String showMemberBookHistory(@PathVariable("membersId") int membersId, HttpServletRequest request, Model model) {
+    public String showMemberBookHistory(@PathVariable("membersId") int membersId, 
+    		HttpServletRequest request, Model model) {
     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
 				this.getClass().getSimpleName(), 
 				request.getRequestURI(),
@@ -218,7 +212,8 @@ public class PrivateMemberController {
     // 회원별 관심 도서 목록 조회
     // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @GetMapping("/{membersId}/book-like")
-    public String showMemberBookLike(@PathVariable("membersId") int membersId, HttpServletRequest request, Model model) {
+    public String showMemberBookLike(@PathVariable("membersId") int membersId, 
+    		HttpServletRequest request, Model model) {
     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
 				this.getClass().getSimpleName(), 
 				request.getRequestURI(),
@@ -241,7 +236,8 @@ public class PrivateMemberController {
     // 회원별 희망 도서 신청 조회
     // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @GetMapping("/{membersId}/book-req")
-    public String showMemberBookReq(@PathVariable("membersId") int membersId, HttpServletRequest request, Model model) {
+    public String showMemberBookReq(@PathVariable("membersId") int membersId, 
+    		HttpServletRequest request, Model model) {
     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
 				this.getClass().getSimpleName(), 
 				request.getRequestURI(),
