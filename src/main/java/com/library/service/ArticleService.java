@@ -104,29 +104,35 @@ public class ArticleService {
 		return articleWithAuthorAndReplies;
 	}
 	
-	// 게시글 등록 - 카테고리에 따라 다름
+	// 게시글 등록
 	public int insertArticle(Article article) {
 		return articleMapper.insertArticle(article);
     }
     
-    // 게시글 수정 (제목, 내용, Q의 경우: 비밀글 여부) - 작성자
+	// 게시글 수정 
+    // 1) 내용 수정 (제목, 내용) - 작성자
 	public int updateArticleInfo(Article article) {
 		return articleMapper.updateArticleInfo(article);
 	}
 	
-	// 게시글 수정 (비활성화) - 작성자
+	// 비공개글 전환 - 작성자 삭제 시
 	public int updateArticleDisable(int articlesId) {
 		return articleMapper.updateArticleDisable(articlesId);
 	}
 	
-	// 게시글 수정 (활성화) - 작성자
+	// 공개글 전환 - 작성자 복구 요청 또는 비밀글 해제 시
 	public int updateArticleEnable(int articlesId) {
 		return articleMapper.updateArticleEnable(articlesId);
 	}
+	
+	// 비밀글 전환(Q&A만) - 작성자 설정
+	public int updateArticleSecret(int articlesId) {
+		return articleMapper.updateArticleSecret(articlesId);
+	}
     
-    // 게시글 삭제 - 관리자
-	public int deleteArticleById(int articleId) {
-		return articleMapper.deleteArticleById(articleId);
+    // 게시글 삭제 - 관리자 삭제
+	public int deleteArticleById(int articlesId) {
+		return articleMapper.deleteArticleById(articlesId);
 	}
 
 

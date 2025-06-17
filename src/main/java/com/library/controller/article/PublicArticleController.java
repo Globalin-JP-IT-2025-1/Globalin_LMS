@@ -1,6 +1,6 @@
 package com.library.controller.article;
 
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.library.model.Article;
-import com.library.model.Member;
 import com.library.model.PageInfo;
 import com.library.service.ArticleService;
 import com.library.service.MemberService;
@@ -65,8 +64,8 @@ public class PublicArticleController {
 				request.getRequestURI(),
 				request.getMethod());
 		
-		//List<Article> articleList = articleService.getAllArticlesByCategory("faq");
-		//model.addAttribute("articleList", articleList);
+//		List<Article> articleList = articleService.getAllArticlesByCategory("faq");
+//		model.addAttribute("articleList", articleList);
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("22")
