@@ -24,14 +24,23 @@
         <div class="input-group d-flex align-items-center">
         	<c:choose>
         		<c:when test="${member.status eq 0}">
-        			준회원
-        		</c:when>
-        		<c:when test="${member.status eq 1}">
-        			정회원
-        		</c:when>
-        		<c:otherwise>
-        			<p class="text-danger">대출정지(${bookOverdueInfo.day} 일)</p>
-        		</c:otherwise>
+              		<p class="badge text-bg-light">준회원</p>
+              	</c:when>
+              	<c:when test="${member.status eq 1}">
+              		<p class="badge text-bg-success">정회원</p>
+              	</c:when>
+              	<c:when test="${member.status eq 2}">
+              		<p class="badge text-bg-danger">대출정지</p>
+              	</c:when>
+              	<c:when test="${member.status eq 3}">
+              		<p class="badge text-bg-secondary">탈퇴회원</p>
+              	</c:when>
+              	<c:when test="${member.status eq 9}">
+              		<p class="badge text-bg-primary">관리자</p>
+              	</c:when>
+              	<c:otherwise>
+              		null
+              	</c:otherwise>
         	</c:choose>
         </div>
     </div>
