@@ -10,7 +10,6 @@
 <!-- 게시글 목록 조회 - 공지사항 -->
 
 <!-- <h2>[공지사항] 게시글 목록 조회</h2> -->
-
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center">
         <div>전체 <strong>${fn:length(articleList)}</strong> 건</div>

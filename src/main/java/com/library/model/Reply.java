@@ -23,5 +23,6 @@ public class Reply {
 	private String content; // 내용
 	private Timestamp createDate; // 등록 날짜
 	private Timestamp updateDate; // 수정 날짜
+	private int status; // 상태: 0-공개댓글, 1-비공개댓글(삭제됨), 2-비밀댓글
 
 }

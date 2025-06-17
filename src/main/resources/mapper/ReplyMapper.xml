@@ -7,10 +7,52 @@
 		SELECT * FROM REPLIES WHERE ORIGIN_ARTICLE_ID = #{articlesId}
 	</select>
 	
-	<!-- 댓글 등록 -->
-	
 	<!-- 댓글 수정 -->
+	<!-- 1) 정보 수정 : title, content -->
+	<update id="updateReplyInfo" parameterType="com.library.model.Reply">
+        UPDATE REPLIES 
+        SET	CONTENT = #{content}
+	    WHERE REPLIES_ID = #{repliesId}
+    </update>
+    
+    <!-- 2) 비공개 댓글로 전환 : status -->
+	<update id="updateReplyDisable" parameterType="com.library.model.Reply">
+        UPDATE REPLIES 
+        SET	STATUS = 2 
+	    WHERE REPLIES_ID = #{repliesId}
+    </update>
+    
+    <!-- 3) 공개글 전환 : status -->
+    <update id="updateReplyEnable" parameterType="int">
+        UPDATE REPLIES 
+        SET	STATUS = 0
+	    WHERE REPLIES_ID = #{repliesId}
+    </update>
+    
+    <!-- 4) 비밀글 전환 : status -->
+    <update id="updateReplySecret" parameterType="int">
+        UPDATE REPLIES 
+        SET	STATUS = 1
+	    WHERE REPLIES_ID = #{repliesId}
+    </update>
+	
+	<!-- 댓글 등록 -->
+	<insert id="insertReply" parameterType="com.library.model.Reply">
+	    <selectKey keyProperty="replyId" resultType="java.lang.Integer" order="BEFORE">
+	        SELECT SQ_REPLIES.NEXTVAL FROM DUAL
+	    </selectKey>
+        INSERT INTO REPLIES (
+		    REPLIES_ID, ORIGIN_ARTICLE_ID, AUTHOR_ID, 
+		   	CONTENT, CREATE_DATE, UPDATE_DATE, STATUS
+		) VALUES (
+		    #{repliesId}, #{originArticleId}, #{authorId}, 
+		    #{content}, #{createDate}, #{updateDate}, #{status}
+		);
+    </insert>
 	
 	<!-- 댓글 삭제 -->
+	<delete id="deleteArticle" parameterType="int">
+        DELETE FROM ARTICLES WHERE ARTICLES_ID = #{articlesId}
+    </delete>
 
 </mapper>

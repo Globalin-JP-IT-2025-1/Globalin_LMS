@@ -11,7 +11,7 @@ CREATE TABLE MEMBERS (
     ADDRESS     VARCHAR2(100)	NOT NULL,
     ADDRESS_DETAIL     VARCHAR2(100)	NOT NULL,
     
-    STATUS      NUMBER(1)		NOT NULL,
+    STATUS      NUMBER(1)		NOT NULL, -- 상태: 0-준회원, 1-정회원, 2-대출정지(연체), 3-탈퇴, ..., 9-관리자
     CARD_NUM    VARCHAR2(15),
     LOAN_COUNT      NUMBER(1)	NOT NULL,
 

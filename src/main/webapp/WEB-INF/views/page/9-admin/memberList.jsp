@@ -10,7 +10,6 @@
 	width: 200% !important;
 	text-align: center !important;
 }
-
 </style>
 	
 <div class="container mt-4">
@@ -84,6 +83,12 @@
                     	<c:when test="${member.status eq 3}">
                     		<td><p class="badge text-bg-secondary">탈퇴회원</p></td>
                     	</c:when>
+                    	<c:when test="${member.status eq 9}">
+                    		<td><p class="badge text-bg-primary">관리자</p></td>
+                    	</c:when>
+                    	<c:otherwise>
+                    		null
+                    	</c:otherwise>
                     </c:choose>
                     <td>${member.cardNum}</td>
                     <td>${member.loanCount}</td>

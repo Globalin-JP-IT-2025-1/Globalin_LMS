@@ -21,13 +21,14 @@ public interface ArticleMapper {
 	// 게시글 상세 조회
     Article getArticleById(int articleId);
     
+    // 게시글 수정
+    int updateArticleInfo(Article article); // 제목, 내용 수정
+    int updateArticleDisable(int articleId); // 비공개글 전환
+    int updateArticleEnable(int articleId); // 공개글 전환
+    int updateArticleSecret(int articleId); // 비밀글 전환
+    
     // 게시글 등록
     int insertArticle(Article article);
-    
-    // 게시글 수정
-    int updateArticleInfo(Article article);
-    int updateArticleDisable(int articlesId);
-    int updateArticleEnable(int articlesId);
     
     // 게시글 삭제
     int deleteArticleById(int articleId);
