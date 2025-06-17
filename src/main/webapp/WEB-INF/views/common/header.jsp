@@ -3,33 +3,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-<%@ page import="javax.servlet.http.Cookie" %>
-<%
-    Cookie[] cookies = request.getCookies();
-    String un = "";
-    String fn = "";
-    String id = "";
 
-    if (cookies != null) {
-        for (Cookie cookie : cookies) {
-            if ("un".equals(cookie.getName())) {
-                un = cookie.getValue();
-            } else if ("fn".equals(cookie.getName())) {
-                fn = cookie.getValue();
-            } else if ("id".equals(cookie.getName())) {
-            	id = cookie.getValue();
-            }
-        }
-    }
-    
-    request.setAttribute("h_membersId", id);
-    request.setAttribute("h_username", un);
-    request.setAttribute("h_name", fn);
-%>
-
-<c:set var="h_membersId" value="${h_membersId}" /> 
-<c:set var="h_username" value="${h_username}" /> 
-<c:set var="h_name" value="${h_name}" />
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.membersId" var="h_membersId" />
+	<sec:authentication property="principal.username" var="h_username" />
+	<sec:authentication property="principal.fullname" var="h_fullname" />
+	<sec:authentication property="principal.status" var="h_status" />
+</sec:authorize>
 
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/static/css/header.css">
@@ -77,8 +57,27 @@
       <c:if test="${not empty h_membersId}">
         <div class="mt-1 px-3 py-1 h_member_info">
 	        <a href="/private/members/${h_membersId}" id="mypage" class="fw-bold text-decoration-none">
-	          <c:out value="${h_name}" />(<c:out value="${h_username}" />)</a>
-	        <spring:message code="h.welcome.message2" />
+	          <c:out value="${h_fullname}" />(<c:out value="${h_username}" />)</a>
+	          <spring:message code="h.welcome.message2" />
+	          <span>|</span>
+	          <c:choose>
+	          	<c:when test="${h_status eq 0}">
+	          		<span>준회원</span>
+	          	</c:when>
+	          	<c:when test="${h_status eq 1}">
+	          		<span>정회원</span>
+	          	</c:when>
+	          	<c:when test="${h_status eq 2}">
+	          		<span class="text-danger">대출정지</span>
+	          	</c:when>
+	          	<c:when test="${h_status eq 9}">
+	          		<span>관리자</span>
+	          	</c:when>
+	          	<c:otherwise>
+	          		<span>게스트</span>
+	          	</c:otherwise>
+	          </c:choose>
+	        
         </div>
       </c:if>
     </div>
@@ -165,10 +164,3 @@
 <script
 	src="${pageContext.request.contextPath}/resources/static/js/header.js"></script>
 
-<script type="text/javascript">
-
-
-
-
-
-</script>

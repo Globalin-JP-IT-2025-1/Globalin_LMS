@@ -202,6 +202,7 @@ all: unset;
 	color: white;
 	margin-top: 20px;
 	margin-left: 10px;
+	cursor: pointer;
 }
 
 .h2_1_div5 .logoutbtn{

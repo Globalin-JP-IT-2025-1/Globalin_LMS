@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <style>
 .sitemap {
@@ -142,7 +143,8 @@
 			</ul>
 		</div>
 	</div>
-
+	
+<sec:authorize access="hasRole('ROLE_ADMIN')">
 	<div>
 		<div class="sitemap_title">관리자 페이지</div>
 		<div class="sitemap_content">
@@ -154,5 +156,6 @@
 			</ul>
 		</div>
 	</div>
+</sec:authorize>
 
 </div>

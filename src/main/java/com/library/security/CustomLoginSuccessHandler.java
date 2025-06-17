@@ -39,29 +39,29 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		// 1) 인증 가져온 후 쿠키에 저장
 		// 인증 정보에서 username, name, membersId 가져오기
 		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-		String username = userDetails.getUsername();
-		String fullname = userDetails.getFullname();
-		int membersId = userDetails.getMembersId();
+		String username = userDetails.getUsername(); // 아이디
+		String fullname = userDetails.getFullname(); // 이름
+		int membersId = userDetails.getMembersId(); // DB 식별 ID
 		
 		log.info("### {} - {} 로그인 성공!", 
 				this.getClass().getSimpleName(), // 클래스
 				username); // 인증된 사용자의 username
 
 		// 쿠키 생성 및 response에 추가
-		Cookie[] infoCookies = new Cookie[] { 
-				new Cookie("un", username),
-				new Cookie("fn", fullname),
-				new Cookie("id", String.valueOf(membersId))
-		};
+//		Cookie[] infoCookies = new Cookie[] { 
+//				new Cookie("un", username),
+//				new Cookie("fn", fullname),
+//				new Cookie("id", String.valueOf(membersId))
+//		};
 
-		for (Cookie c : infoCookies) {
-			c.setMaxAge(60 * 60 * 24); // 1일 유지
-			c.setHttpOnly(true); // JavaScript 접근 불가 (XSS 방지)
-			c.setSecure(true); // HTTPS에서만 쿠키 전송 (보안 강화)
-			c.setPath("/"); // 전체 도메인에서 쿠키 사용 가능
-
-			response.addCookie(c);
-		}
+//		for (Cookie c : infoCookies) {
+//			c.setMaxAge(60 * 60 * 24); // 1일 유지
+//			c.setHttpOnly(true); // JavaScript 접근 불가 (XSS 방지)
+//			c.setSecure(true); // HTTPS에서만 쿠키 전송 (보안 강화)
+//			c.setPath("/"); // 전체 도메인에서 쿠키 사용 가능
+//
+//			response.addCookie(c);
+//		}
 		
 		// 관리자의 경우 토큰 제외
 		if (!username.equals("admin")) {
@@ -98,12 +98,12 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		
 		// 3) 이전 요청 정보 가져온 후 redirect
 		SavedRequest savedRequest = requestCache.getRequest(request, response);
-
+		
 		if (savedRequest != null) {
 			String targetUrl = savedRequest.getRedirectUrl(); // 원래 요청한 페이지 URL
 			response.sendRedirect(targetUrl); // 로그인 후 원래 페이지로 이동
 		} else {
-			response.sendRedirect("/?status=2"); // 로그인 성공(2) : 메인 페이지로 이동
+			response.sendRedirect("/"); // 로그인 성공 : 메인 페이지로 이동
 		}
 
 	}

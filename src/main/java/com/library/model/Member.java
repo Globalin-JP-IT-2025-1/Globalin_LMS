@@ -26,7 +26,7 @@ public class Member {
     private String address; // 주소
     private String addressDetail; // 상세주소
     
-    private int status; // 회원 등급 (0:준회원, 1:정회원, 2:연체 대출정지, 3: 탈퇴회원)
+    private int status; // 회원 등급 (0:준회원, 1:정회원, 2:연체 대출정지, 3: 탈퇴회원, 9: 관리자)
     private String cardNum; // 회원 카드번호
     private int loanCount; // 현재 대출 중인 도서 권수 (0~9)
     
