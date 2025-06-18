@@ -172,9 +172,7 @@
 			  </div>
 			  <button class="btn btn-outline-primary addBtn" type="submit">등록</button>
 			</div>
-
 		</form>
-		<hr class="border border-1 opacity-50">
 	</div>
 	
 	<div class="articleDetail_div4">	
@@ -182,9 +180,10 @@
 		<c:if test="${fn:length(replyList) > 0}">
 		<div class="position-relative mt-2 mb-4">
 			<c:forEach var="i" begin="0" end="${fn:length(replyList) - 1}" step="1">
+					<hr class="border border-1 opacity-50">
 				   <div class="d-flex justify-content-between align-items-center mb-2" style="position: relative;">
 						<div>
-					        <label class="form-label replyLabel">${r_authorList[i].name}(${r_authorList[i].username})</label>
+					        <label class="form-label replyLabel">${r_authorList[i].name}(${r_authorList[i].username})</label><br>
 					       <label class="form-label">
 							  <c:choose>
 							    <c:when test="${replyList[i].status == 2}">
@@ -194,8 +193,8 @@
 							      ${replyList[i].content}
 							    </c:otherwise>
 							  </c:choose>
-							</label>
-					        <label class="form-label replyLabel"><fmt:formatDate value="${replyList[i].updateDate}" pattern="MM.dd hh:mm:ss" /></label>
+							</label><br>
+					        <label class="form-label replyLabel"><fmt:formatDate value="${replyList[i].updateDate}" pattern="yyyy.MM.dd a hh:mm:ss" /></label>
 				      	</div>
 			
 					<!-- 오른쪽 스위치 + 삭제 버튼 -->

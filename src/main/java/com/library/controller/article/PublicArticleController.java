@@ -85,10 +85,10 @@ public class PublicArticleController {
     			request.getRequestURI(),
     			request.getMethod());
     	
-//    	Map<String, Object> articleListWithAuthor = articleService.getAllArticlesByCategoryWithAuthor("qna");
-//    	
-//    	model.addAttribute("articleList", articleListWithAuthor.get("articleList"));
-//    	model.addAttribute("authorList", articleListWithAuthor.get("authorList"));
+    	Map<String, Object> articleListWithAuthor = articleService.getAllArticlesByCategoryWithAuthor("qna");
+    	
+    	model.addAttribute("articleList", articleListWithAuthor.get("articleList"));
+    	model.addAttribute("authorList", articleListWithAuthor.get("authorList"));
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("23")
@@ -141,11 +141,12 @@ public class PublicArticleController {
 				request.getMethod());
 		
 		try {
-//			Map<String, Object> articleWithAuthorAndReplies = articleService.getArticleWithAuthorAndReplies(articlesId);
-//			model.addAttribute("article", articleWithAuthorAndReplies.get("article")); // 게시글 상세 정보
-//			model.addAttribute("author", articleWithAuthorAndReplies.get("author")); // 작성자 정보
-//			model.addAttribute("replyList", articleWithAuthorAndReplies.get("replyList")); // 댓글 리스트
-			
+			Map<String, Object> articleWithAuthorAndReplies = articleService.getArticleWithAuthorAndReplies(articlesId);
+			model.addAttribute("article", articleWithAuthorAndReplies.get("article")); // 게시글 상세 정보
+			model.addAttribute("a_author", articleWithAuthorAndReplies.get("a_author")); // 작성자 정보
+			model.addAttribute("replyList", articleWithAuthorAndReplies.get("replyList")); // 댓글 리스트
+			model.addAttribute("r_authorList", articleWithAuthorAndReplies.get("r_authorList")); // 댓글 작성자 리스트
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			
