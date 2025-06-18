@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class recBook {
+public class RecBook {
 	
 	private int recBooksId; // 댓글 ID
 	private int booksId; // 대상 도서 ID (조회)

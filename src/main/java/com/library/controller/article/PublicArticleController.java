@@ -1,8 +1,7 @@
 package com.library.controller.article;
 
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.library.model.Article;
 import com.library.model.PageInfo;
 import com.library.service.ArticleService;
-import com.library.service.MemberService;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class PublicArticleController {
     private final ArticleService articleService; // 게시글
-    private final MemberService memberService; // 작성자
     private PageInfo pageInfo;
     
     public void setPageInfo(Model model) {
@@ -35,11 +32,7 @@ public class PublicArticleController {
     
     // not 목록 조회 --> ok
     @GetMapping("/not")
-    public String getListNot(HttpServletRequest request, Model model) {
-		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String getListNot(Model model) {
 		
 		Map<String, Object> articleListWithAuthor = articleService.getAllArticlesByCategoryWithAuthor("not");
 		
@@ -58,11 +51,7 @@ public class PublicArticleController {
     
     // faq 목록 조회
     @GetMapping("/faq")
-    public String getListFaq(HttpServletRequest request, Model model) {
-		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String getListFaq(Model model) {
 		
 		List<Article> articleList = articleService.getAllArticlesByCategory("faq");
 		model.addAttribute("articleList", articleList);
@@ -79,16 +68,12 @@ public class PublicArticleController {
     
     // qna 목록 조회
     @GetMapping("/qna")
-    public String getListQna(HttpServletRequest request, Model model) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-    			this.getClass().getSimpleName(), 
-    			request.getRequestURI(),
-    			request.getMethod());
+    public String getListQna(Model model) {
     	
-//    	Map<String, Object> articleListWithAuthor = articleService.getAllArticlesByCategoryWithAuthor("qna");
-//    	
-//    	model.addAttribute("articleList", articleListWithAuthor.get("articleList"));
-//    	model.addAttribute("authorList", articleListWithAuthor.get("authorList"));
+    	Map<String, Object> articleListWithAuthor = articleService.getAllArticlesByCategoryWithAuthor("qna");
+    	
+    	model.addAttribute("articleList", articleListWithAuthor.get("articleList"));
+    	model.addAttribute("authorList", articleListWithAuthor.get("authorList"));
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("23")
@@ -102,11 +87,8 @@ public class PublicArticleController {
     
     // not 상세 조회 --> test 중
     @GetMapping("/not/{articlesId}")
-    public String getDetailNot(@PathVariable("articlesId") int articlesId, HttpServletRequest request, Model model) {
-		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String getDetailNot(@PathVariable("articlesId") int articlesId, 
+			    		       Model model) {
 		
 		try {
 			Map<String, Object> articleWithAuthorAndReplies = articleService.getArticleWithAuthorAndReplies(articlesId);
@@ -119,7 +101,7 @@ public class PublicArticleController {
 			e.printStackTrace();
 			
 			model.addAttribute("alertType", "fail");
-			model.addAttribute("alertMesssage", "게시글 조회를 실패 하였습니다. 다시 시도해주세요.");
+			model.addAttribute("alertMesssage", "[공지사항] 게시글 상세 조회 실패");
 		}
 		
     	pageInfo = PageInfo.builder()
@@ -134,23 +116,20 @@ public class PublicArticleController {
     
     // qna 상세 조회 (+댓글)
     @GetMapping("/qna/{articlesId}")
-    public String getDetailQna(@PathVariable("articlesId") int articlesId, HttpServletRequest request, Model model) {
-		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String getDetailQna(@PathVariable("articlesId") int articlesId, 
+				    		   Model model) {
 		
 		try {
-//			Map<String, Object> articleWithAuthorAndReplies = articleService.getArticleWithAuthorAndReplies(articlesId);
-//			model.addAttribute("article", articleWithAuthorAndReplies.get("article")); // 게시글 상세 정보
-//			model.addAttribute("author", articleWithAuthorAndReplies.get("author")); // 작성자 정보
-//			model.addAttribute("replyList", articleWithAuthorAndReplies.get("replyList")); // 댓글 리스트
+			Map<String, Object> articleWithAuthorAndReplies = articleService.getArticleWithAuthorAndReplies(articlesId);
+			model.addAttribute("article", articleWithAuthorAndReplies.get("article")); // 게시글 상세 정보
+			model.addAttribute("author", articleWithAuthorAndReplies.get("author")); // 작성자 정보
+			model.addAttribute("replyList", articleWithAuthorAndReplies.get("replyList")); // 댓글 리스트
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			
 			model.addAttribute("alertType", "fail");
-			model.addAttribute("alertMesssage", "게시글 조회를 실패 하였습니다. 다시 시도해주세요.");
+			model.addAttribute("alertMesssage", "[Q&A] 게시글 상세 조회 실패");
 		}
     	
     	pageInfo = PageInfo.builder()

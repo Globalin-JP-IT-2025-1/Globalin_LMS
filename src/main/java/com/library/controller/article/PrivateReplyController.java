@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/private/replies/{articlesId}")
+@RequestMapping("/private/replies/{articlesId}/{originCat}")
 @AllArgsConstructor
 public class PrivateReplyController {
     private final ReplyService replyService;
@@ -32,7 +32,7 @@ public class PrivateReplyController {
  	
      
      // 등록 처리
- 	@PostMapping("/{originCat}/{repliesId}")
+ 	@PostMapping
      public String insertProc(
     		 @PathVariable("originCat") String originCat, 
     		 @PathVariable("articlesId") int articlesId, 
@@ -47,30 +47,30 @@ public class PrivateReplyController {
      		e.printStackTrace();
      		
      		redirectAttributes.addFlashAttribute("alertType", "fail");
-     		redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 등록 실패 하였습니다");
+     		redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 등록 실패");
      		redirectAttributes.addFlashAttribute("reply", reply); // 입력 내용 반환
      		
      		return "redirect:/private/articles/" + originCat + "/" + articlesId; // 실패: 원본 글 상세 조회로 이동
      	}
      	
      	redirectAttributes.addFlashAttribute("alertType", "success");
-     	redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 등록 성공 하였습니다");
+     	redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 등록 성공");
      	
      	return "redirect:/private/articles/" + originCat + "/" + articlesId; // 성공: 원본 글 상세 조회로 이동
      }
-   
+ 	
      
      // 활성화, 비활성화, 잠금 처리
-     @PutMapping("/{originCat}/{articlesId}/{repliesId}/{status}")
+     @PutMapping("/{repliesId}/{status}")
      public String updateDisplayProc(@PathVariable("originCat") String originCat,  // 원본 글 카테고리
     		 						 @PathVariable("articlesId") int articlesId,  // 원본 글 id
     		 						 @PathVariable("repliesId") int repliesId, // 댓글 id
     		 						 @PathVariable("status") int status,  // 요청 작업 코드
-    		 						 RedirectAttributes redirectAttributes) {
+    		 			    		 RedirectAttributes redirectAttributes) {
      	
      	try {
      		if (status == 1) {
-     			replyService.updateReplyDisable(repliesId); // 댓글 비활성화 (관리자 페이지에서만 조회 가능)
+     			replyService.updateReplyDisable(repliesId); // 댓글 비활성화 (관리자 페이지에서만 조회 가능) (soft del)
      		} else if (status == 0) {
      			replyService.updateReplyEnable(repliesId); // 댓글 활성화 (모든 사용자 조회 가능)
      		} else if (status == 2) {
@@ -82,11 +82,11 @@ public class PrivateReplyController {
      		
      		redirectAttributes.addFlashAttribute("alertType", "fail");
      		if (status == 1) {
-     			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 비활성화 실패 하였습니다");
+     			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 비활성화 실패");
      		} else if (status == 0) {
-     			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 활성화 실패 하였습니다");
+     			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 활성화 실패");
      		} else if (status == 2) {
-     			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 잠금 실패 하였습니다");
+     			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 잠금 실패");
      		}
      		
      		return "redirect:/public/articles/" + originCat + "/" + articlesId; // 실패: 원본 글 상세 조회로 이동
@@ -94,22 +94,22 @@ public class PrivateReplyController {
      	
      	redirectAttributes.addAttribute("alertType", "success");
      	if (status == 1) {
- 			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 비활성화 성공 하였습니다");
+ 			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 비활성화 성공");
      	} else if (status == 0) {
- 			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 활성화 성공 하였습니다");
+ 			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 활성화 성공");
  		} else if (status == 2) {
- 			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 잠금 성공 하였습니다");
+ 			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 잠금 성공");
  		}
      	
      	return "redirect:/public/articles/" + originCat + "/" + articlesId; // 성공: 원본 글 상세 조회로 이동
      }
      
-     // 삭제 처리
-     @DeleteMapping("/{originCat}/{repliesId}/{articlesId}")
+     // 삭제 처리 (hard del)
+     @DeleteMapping("/{articlesId}")
      public String deleteProc(@PathVariable("originCat") String originCat, 
     		 				  @PathVariable("repliesId") int repliesId, 
 							  @PathVariable("articlesId") int articlesId, 
-							  RedirectAttributes redirectAttributes) {
+		 			    	  RedirectAttributes redirectAttributes) {
      	
      	try {
  			replyService.deleteReply(repliesId); // 댓글 DB 삭제
@@ -118,13 +118,13 @@ public class PrivateReplyController {
      		e.printStackTrace();
      		
      		redirectAttributes.addFlashAttribute("alertType", "fail");
- 			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 삭제 실패 하였습니다");
+ 			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 삭제 실패");
      		
  			return "redirect:/public/articles/" + originCat + "/" + articlesId; // 실패: 원본 게시글로 이동
      	}
      	
      	redirectAttributes.addFlashAttribute("alertType", "success");
- 		redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 삭제 성공 하였습니다");
+ 		redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 삭제 성공");
      	
  		return "redirect:/public/articles/" + originCat + "/" + articlesId; // 성공: 원본 게시글로 이동
      }
