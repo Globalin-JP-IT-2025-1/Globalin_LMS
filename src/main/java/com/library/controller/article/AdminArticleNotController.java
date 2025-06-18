@@ -1,7 +1,5 @@
 package com.library.controller.article;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,11 +33,7 @@ public class AdminArticleNotController {
     
     // 등록 폼 요청
     @GetMapping("/add")
-    public String showAddForm(HttpServletRequest request, Model model) {
-		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String showAddForm(Model model) {
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("21")
@@ -53,11 +47,7 @@ public class AdminArticleNotController {
     
     // 수정 폼 요청
     @GetMapping("/edit/{articlesId}")
-    public String showEditForm(HttpServletRequest request, Model model) {
-		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String showEditForm(Model model) {
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("21")
@@ -71,15 +61,10 @@ public class AdminArticleNotController {
     
     // 등록 처리
     @PostMapping
-    public String insertProc(@ModelAttribute Article article,  
-    		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-    			this.getClass().getSimpleName(), 
-    			request.getRequestURI(),
-    			request.getMethod());
+    public String insertProc(@ModelAttribute Article article, RedirectAttributes redirectAttributes) {
     	
     	try {
-    		//articleService.insertArticle(article); // 게시글 등록
+    		articleService.insertArticle(article); // 게시글 등록
     		
     	} catch (Exception e) {
     		e.printStackTrace();
@@ -101,14 +86,10 @@ public class AdminArticleNotController {
     // 내용 수정 처리
     @PutMapping("/{articlesId}")
     public String updateInfoProc(@PathVariable("articlesId") int articlesId, @ModelAttribute Article article,
-    		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-    			this.getClass().getSimpleName(), 
-    			request.getRequestURI(),
-    			request.getMethod());
+    		RedirectAttributes redirectAttributes) {
     	
     	try {
-			//articleService.updateArticleInfo(article); // 게시글 내용 수정
+			articleService.updateArticleInfo(article); // 게시글 내용 수정
     		
     	} catch (Exception e) {
     		e.printStackTrace();
@@ -128,20 +109,18 @@ public class AdminArticleNotController {
     	
     }
     
-    // 활성화, 비활성화 처리
+    // 활성화, 비활성화, 잠금 처리
     @PutMapping("/{articlesId}/{type}")
     public String updateDisplayProc(@PathVariable("articlesId") int articlesId, @PathVariable("type") String type,
-    		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-    			this.getClass().getSimpleName(), 
-    			request.getRequestURI(),
-    			request.getMethod());
+    		RedirectAttributes redirectAttributes) {
     	
     	try {
     		if (type.equals("disable")) {
-    			//articleService.updateArticleDisable(articlesId); // 게시글 비활성화
+    			articleService.updateArticleDisable(articlesId); // 게시글 비활성화
     		} else if (type.equals("enable")) {
-    			//articleService.updateArticleEnable(articlesId); // 게시글 활성화
+    			articleService.updateArticleEnable(articlesId); // 게시글 활성화
+    		} else if (type.equals("secret")) {
+    			articleService.updateArticleEnable(articlesId); // 게시글 잠금
     		}
     		
     	} catch (Exception e) {
@@ -152,6 +131,8 @@ public class AdminArticleNotController {
     			redirectAttributes.addAttribute("alertMessage", "[공지사항] 비활성화 실패 하였습니다");
     		} else if (type.equals("enable")) {
     			redirectAttributes.addAttribute("alertMessage", "[공지사항] 활성화 실패 하였습니다");
+    		} else if (type.equals("secret")) {
+    			redirectAttributes.addAttribute("alertMessage", "[공지사항] 잠금 실패 하였습니다");
     		}
     		
     		return "redirect:/public/articles/not/" + articlesId; // 실패: 상세 조회로 이동
@@ -161,8 +142,9 @@ public class AdminArticleNotController {
     	if (type.equals("disable")) {
 			redirectAttributes.addAttribute("alertMessage", "[공지사항] 비활성화 성공 하였습니다");
 		} else if (type.equals("enable")) {
-			redirectAttributes.addAttribute("alertType", "fail");
 			redirectAttributes.addAttribute("alertMessage", "[공지사항] 활성화 성공 하였습니다");
+		} else if (type.equals("secret")) {
+			redirectAttributes.addAttribute("alertMessage", "[공지사항] 잠금 성공 하였습니다");
 		}
     	
     	return "redirect:/public/articles/not/" + articlesId; // 성공: 상세 조회로 이동
@@ -170,15 +152,10 @@ public class AdminArticleNotController {
     
     // 삭제 처리
     @DeleteMapping("/{articlesId}")
-    public String deleteProc(@PathVariable("articlesId") int articlesId,
-    		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-    			this.getClass().getSimpleName(), 
-    			request.getRequestURI(),
-    			request.getMethod());
+    public String deleteProc(@PathVariable("articlesId") int articlesId, RedirectAttributes redirectAttributes) {
     	
     	try {
-			//articleService.deleteArticleById(articlesId); // 게시글 DB 삭제
+			articleService.deleteArticleById(articlesId); // 게시글 DB 삭제
     		
     	} catch (Exception e) {
     		e.printStackTrace();

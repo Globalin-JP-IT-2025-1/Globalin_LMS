@@ -22,14 +22,14 @@
 	    WHERE REPLIES_ID = #{repliesId}
     </update>
     
-    <!-- 3) 공개글 전환 : status -->
+    <!-- 3) 공개 댓글로 전환 : status -->
     <update id="updateReplyEnable" parameterType="int">
         UPDATE REPLIES 
         SET	STATUS = 0
 	    WHERE REPLIES_ID = #{repliesId}
     </update>
     
-    <!-- 4) 비밀글 전환 : status -->
+    <!-- 4) 비밀 댓글로 전환 : status -->
     <update id="updateReplySecret" parameterType="int">
         UPDATE REPLIES 
         SET	STATUS = 1

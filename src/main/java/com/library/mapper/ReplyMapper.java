@@ -18,8 +18,17 @@ public interface ReplyMapper {
 	// 댓글 등록
 	public int insertReply(Reply reply);
 	
-	// 댓글 수정
-	public int updateReply(Reply reply);
+	// 댓글 수정 - 내용
+	public int updateReplyInfo(Reply reply);
+	
+	// 댓글 수정 - 비공개 (soft delete)
+	public int updateReplyDisable(int replyId);
+	
+	// 댓글 수정 - 공개
+	public int updateReplyEnable(int replyId);
+	
+	// 댓글 수정 - 비밀
+	public int updateReplySecret(int replyId);
 	
 	// 댓글 삭제
 	public int deleteReply(int repliesId);
