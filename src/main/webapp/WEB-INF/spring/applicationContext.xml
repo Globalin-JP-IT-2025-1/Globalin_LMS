@@ -6,15 +6,13 @@
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
-	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd 
            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
-		   http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd 
-		   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
-	
+		   http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+		   
 	<!-- 웹 계층 설정 : JSON 변환, 인터셉터, Redis -->
 
 	<!-- JSON 변환 설정 -->
@@ -40,13 +38,7 @@
 	    <constructor-arg ref="redisConnectionFactory"/>
 	    <property name="enableTransactionSupport" value="true"/>
 	</bean>
-	
-	<!-- AOP 활성화 -->
-    <aop:aspectj-autoproxy />
-
-    <!-- Aspect Bean 등록 -->
-    <bean id="loggingAspect" class="com.library.aop.LoggingAspect" />
-	
+    
   <!--   
     Mail 관련 설정
 	<bean id="mailSender" class = "org.springframework.mail.javamail.JavaMailSenderImpl">
