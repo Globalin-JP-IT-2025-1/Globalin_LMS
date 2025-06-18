@@ -30,6 +30,7 @@
                 <th>제목</th>
                 <th>작성자</th>
                 <th>조회수</th>
+                <th>댓글수</th>
             </tr>
         </thead>
         <tbody>
@@ -41,6 +42,7 @@
                     
                     <td>${authorList[i].name}(${authorList[i].username})</td>
                     <td>${articleList[i].viewCount}</td>
+                    <td>${articleList[i].replyCount}</td>
                              
                 </tr>
             </c:forEach>

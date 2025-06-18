@@ -68,14 +68,16 @@
 								<input type="submit" value="<spring:message code='h.minimenu.logout' />" class="logoutbtn">
 				            </form>
 						</div>
+						<hr class="border border-1 opacity-50">
 						<div class="h2_1_div6">
 							<button onclick="location.href='/private/members/${h_membersId}'"><spring:message code='menu.3.con1' /></button>
 							<button onclick="location.href='/private/members/${h_membersId}/edit'">정보 수정</button>
 						</div>
 						<div class="h2_1_div7">
-							<a href="/private/members/${h_membersId}book-history"><i class="bi bi-bookmarks"></i><spring:message code='menu.3.con2' /></a>&nbsp;|
-							<a href="/private/members/${h_membersId}book-req"><i class="bi bi-pencil-square"></i><spring:message code='menu.3.con4' /></a>
+							<a href="/private/members/${h_membersId}/book-history"><i class="bi bi-bookmarks"></i><spring:message code='menu.3.con2' /></a>&nbsp;|
+							<a href="/private/members/${h_membersId}/book-req"><i class="bi bi-pencil-square"></i><spring:message code='menu.3.con4' /></a>
 						</div>
+						<div class="h2_1_div8 bg-warning-subtle" onclick="location.href='/private/members/${h_membersId}/book-history'"><i class="bi bi-megaphone"></i>&nbsp;도서 연체 3일(총 2건)</div>
 					</div>
 				</c:otherwise>
 	        </c:choose>

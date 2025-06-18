@@ -32,6 +32,8 @@ CREATE INDEX IDX_ARTICLES_CONTENT      ON ARTICLES (CONTENT);       -- 내용 �
 CREATE INDEX IDX_ARTICLES_CREATE_DATE  ON ARTICLES (CREATE_DATE);   -- 등록일자 정렬
 CREATE INDEX IDX_ARTICLES_VIEWS_COUNT  ON ARTICLES (VIEW_COUNT);    -- 조회수 정렬
 
+update articles set reply_count=2 where articles_id=2;
+
 -- 공지사항(not)
 INSERT INTO ARTICLES (ARTICLES_ID, AUTHOR_ID, CATEGORY, TITLE, CONTENT, CREATE_DATE, UPDATE_DATE, STATUS)
 VALUES (SQ_ARTICLES.NEXTVAL, 0, 'not', '시스템 점검 안내', '시스템 점검 일정에 대한 공지입니다.', TO_DATE('2025-06-01', 'YYYY-MM-DD'), TO_DATE('2025-06-01', 'YYYY-MM-DD'), 0);

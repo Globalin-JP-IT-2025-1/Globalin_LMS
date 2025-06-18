@@ -16,7 +16,7 @@
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 	padding: 20px 20px 20px 30px; 
 	margin-top: 40px;
-	width: 85%;
+	width: 90%;
 }
 
 /* 상단 알림 */
