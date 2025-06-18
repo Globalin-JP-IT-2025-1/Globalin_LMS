@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.library.mapper.ArticleMapper;
-import com.library.mapper.ReplyMapper;
 import com.library.model.Article;
 import com.library.model.Member;
 import com.library.model.Reply;
@@ -20,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ArticleService {
 	private final ArticleMapper articleMapper; // 게시글
-	private final ReplyMapper replyMapper; // 댓글
+	private final ReplyService replyService; // 댓글
 	private final MemberService memberService; // 작성자
 	
 	// 게시글 전체 조회 - admin
@@ -90,7 +89,7 @@ public class ArticleService {
 		
 		// 댓글 + 댓글 작성자 목록 가져오기
 		if (article.getReplyCount() > 0) {
-			List<Reply> replyList = replyMapper.getAllRepliesByArticlesId(articlesId);
+			List<Reply> replyList = replyService.getAllRepliesByArticlesId(articlesId);
 			articleWithAuthorAndReplies.put("replyList", replyList);
 			
 			List<Member> r_authorList = new ArrayList<>();
