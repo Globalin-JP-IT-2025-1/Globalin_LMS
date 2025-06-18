@@ -110,6 +110,7 @@ all: unset;
 /* home_2 내부 구성 */
 .home_2_1 {
 	width: 27%;
+
 }
 /* 아이디, 비번 */
 #username, #password {
@@ -165,7 +166,7 @@ all: unset;
 
 .home_2_1 .h2_1_div6 {
 	text-align: center;
-	margin: 35px 20px 35px 20px;
+	margin: 20px 20px 35px 20px;
 	display: flex;
 	justify-content: space-between;
 }
@@ -183,6 +184,17 @@ all: unset;
 .home_2_1 .h2_1_div7 {
 	text-align: center;
 	margin: 10px 0 10px 0;
+}
+
+.home_2_1 .h2_1_div8 {
+	text-align: center;
+	margin: 20px auto;
+	border-radius: 10px;
+	width: 80%;
+	height: 35px;
+	align-content: center;
+	color: red;
+	font-weight: bold;
 }
 
 .h2_1_div7 >a:hover {
@@ -318,6 +330,11 @@ all: unset;
 /* 공지사항 부분 */
 .home_2_3 {
 	width: 30%;
+}
+
+.border {
+	width:90%;
+	margin: 0 auto;
 }
 
 .h2_3_div1 > p {
