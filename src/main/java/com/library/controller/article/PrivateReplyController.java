@@ -31,9 +31,9 @@ public class PrivateReplyController {
     }
  	
      
-     // 등록 처리
- 	@PostMapping
-     public String insertProc(
+	// 등록 처리
+    @PostMapping
+    public String insertProc(
     		 @PathVariable("originCat") String originCat, 
     		 @PathVariable("articlesId") int articlesId, 
     		 @ModelAttribute Reply reply, 
@@ -50,13 +50,13 @@ public class PrivateReplyController {
      		redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 등록 실패");
      		redirectAttributes.addFlashAttribute("reply", reply); // 입력 내용 반환
      		
-     		return "redirect:/private/articles/" + originCat + "/" + articlesId; // 실패: 원본 글 상세 조회로 이동
+     		return "redirect:/public/articles/" + originCat + "/" + articlesId; // 실패: 원본 글 상세 조회로 이동
      	}
      	
      	redirectAttributes.addFlashAttribute("alertType", "success");
      	redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 등록 성공");
      	
-     	return "redirect:/private/articles/" + originCat + "/" + articlesId; // 성공: 원본 글 상세 조회로 이동
+     	return "redirect:/public/articles/" + originCat + "/" + articlesId; // 성공: 원본 글 상세 조회로 이동
      }
  	
      

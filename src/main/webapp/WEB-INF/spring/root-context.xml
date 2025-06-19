@@ -78,5 +78,6 @@
 
     <!-- Advice Bean 등록 -->
 	<bean id="loggingAdvice" class="com.library.aop.LoggingAdvice" />
+	<bean id="articleViewAndReplyCountAspect" class="com.library.aop.ArticleViewAndReplyCountAspect" />
     
 </beans>

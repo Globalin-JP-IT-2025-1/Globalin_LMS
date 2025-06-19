@@ -11,121 +11,10 @@
 
 <sec:authorize access="hasRole('ROLE_USER')">
     <sec:authentication property="principal" var="userDetails" />
-    <c:out value="${userDetails.membersId}" />
 </sec:authorize>
 
-<style>
-.container-fluid {
-	margin-left:25px;
-}
-.updateBtn {
-	border: 0;
-	background-color: var(--main-color) !important;	
-}
-
-.saveBtn {
-	border: 0;
-	background-color: var(--main-color) !important;
-	margin-left: 10px;
-}
-
-.cancleBtn {
-	border: 0;
-
-}
-
-.btndiv {
-	display: flex;
-	flex-direction: colum;	
-	justify-content: flex-end;
-	width: 83%;
-}
-
-.articleTitle {
-	font-size: 1.7em;
-	font-weight: bold; 
-	text-align: center;
-}
-
-
-.articleDetail_div1 >label{
-	font-size: 0.8em;
-	margin: 0 10px 0 10px;
-}
-
-.articleDetail_div1{
-	display: flex;
-    justify-content: flex-end;
-    align-content: center;
-    gap: 20px;	
-}
-.articleDetail_div1 .vr{
-	height: 35px;
-}
-
-.articleDetail_div2 {
-	width: 915px;
-    margin: 35px 20px 0 35px;
-}
-
-.articleDetail_div2 >label{
-	margin: 0 20px 0 20px;
-}
-
-.hideBtn {
-	all: unset;
-	color: red;
-}
-
-.articleDetail_div3 {
-	margin: 0 20px 0 20px;
-	
-}
-.articleDetail_div4 {
-	margin: 0 20px 0 20px;
-}
-
-.replies_writebox {
-	margin-bottom: 25px;
-	display: flex;
-	gap: 10px;
-	align-items: flex-start;
-}
-
-.replies_writebox .form-control {
-	height: 70px;
-	padding: 8px;
-	padding-bottom: 20px;
-	resize: none;
-	overflow-y: auto;
-	line-height: 1.4;
-	white-space: pre-wrap;
-	word-break: break-word;
-}
-
-/* 글자 수 */
-.char-count-inside {
-	position: absolute;
-	bottom: 6px;
-	right: 10px;
-	font-size: 0.75rem;
-	color: #999;
-	pointer-events: none;
-}
-
-.addBtn {
-	min-width: 100px;
-	background-color: var(--main-color) !important;
-	color: white;
-	border: 0;
-	height: 70px;
-}
-
-.replyLabel {
-	color: gray;
-}
-</style>
-
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/resources/static/css/articleDetail.css">
 
 <!-- 게시글 상세 조회 - 공지사항 -->
 <div class="container-fluid">
@@ -151,16 +40,17 @@
 			<textarea class="form-control mb-4" style="border: none; resize: none;" id="contentView" readonly rows="7">${article.content}</textarea>
 		</div>
 		<div class="btndiv">
-			<button class="btn btn-primary updateBtn" type="button" id="editButton" onclick="enableEdit()">수정</button>
-			<button type="submit" id="cancleButton" class="btn btn-light cancleBtn" style="display: none;" onclick="cancleEdit(${article.articlesId})">취소</button>
+			<!-- 현재 로그인한 사용자가 관리자인 경우에만 보이기 -->
+			<sec:authorize access="hasRole('ROLE_ADMIN')">
+				<button class="btn btn-primary updateBtn" type="button" id="editButton" onclick="enableEdit()">수정</button>
+				<button type="submit" id="cancleButton" class="btn btn-light cancleBtn" style="display: none;" onclick="cancleEdit(${article.articlesId})">취소</button>
+			</sec:authorize>
 			
 			<form action="/admin/articles/not" method="post" id="articleForm" >
 				<input type="hidden" name="_method" value="PUT">
 				<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
-			    
 			    <input type="hidden" id="title" name="title" readonly value="${article.title}"><!-- 게시글 수정 - 서버 송신1 -->
 			    <textarea id="content" name="content" readonly hidden="true">${article.content}</textarea><!-- 게시글 수정 - 서버 송신2 -->
-				
 				<button type="submit" class="btn btn-primary saveBtn" id="saveButton" style="display: none;">저장</button>				
 			</form>
 		</div>
@@ -180,7 +70,7 @@
 						    <textarea class="form-control" name="content" id="replyContent" maxlength="500" rows="3"></textarea><!-- 댓글 작성 - 서버 송신1 -->
 						    <div class="char-count-inside" id="charCount">0 / 500</div>
 						    <sec:authorize access="hasRole('ROLE_USER')">
-					        	<input type="text" name="authorId" value="${userDetails.membersId}" readonly><!-- 댓글 작성 - 서버 송신2 -->
+					        	<input type="hidden" name="authorId" value="${userDetails.membersId}" readonly><!-- 댓글 작성 - 서버 송신2 -->
 							</sec:authorize>
 						</div>
 						<button class="btn btn-outline-primary addBtn" type="submit">등록</button>
@@ -197,8 +87,8 @@
 					</div>
 			    </c:otherwise>
 			</c:choose>
-
 		</form>
+		
 		<hr class="border border-1 opacity-50">
 	</div>
 	
@@ -209,20 +99,41 @@
 			<c:forEach var="i" begin="0" end="${fn:length(replyList) - 1}" step="1">
 				   <div class="d-flex justify-content-between align-items-center mb-2" style="position: relative;">
 						<div>
-					        <label class="form-label replyLabel">${r_authorList[i].name}(${r_authorList[i].username})</label>
-					       <label class="form-label">
-							  <c:choose>
-							    <c:when test="${replyList[i].status == 2}">
-							      <i class="bi bi-lock"></i>비공개 댓글입니다.
-							    </c:when>
-							    <c:otherwise>
-							      ${replyList[i].content}
-							    </c:otherwise>
-							  </c:choose>
+					        <c:set var="fullname" value="${r_authorList[i].name}" />
+					        <label class="form-label replyLabel">
+							    <!-- 로그인하지 않은 경우 -->
+								<sec:authorize access="isAnonymous()">
+					        		${fn:substring(fullname, 0, 1)}<i class="bi bi-asterisk"></i><i class="bi bi-asterisk"></i>(${r_authorList[i].username})
+								</sec:authorize>
+							    <!-- 로그인한 경우 -->
+					        	<sec:authorize access="isAuthenticated()">
+									<c:choose>
+										<c:when test="${replyList[i].authorId == userDetails.membersId or userDetails.membersId == 0}">							
+							        		${fullname}(${r_authorList[i].username})
+							        	</c:when>
+							        	<c:otherwise>
+							        		${fn:substring(fullname, 0, 1)}<i class="bi bi-asterisk"></i><i class="bi bi-asterisk"></i>(${r_authorList[i].username})
+							        	</c:otherwise>
+							        </c:choose>
+								</sec:authorize>
+					        </label>
+					        
+					        <label class="form-label">
+								<c:choose>
+								    <c:when test="${replyList[i].status == 2}">
+								    	<i class="bi bi-lock"></i>비공개 댓글입니다.
+								    </c:when>
+								    <c:otherwise>
+								     	${replyList[i].content}
+								    </c:otherwise>
+								</c:choose>
 							</label>
 					        <label class="form-label replyLabel"><fmt:formatDate value="${replyList[i].updateDate}" pattern="MM.dd hh:mm:ss" /></label>
 				      	</div>
-			
+				<!-- 현재 로그인한 경우 -->
+		      	<sec:authorize access="hasRole('ROLE_USER')">
+				<!-- 현재 로그인한 사용자와 댓글 작성자와 일치하는 경우 또는 관리자 -->
+				<c:if test="${replyList[i].authorId == userDetails.membersId or userDetails.membersId == 0}">
 					<!-- 오른쪽 스위치 + 삭제 버튼 -->
 					<div class="d-flex align-items-center" style="gap: 10px;">
 						<!-- 공개/비공개 스위치 폼 -->
@@ -236,13 +147,15 @@
 										onchange="submitStatus('${article.articlesId}', '${replyList[i].repliesId}')">
 						   	</div>
 						</form>
-					    <!-- 삭제 -->
+					    <!-- 삭제 (soft del) -->
 						<form action="/private/replies/${article.articlesId}/not/${replyList[i].repliesId}/1" method="post">
 							<input type="hidden" name="_method" value="PUT" />
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-						   <button type="submit" class="hideBtn"><i class="bi bi-trash3"></i></button>
+						    <button type="submit" class="hideBtn"><i class="bi bi-trash3"></i></button>
 					 	</form>
 					</div>
+				</c:if>
+				</sec:authorize>
 			    </div>
 			    <hr class="border opacity-50">
 			  </c:forEach>
@@ -250,6 +163,7 @@
 		</c:if>
 	</div>
 </div>
+
 <div class="d-none"> <!-- 테스트시 d-none 해제 -->
    <button onclick="vailFormData()">빈 값 검사</button>
    <button onclick="testUpdate()">수정 테스트</button>

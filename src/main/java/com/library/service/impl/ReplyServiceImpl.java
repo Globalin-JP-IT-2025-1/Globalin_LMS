@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.library.mapper.ReplyMapper;
 import com.library.model.Reply;
@@ -23,8 +24,9 @@ public class ReplyServiceImpl implements ReplyService {
 		return replyMapper.getAllRepliesByArticlesId(articlesId);
 	}
 	
-	// 댓글 작성
+	// 댓글 등록 및 해당 게시글 댓글 수 늘리기
 	@Override
+	@Transactional
     public int insertReply(Reply reply) {
 		// 오늘 날짜 설정
 		LocalDateTime currentDate = LocalDateTime.now();

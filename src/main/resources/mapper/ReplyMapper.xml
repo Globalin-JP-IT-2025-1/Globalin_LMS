@@ -46,8 +46,7 @@
 		   	CONTENT, CREATE_DATE, UPDATE_DATE, STATUS
 		) VALUES (
 		    #{repliesId}, #{originArticleId}, #{authorId}, 
-		    #{content}, #{createDate}, #{updateDate}, #{status}
-		);
+		    #{content}, #{createDate}, #{updateDate}, #{status})
     </insert>
 	
 	<!-- 댓글 삭제 -->

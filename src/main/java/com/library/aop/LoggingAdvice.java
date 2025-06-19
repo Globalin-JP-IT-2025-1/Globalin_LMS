@@ -17,10 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class LoggingAdvice {
 
-    @Pointcut("execution(* com.library.service.impl.*ServiceImpl.*(..))")
-    public void serviceMethods() {}
-
-    @Before("serviceMethods()")
+    @Pointcut("execution(* com.library.service.impl.*ServiceImpl.insert*(..))")
+    public void serviceInsertMethods() {}
+	
+    @Before("serviceInsertMethods()")
     public void logBefore(JoinPoint joinPoint) {
         log.info("📌 실행 전: {}.{}() 호출됨 / 파라미터: {}",
                 joinPoint.getSignature().getDeclaringTypeName(),
@@ -28,7 +28,7 @@ public class LoggingAdvice {
                 Arrays.toString(joinPoint.getArgs()));
     }
 
-    @AfterReturning(pointcut = "serviceMethods()", returning = "result")
+    @AfterReturning(pointcut = "serviceInsertMethods()", returning = "result")
     public void logAfter(JoinPoint joinPoint, Object result) {
         String className = (result != null) ? result.getClass().getSimpleName() : "null";
         log.info("✅ 실행 후: {}.{}() 반환값 클래스: {}",
@@ -37,8 +37,7 @@ public class LoggingAdvice {
                 className);
     }
 
-
-    @AfterThrowing(pointcut = "serviceMethods()", throwing = "ex")
+    @AfterThrowing(pointcut = "serviceInsertMethods()", throwing = "ex")
     public void logException(JoinPoint joinPoint, Throwable ex) {
     	log.error("❌ 예외 발생: {}.{}() / 예외: {}",
                 joinPoint.getSignature().getDeclaringTypeName(),
