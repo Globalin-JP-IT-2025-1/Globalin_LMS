@@ -42,10 +42,12 @@
                     <td>${authorList[i].name}(${authorList[i].username})</td>
                     <td>${articleList[i].viewCount}</td>
                     <td>${articleList[i].replyCount}</td>
-                             
                 </tr>
             </c:forEach>
         </tbody>
     </table>
     </div>
+    <div>
+   		<button class="btn btn-primary" onclick="location.href='/admin/articles/not/add'">질문하기</button>
+  	</div>
 </div>

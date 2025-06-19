@@ -11,7 +11,7 @@
 
 
 <!-- <h2>[자주 묻는 질문] 게시글 목록 조회</h2> -->
-<div class="container mt-5">
+<div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center">
         <div>전체 <strong>${fn:length(articleList)}</strong> 건</div>
         <div>
@@ -43,6 +43,9 @@
 	      </div>
 	    </div>	
 	</c:forEach>
+  </div>
+  <div>
+   	<button class="btn btn-primary" onclick="location.href='/admin/articles/faq/add'">질문하기</button>
   </div>
 </div>
 
