@@ -38,7 +38,7 @@
 	
 	<!-- 댓글 등록 -->
 	<insert id="insertReply" parameterType="com.library.model.Reply">
-	    <selectKey keyProperty="replyId" resultType="java.lang.Integer" order="BEFORE">
+	    <selectKey keyProperty="repliesId" resultType="java.lang.Integer" order="BEFORE">
 	        SELECT SQ_REPLIES.NEXTVAL FROM DUAL
 	    </selectKey>
         INSERT INTO REPLIES (
@@ -51,8 +51,8 @@
     </insert>
 	
 	<!-- 댓글 삭제 -->
-	<delete id="deleteArticle" parameterType="int">
-        DELETE FROM ARTICLES WHERE ARTICLES_ID = #{articlesId}
+	<delete id="deleteReply" parameterType="int">
+        DELETE FROM REPLIES WHERE REPLIES_ID = #{repliesId}
     </delete>
 
 </mapper>

@@ -35,11 +35,8 @@ public class AdminBookController {
     
     // 도서 관리 목록 조회
     @GetMapping
-    public String getAllBooksTotal(HttpServletRequest request, Model model) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String getAllBooksTotal(HttpServletRequest request, 
+    							   Model model) {
 	
 //		List<Book> bookList = bookService.getAllBooks();
 //		model.addAttribute("bookList", bookList);
@@ -56,11 +53,8 @@ public class AdminBookController {
     
     // 도서 추가 폼
     @GetMapping("/add")
-    public String showAddBook(HttpServletRequest request, Model model) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String showAddBook(HttpServletRequest request, 
+    						  Model model) {
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("92")
@@ -75,11 +69,8 @@ public class AdminBookController {
     // 도서 추가 요청
     @PostMapping
     public String addBookProc(@ModelAttribute Book book, 
-    		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    						  HttpServletRequest request, 
+    						  RedirectAttributes redirectAttributes) {
     	
     	try {
     		bookService.insertBook(book);
@@ -87,14 +78,14 @@ public class AdminBookController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addAttribute("alertType", "success");
-    		redirectAttributes.addAttribute("alertMessage", "도서 추가 성공 하였습니다.");
+    		redirectAttributes.addAttribute("alertType", "fail");
+    		redirectAttributes.addAttribute("alertMessage", "도서 추가 실패");
     		
     		return "redirect:/admin/books";
     	}
     	
     	redirectAttributes.addAttribute("alertType", "success");
-    	redirectAttributes.addAttribute("alertMessage", "도서 추가 성공 하였습니다.");
+    	redirectAttributes.addAttribute("alertMessage", "도서 추가 성공");
     	
     	return "redirect:/admin/books";
     }
@@ -103,11 +94,8 @@ public class AdminBookController {
     // 도서 수정 폼 --> js로 변경 예정
     @GetMapping("/{booksId}/edit")
     public String showEditBook(@PathVariable("booksId") int booksId, 
-    		HttpServletRequest request, Model model) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    						   HttpServletRequest request, 
+    						   Model model) {
 
 	//    	Book book = bookService.getBookById(booksId);
 	//    	model.addAttribute("book", book);
@@ -124,12 +112,10 @@ public class AdminBookController {
     
     // 도서 정보 수정 요청 - 정보
     @PutMapping("/{booksId}")
-    public String editBookInfoProc(@PathVariable("booksId") int booksId, @ModelAttribute Book book, 
-    		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String editBookInfoProc(@PathVariable("booksId") int booksId, 
+    							   @ModelAttribute Book book, 
+    							   HttpServletRequest request, 
+    							   RedirectAttributes redirectAttributes) {
     	
     	try {
     		//bookService.updateBookInfo(book);
@@ -137,13 +123,13 @@ public class AdminBookController {
     		e.printStackTrace();
     		
     		redirectAttributes.addAttribute("alertType", "fail");
-    		redirectAttributes.addAttribute("alertMessage", "도서 추가 실패 하였습니다.");
+    		redirectAttributes.addAttribute("alertMessage", "도서 추가 실패");
     		
     		return "redirect:/admin/books";
     	}
     	
     	redirectAttributes.addAttribute("alertType", "success");
-    	redirectAttributes.addAttribute("alertMessage", "도서 추가 성공 하였습니다.");
+    	redirectAttributes.addAttribute("alertMessage", "도서 추가 성공");
     	
     	return "redirect:/admin/books";
     	
@@ -151,28 +137,26 @@ public class AdminBookController {
     
     // 도서 정보 수정 요청 - 비활성화, 활성화
     @PutMapping("/{booksId}/{type}")
-    public String editBookDisableProc(@PathVariable("booksId") int booksId, @PathVariable("type") String type, 
-    		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String editBookDisableProc(@PathVariable("booksId") int booksId, 
+    		   						  @PathVariable("type") String type, 
+    		   						  HttpServletRequest request, 
+    		   						  RedirectAttributes redirectAttributes) {
     	
     	try {
     		if (type.equals("disable")) {
     			//bookService.updateBookDisable(booksId); // 도서 비활성화
     		} else if (type.equals("enable")) {
     			//bookService.updateBookEnable(booksId); // 도서 활성화
-    		}
+    		} 
     		
     	} catch (Exception e) {
     		e.printStackTrace();
     		
     		redirectAttributes.addAttribute("alertType", "fail");
     		if (type.equals("disable")) {
-    			redirectAttributes.addAttribute("alertMessage", "도서 비활성화 실패 하였습니다.");
+    			redirectAttributes.addAttribute("alertMessage", "도서 비활성화 실패");
     		} else if (type.equals("enable")) {
-    			redirectAttributes.addAttribute("alertMessage", "도서 활성화 실패 하였습니다");
+    			redirectAttributes.addAttribute("alertMessage", "도서 활성화 실패");
     		}
     		
     		return "redirect:/admin/books"; // 실패: 목록으로 이동
@@ -180,9 +164,9 @@ public class AdminBookController {
     	
     	redirectAttributes.addAttribute("alertType", "success");
 		if (type.equals("disable")) {
-			redirectAttributes.addAttribute("alertMessage", "도서 비활성화 성공 하였습니다.");
+			redirectAttributes.addAttribute("alertMessage", "도서 비활성화 성공");
 		} else if (type.equals("enable")) {
-			redirectAttributes.addAttribute("alertMessage", "도서 활성화 성공 하였습니다");
+			redirectAttributes.addAttribute("alertMessage", "도서 활성화 성공");
 		}
     	
     	return "redirect:/admin/books"; // 성공: 목록으로 이동
@@ -192,11 +176,8 @@ public class AdminBookController {
     // 도서 정보 삭제 요청
     @DeleteMapping("/{booksId}")
     public String deleteBookProc(@PathVariable("booksId") int booksId, 
-    		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    							 HttpServletRequest request, 
+    							 RedirectAttributes redirectAttributes) {
     	
     	try {
     		//bookService.deleteBook(booksId);
@@ -204,13 +185,13 @@ public class AdminBookController {
     		e.printStackTrace();
     		
     		redirectAttributes.addAttribute("alertType", "fail");
-    		redirectAttributes.addAttribute("alertMessage", "도서 삭제 실패 하였습니다.");
+    		redirectAttributes.addAttribute("alertMessage", "도서 삭제 실패");
     		
     		return "redirect:/admin/books/" + booksId; // 실패 : 도서 상세 조회로
     	}
 
     	redirectAttributes.addAttribute("alertType", "success");
-    	redirectAttributes.addAttribute("alertMessage", "도서 삭제 성공 하였습니다.");
+    	redirectAttributes.addAttribute("alertMessage", "도서 삭제 성공");
     	
     	return "redirect:/admin/books"; // 성공 : 도서 목록 조회로
     	

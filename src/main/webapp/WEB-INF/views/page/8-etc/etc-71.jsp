@@ -137,7 +137,7 @@
 		<div class="sitemap_content">
 			<ul>
 				<li><a href="/public/auth/login">로그인</a></li>
-				<li><a href="/public/members/check">가입 여부 확인</a></li>
+				<li><a href="/public/members/check">아이디 찾기</a></li>
 				<li><a href="/public/members/repass">비밀번호 재발급</a></li>
 				<li><a href="/public/members/register">회원가입</a></li>
 			</ul>

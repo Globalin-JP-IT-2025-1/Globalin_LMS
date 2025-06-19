@@ -29,7 +29,6 @@ public class AdminTokenController {
     @GetMapping
     public String getAllBlacklistedTokens(Model model) {
     	List<BlacklistedToken> blackList = tokenBlacklistService.getAllBlacklistedTokens();
-        
     	model.addAttribute("blackList", blackList);
 
     	pageInfo = PageInfo.builder()
@@ -38,7 +37,7 @@ public class AdminTokenController {
 			.build();
     	
     	model.addAttribute("alertType", "success");
-    	model.addAttribute("alertMessage", "차단된 토큰 목록 조회를 완료하였습니다.");
+    	model.addAttribute("alertMessage", "차단된 토큰 목록 조회 완료");
     	
     	setPageInfo(model);
     	

@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.library.model.PageInfo;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @RequestMapping("/")
 @AllArgsConstructor
@@ -23,8 +25,13 @@ public class HomeController {
 	}
 	
 	@GetMapping
-    public String showHome(HttpServletRequest request, Model model) {
-    	System.out.println("homeController!! - homeController");
+    public String showHome(HttpServletRequest request, 
+    					   Model model) {
+		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
+				this.getClass().getSimpleName(), 
+				request.getRequestURI(),
+				request.getMethod());
+		
     	setPageInfo(model);
     	
         return "layout";
