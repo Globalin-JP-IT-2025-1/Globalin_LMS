@@ -61,7 +61,8 @@ public class AdminArticleNotController {
     
     // 등록 처리
     @PostMapping
-    public String insertProc(@ModelAttribute Article article, RedirectAttributes redirectAttributes) {
+    public String insertProc(@ModelAttribute Article article, 
+    						 RedirectAttributes redirectAttributes) {
     	
     	try {
     		articleService.insertArticle(article); // 게시글 등록
@@ -70,14 +71,14 @@ public class AdminArticleNotController {
     		e.printStackTrace();
     		
     		redirectAttributes.addAttribute("alertType", "fail");
-    		redirectAttributes.addAttribute("alertMessage", "[공지사항] 등록 실패 하였습니다");
+    		redirectAttributes.addAttribute("alertMessage", "[공지사항] 등록 실패");
     		redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
     		
     		return "redirect:/public/articles/not/add"; // 실패: 등록 폼으로 이동
     	}
     	
     	redirectAttributes.addAttribute("alertType", "success");
-    	redirectAttributes.addAttribute("alertMessage", "[공지사항] 등록 성공 하였습니다");
+    	redirectAttributes.addAttribute("alertMessage", "[공지사항] 등록 성공");
     	
     	return "redirect:/public/articles/not"; // 성공: 목록으로 이동
     }
@@ -85,8 +86,9 @@ public class AdminArticleNotController {
     
     // 내용 수정 처리
     @PutMapping("/{articlesId}")
-    public String updateInfoProc(@PathVariable("articlesId") int articlesId, @ModelAttribute Article article,
-    		RedirectAttributes redirectAttributes) {
+    public String updateInfoProc(@PathVariable("articlesId") int articlesId, 
+					    		 @ModelAttribute Article article,
+					    		 RedirectAttributes redirectAttributes) {
     	
     	try {
 			articleService.updateArticleInfo(article); // 게시글 내용 수정
@@ -95,14 +97,14 @@ public class AdminArticleNotController {
     		e.printStackTrace();
     		
     		redirectAttributes.addAttribute("alertType", "fail");
-			redirectAttributes.addAttribute("alertMessage", "[공지사항] 내용 수정 실패 하였습니다");
+			redirectAttributes.addAttribute("alertMessage", "[공지사항] 내용 수정 실패");
 			redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
     		
     		return "redirect:/public/articles/not/" + articlesId + "/edit"; // 실패: 상세 조회로 이동
     	}
     	
     	redirectAttributes.addAttribute("alertType", "success");
-		redirectAttributes.addAttribute("alertMessage", "[공지사항] 내용 수정 성공 하였습니다");
+		redirectAttributes.addAttribute("alertMessage", "[공지사항] 내용 수정 성공");
 		
     	
     	return "redirect:/public/articles/not/" + articlesId; // 성공: 상세 조회로 이동
@@ -111,8 +113,9 @@ public class AdminArticleNotController {
     
     // 활성화, 비활성화, 잠금 처리
     @PutMapping("/{articlesId}/{type}")
-    public String updateDisplayProc(@PathVariable("articlesId") int articlesId, @PathVariable("type") String type,
-    		RedirectAttributes redirectAttributes) {
+    public String updateDisplayProc(@PathVariable("articlesId") int articlesId, 
+    								@PathVariable("type") String type,
+    								RedirectAttributes redirectAttributes) {
     	
     	try {
     		if (type.equals("disable")) {
@@ -128,11 +131,11 @@ public class AdminArticleNotController {
     		
     		redirectAttributes.addAttribute("alertType", "fail");
     		if (type.equals("disable")) {
-    			redirectAttributes.addAttribute("alertMessage", "[공지사항] 비활성화 실패 하였습니다");
+    			redirectAttributes.addAttribute("alertMessage", "[공지사항] 비활성화 실패");
     		} else if (type.equals("enable")) {
-    			redirectAttributes.addAttribute("alertMessage", "[공지사항] 활성화 실패 하였습니다");
+    			redirectAttributes.addAttribute("alertMessage", "[공지사항] 활성화 실패");
     		} else if (type.equals("secret")) {
-    			redirectAttributes.addAttribute("alertMessage", "[공지사항] 잠금 실패 하였습니다");
+    			redirectAttributes.addAttribute("alertMessage", "[공지사항] 잠금 실패");
     		}
     		
     		return "redirect:/public/articles/not/" + articlesId; // 실패: 상세 조회로 이동
@@ -140,11 +143,11 @@ public class AdminArticleNotController {
     	
     	redirectAttributes.addAttribute("alertType", "success");
     	if (type.equals("disable")) {
-			redirectAttributes.addAttribute("alertMessage", "[공지사항] 비활성화 성공 하였습니다");
+			redirectAttributes.addAttribute("alertMessage", "[공지사항] 비활성화 성공");
 		} else if (type.equals("enable")) {
-			redirectAttributes.addAttribute("alertMessage", "[공지사항] 활성화 성공 하였습니다");
+			redirectAttributes.addAttribute("alertMessage", "[공지사항] 활성화 성공");
 		} else if (type.equals("secret")) {
-			redirectAttributes.addAttribute("alertMessage", "[공지사항] 잠금 성공 하였습니다");
+			redirectAttributes.addAttribute("alertMessage", "[공지사항] 잠금 성공");
 		}
     	
     	return "redirect:/public/articles/not/" + articlesId; // 성공: 상세 조회로 이동
@@ -152,7 +155,8 @@ public class AdminArticleNotController {
     
     // 삭제 처리
     @DeleteMapping("/{articlesId}")
-    public String deleteProc(@PathVariable("articlesId") int articlesId, RedirectAttributes redirectAttributes) {
+    public String deleteProc(@PathVariable("articlesId") int articlesId, 
+    						 RedirectAttributes redirectAttributes) {
     	
     	try {
 			articleService.deleteArticleById(articlesId); // 게시글 DB 삭제
@@ -161,13 +165,13 @@ public class AdminArticleNotController {
     		e.printStackTrace();
     		
     		redirectAttributes.addAttribute("alertType", "fail");
-			redirectAttributes.addAttribute("alertMessage", "[공지사항] 삭제 실패 하였습니다");
+			redirectAttributes.addAttribute("alertMessage", "[공지사항] 삭제 실패");
     		
 			return "redirect:/public/articles/not/" + articlesId; // 실패: 상세 조회로 이동
     	}
     	
     	redirectAttributes.addAttribute("alertType", "success");
-		redirectAttributes.addAttribute("alertMessage", "[공지사항] 삭제 성공 하였습니다");
+		redirectAttributes.addAttribute("alertMessage", "[공지사항] 삭제 성공");
     	
 		return "redirect:/public/articles/not"; // 성공: 목록으로 이동
     }

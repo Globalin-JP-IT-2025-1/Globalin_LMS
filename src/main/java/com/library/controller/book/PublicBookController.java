@@ -2,8 +2,6 @@ package com.library.controller.book;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,14 +28,10 @@ public class PublicBookController {
     }
 
     @GetMapping("/total")
-    public String getAllBooksTotal(HttpServletRequest request, Model model) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String getAllBooksTotal(Model model) {
     	
-    	//List<Book> bookList = bookService.getAllBooks();
-    	//model.addAttribute("bookList", bookList);
+    	List<Book> bookList = bookService.getAllBooks();
+    	model.addAttribute("bookList", bookList);
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("11")
@@ -50,14 +44,10 @@ public class PublicBookController {
     }
     
     @GetMapping("/class")
-    public String getAllBooksClass(HttpServletRequest request, Model model) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String getAllBooksClass(Model model) {
     	
-    	//List<Book> bookList = bookService.getAllBooks();
-    	//model.addAttribute("bookList", bookList);
+    	List<Book> bookList = bookService.getAllBooks();
+    	model.addAttribute("bookList", bookList);
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("12")
@@ -70,14 +60,10 @@ public class PublicBookController {
     }
     
     @GetMapping("/loan")
-    public String getAllBooksLoan(HttpServletRequest request, Model model) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String getAllBooksLoan(Model model) {
     	
-    	//List<Book> bookList = bookService.getAllBooks();
-    	//model.addAttribute("bookList", bookList);
+    	List<Book> bookList = bookService.getAllBooks();
+    	model.addAttribute("bookList", bookList);
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("13")
@@ -91,14 +77,10 @@ public class PublicBookController {
     
     
     @GetMapping("/like")
-    public String getAllBooksLike(HttpServletRequest request, Model model) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String getAllBooksLike(Model model) {
     	
-    	//List<Book> bookList = bookService.getAllBooks();
-    	//model.addAttribute("bookList", bookList);
+    	List<Book> bookList = bookService.getAllBooks();
+    	model.addAttribute("bookList", bookList);
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("14")

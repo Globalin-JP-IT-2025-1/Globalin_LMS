@@ -2,10 +2,17 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
 <c:set var="article" value="${article}" />
 <c:set var="a_author" value="${a_author}" />
 <c:set var="replyList" value="${replyList}" />
 <c:set var="r_authorList" value="${r_authorList}" />
+
+<sec:authorize access="hasRole('ROLE_USER')">
+    <sec:authentication property="principal" var="userDetails" />
+    <c:out value="${userDetails.membersId}" />
+</sec:authorize>
 
 <style>
 .container-fluid {
@@ -79,45 +86,46 @@
 }
 
 .replies_writebox {
-  margin-bottom: 25px;
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
+	margin-bottom: 25px;
+	display: flex;
+	gap: 10px;
+	align-items: flex-start;
 }
 
 .replies_writebox .form-control {
-  height: 70px;
-  padding: 8px;
-  padding-bottom: 20px;
-  resize: none;
-  overflow-y: auto;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  word-break: break-word;
+	height: 70px;
+	padding: 8px;
+	padding-bottom: 20px;
+	resize: none;
+	overflow-y: auto;
+	line-height: 1.4;
+	white-space: pre-wrap;
+	word-break: break-word;
 }
 
 /* 글자 수 */
 .char-count-inside {
-  position: absolute;
-  bottom: 6px;
-  right: 10px;
-  font-size: 0.75rem;
-  color: #999;
-  pointer-events: none;
+	position: absolute;
+	bottom: 6px;
+	right: 10px;
+	font-size: 0.75rem;
+	color: #999;
+	pointer-events: none;
 }
 
 .addBtn {
-  min-width: 100px;
-  background-color: var(--main-color) !important;
-  color: white;
-  border: 0;
-  height: 70px;
+	min-width: 100px;
+	background-color: var(--main-color) !important;
+	color: white;
+	border: 0;
+	height: 70px;
 }
 
 .replyLabel {
 	color: gray;
 }
 </style>
+
 
 <!-- 게시글 상세 조회 - 공지사항 -->
 <div class="container-fluid">
@@ -149,30 +157,49 @@
 			<form action="/admin/articles/not" method="post" id="articleForm" >
 				<input type="hidden" name="_method" value="PUT">
 				<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
-			    <input type="hidden" id="title" readonly value="${article.title}">
-			    <textarea id="content" readonly hidden="true">${article.content}</textarea>
+			    
+			    <input type="hidden" id="title" name="title" readonly value="${article.title}"><!-- 게시글 수정 - 서버 송신1 -->
+			    <textarea id="content" name="content" readonly hidden="true">${article.content}</textarea><!-- 게시글 수정 - 서버 송신2 -->
+				
 				<button type="submit" class="btn btn-primary saveBtn" id="saveButton" style="display: none;">저장</button>				
 			</form>
 		</div>
 	</div>
 </div>
 
-
-
 <div class="container-fluid mb-5 card articleDetail_div2">	
 	<label class="form-label mt-4 mb-3">댓글(전체 <strong>${fn:length(replyList)}</strong> 건)</label>
 	<!-- 댓글 작성 폼 -->
 	<div class="articleDetail_div3">
-		<form action="/private/replies/${articlesId}" method="post">
+		<form action="/private/replies/${articlesId}/not" method="post">
 			<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
-			<div class="replies_writebox position-relative">
-			  <div class="position-relative w-100">
-			    <textarea class="form-control" id="replyContent" maxlength="500" rows="3"></textarea>
-			    <div class="char-count-inside" id="charCount">0 / 500</div>
-			  </div>
-			  <button class="btn btn-outline-primary addBtn" type="submit">등록</button>
-			</div>
+			<c:choose>
+			    <c:when test="${not empty userDetails}">
+			    	<div class="replies_writebox position-relative">
+						<div class="position-relative w-100">
+						    <textarea class="form-control" name="content" id="replyContent" maxlength="500" rows="3"></textarea><!-- 댓글 작성 - 서버 송신1 -->
+						    <div class="char-count-inside" id="charCount">0 / 500</div>
+						    <sec:authorize access="hasRole('ROLE_USER')">
+					        	<input type="text" name="authorId" value="${userDetails.membersId}" readonly><!-- 댓글 작성 - 서버 송신2 -->
+							</sec:authorize>
+						</div>
+						<button class="btn btn-outline-primary addBtn" type="submit">등록</button>
+					</div>
+			    </c:when>
+			
+			    <c:otherwise>
+			   		<div class="replies_writebox position-relative">
+						<div class="position-relative w-100">
+						    <textarea class="form-control bg-light" id="replyContent" maxlength="500" rows="3" readonly>로그인 필요</textarea>
+							<div class="char-count-inside" id="charCount">0 / 500</div>
+						</div>
+						<button class="btn btn-outline-secondary addBtn" type="submit" disabled>등록불가</button>
+					</div>
+			    </c:otherwise>
+			</c:choose>
+
 		</form>
+		<hr class="border border-1 opacity-50">
 	</div>
 	
 	<div class="articleDetail_div4">	
@@ -180,10 +207,9 @@
 		<c:if test="${fn:length(replyList) > 0}">
 		<div class="position-relative mt-2 mb-4">
 			<c:forEach var="i" begin="0" end="${fn:length(replyList) - 1}" step="1">
-					<hr class="border border-1 opacity-50">
 				   <div class="d-flex justify-content-between align-items-center mb-2" style="position: relative;">
 						<div>
-					        <label class="form-label replyLabel">${r_authorList[i].name}(${r_authorList[i].username})</label><br>
+					        <label class="form-label replyLabel">${r_authorList[i].name}(${r_authorList[i].username})</label>
 					       <label class="form-label">
 							  <c:choose>
 							    <c:when test="${replyList[i].status == 2}">
@@ -193,8 +219,8 @@
 							      ${replyList[i].content}
 							    </c:otherwise>
 							  </c:choose>
-							</label><br>
-					        <label class="form-label replyLabel"><fmt:formatDate value="${replyList[i].updateDate}" pattern="yyyy.MM.dd a hh:mm:ss" /></label>
+							</label>
+					        <label class="form-label replyLabel"><fmt:formatDate value="${replyList[i].updateDate}" pattern="MM.dd hh:mm:ss" /></label>
 				      	</div>
 			
 					<!-- 오른쪽 스위치 + 삭제 버튼 -->
@@ -210,8 +236,8 @@
 										onchange="submitStatus('${article.articlesId}', '${replyList[i].repliesId}')">
 						   	</div>
 						</form>
-					    	 <!-- 삭제 -->
-						<form action="/private/replies/${article.articlesId}/${replyList[i].repliesId}/1" method="post">
+					    <!-- 삭제 -->
+						<form action="/private/replies/${article.articlesId}/not/${replyList[i].repliesId}/1" method="post">
 							<input type="hidden" name="_method" value="PUT" />
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 						   <button type="submit" class="hideBtn"><i class="bi bi-trash3"></i></button>
@@ -300,7 +326,7 @@
 	  }
 	
 	  	const form = document.getElementById("statusForm-" + replyId);
-	  	form.action = '/private/replies/not/'+articlesId+'/'+replyId+'/'+status;
+	  	form.action = '/private/replies/'+articlesId+'/not/'+replyId+'/'+status;
 	  	form.submit();
 	}
  	

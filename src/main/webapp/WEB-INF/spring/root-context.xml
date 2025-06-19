@@ -73,18 +73,10 @@
         <property name="defaultEncoding" value="UTF-8" />
     </bean>
     
-    
-    <!-- AOP용? -->
-    <context:component-scan base-package="com.library.service" />
-    <context:component-scan base-package="com.library.aop" />
-    
-    <context:annotation-config />
-    
 	<!-- AOP 활성화 -->
     <aop:aspectj-autoproxy />
 
     <!-- Advice Bean 등록 -->
-    <bean name="loggingAdvice" class="com.library.aop.LoggingAdvice" />
-    
+	<bean id="loggingAdvice" class="com.library.aop.LoggingAdvice" />
     
 </beans>

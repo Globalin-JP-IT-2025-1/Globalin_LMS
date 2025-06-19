@@ -1,4 +1,4 @@
-package com.library.service;
+package com.library.service.impl;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.library.mapper.MemberMapper;
 import com.library.model.Member;
+import com.library.service.BlacklistedTokenService;
+import com.library.service.MemberService;
 import com.library.util.CommonUtil;
 
 import lombok.AllArgsConstructor;

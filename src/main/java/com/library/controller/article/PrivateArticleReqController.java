@@ -2,8 +2,6 @@ package com.library.controller.article;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,16 +35,12 @@ public class PrivateArticleReqController {
     
     // 목록 조회
     @GetMapping
-    public String getList(HttpServletRequest request, Model model) {
-    	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String getList(Model model) {
 		
-		//Map<String, Object> articleListWithAuthor = articleService.getAllArticlesByCategoryWithAuthor("qna");
+		Map<String, Object> articleListWithAuthor = articleService.getAllArticlesByCategoryWithAuthor("qna");
 		
-		//model.addAttribute("articleList", articleListWithAuthor.get("articleList"));
-		//model.addAttribute("authorList", articleListWithAuthor.get("authorList"));
+		model.addAttribute("articleList", articleListWithAuthor.get("articleList"));
+		model.addAttribute("authorList", articleListWithAuthor.get("authorList"));
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("24")
@@ -60,18 +54,15 @@ public class PrivateArticleReqController {
     
     // 상세 조회
     @GetMapping("/{articlesId}")
-    public String getDetail(@PathVariable("articlesId") int articlesId, HttpServletRequest request, Model model) {
-		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-				this.getClass().getSimpleName(), 
-				request.getRequestURI(),
-				request.getMethod());
+    public String getDetail(@PathVariable("articlesId") int articlesId, 
+    		   				Model model) {
 		
-//		Map<String, Object> articleWithReply = articleService.getArticleWithReply(articlesId);
-//		
-//		model.addAttribute("article", articleWithReply.get("article"));
-//		if (articleWithReply.containsKey("reply")) {
-//			model.addAttribute("reply", articleWithReply.get("reply"));
-//		}
+		Map<String, Object> articleWithReply = articleService.getArticleWithAuthorAndReplies(articlesId);
+		
+		model.addAttribute("article", articleWithReply.get("article"));
+		if (articleWithReply.containsKey("reply")) {
+			model.addAttribute("reply", articleWithReply.get("reply"));
+		}
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("24")
@@ -86,11 +77,7 @@ public class PrivateArticleReqController {
     
     // 등록 폼 요청
  	@GetMapping("/add")
- 	public String showAddForm(HttpServletRequest request, Model model) {
- 		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
- 			this.getClass().getSimpleName(), 
- 			request.getRequestURI(),
- 			request.getMethod());
+ 	public String showAddForm(Model model) {
  		
  		pageInfo = PageInfo.builder()
  				.pageTitleCode("22")
@@ -102,61 +89,50 @@ public class PrivateArticleReqController {
  		return "layout";
  	}
  	
- 	// 수정 폼 요청
- 	@GetMapping("/edit")
- 	public String showEditForm(HttpServletRequest request, Model model) {
- 		log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
- 			this.getClass().getSimpleName(), 
- 			request.getRequestURI(),
- 			request.getMethod());
- 		
- 		pageInfo = PageInfo.builder()
- 				.pageTitleCode("22")
- 				.pagePath("page/3-article/editForm_article_faq.jsp")
- 				.build();
- 		  
- 		setPageInfo(model);
- 		  
- 		return "layout";
- 	}
+ 	// 수정 폼 요청 --> js
+// 	@GetMapping("/edit")
+// 	public String showEditForm(Model model) {
+// 		
+// 		pageInfo = PageInfo.builder()
+// 				.pageTitleCode("22")
+// 				.pagePath("page/3-article/editForm_article_faq.jsp")
+// 				.build();
+// 		  
+// 		setPageInfo(model);
+// 		  
+// 		return "layout";
+// 	}
      
      // 등록 처리
  	@PostMapping
      public String insertProc(@ModelAttribute Article article,  
-     		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-     			this.getClass().getSimpleName(), 
-     			request.getRequestURI(),
-     			request.getMethod());
+     						  RedirectAttributes redirectAttributes) {
      	
      	try {
-     		//articleService.insertArticle(article); // 게시글 등록
+     		articleService.insertArticle(article); // 게시글 등록
      		
      	} catch (Exception e) {
      		e.printStackTrace();
      		
      		redirectAttributes.addAttribute("alertType", "fail");
-     		redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 등록 실패 하였습니다");
+     		redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 등록 실패");
      		redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
      		
      		return "redirect:/private/articles/req/add"; // 실패: 등록 폼으로 이동
      	}
      	
      	redirectAttributes.addAttribute("alertType", "success");
-     	redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 등록 성공 하였습니다");
+     	redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 등록 성공");
      	
      	return "redirect:/private/articles/req"; // 성공: 목록으로 이동
      }
      
  	// 내용 수정 처리
      @PutMapping("/{articlesId}")
-     public String updateInfoProc(@PathVariable("articlesId") int articlesId, @ModelAttribute Article article,
-     		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-     			this.getClass().getSimpleName(), 
-     			request.getRequestURI(),
-     			request.getMethod());
-     	
+     public String updateInfoProc(@PathVariable("articlesId") int articlesId, 
+					    		  @ModelAttribute Article article,
+					     		  RedirectAttributes redirectAttributes) {
+    	 
      	try {
  			//articleService.updateArticleInfo(article); // 게시글 내용 수정
      		
@@ -164,14 +140,14 @@ public class PrivateArticleReqController {
      		e.printStackTrace();
      		
      		redirectAttributes.addAttribute("alertType", "fail");
- 			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 내용 수정 실패 하였습니다");
+ 			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 내용 수정 실패");
  			redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
      		
      		return "redirect:/private/articles/req/" + articlesId + "/edit"; // 실패: 상세 조회로 이동
      	}
      	
      	redirectAttributes.addAttribute("alertType", "success");
- 		redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 내용 수정 성공 하였습니다");
+ 		redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 내용 수정 성공");
  		
      	
      	return "redirect:/private/articles/req/" + articlesId; // 성공: 상세 조회로 이동
@@ -180,67 +156,65 @@ public class PrivateArticleReqController {
      
      // 활성화, 비활성화 처리
      @PutMapping("/{articlesId}/{type}")
-     public String updateDisplayProc(@PathVariable("articlesId") int articlesId, @PathVariable("type") String type,
-     		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-     			this.getClass().getSimpleName(), 
-     			request.getRequestURI(),
-     			request.getMethod());
+     public String updateDisplayProc(@PathVariable("articlesId") int articlesId, 
+						    		 @PathVariable("status") int type,
+						     		 RedirectAttributes redirectAttributes) {
      	
      	try {
-     		if (type.equals("disable")) {
-     			//articleService.updateArticleDisable(articlesId); // 게시글 비활성화
-     		} else if (type.equals("enable")) {
-     			//articleService.updateArticleEnable(articlesId); // 게시글 활성화
+     		if (type == 1) {
+     			articleService.updateArticleDisable(articlesId); // 게시글 비활성화 (soft del)
+     		} else if (type == 0) {
+     			articleService.updateArticleEnable(articlesId); // 게시글 활성화
+     		} else if (type == 2) {
+     			articleService.updateArticleSecret(articlesId); // 게시글 잠금 (soft del)
      		}
      		
      	} catch (Exception e) {
      		e.printStackTrace();
      		
      		redirectAttributes.addAttribute("alertType", "fail");
-     		if (type.equals("disable")) {
-     			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 비활성화 실패 하였습니다");
-     		} else if (type.equals("enable")) {
-     			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 활성화 실패 하였습니다");
+     		if (type == 1) {
+     			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 비활성화 실패");
+     		} else if (type == 0) {
+     			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 활성화 실패");
+     		} else if (type == 2) {
+     			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 잠금 실패");
      		}
      		
      		return "redirect:/private/articles/req/" + articlesId; // 실패: 상세 조회로 이동
      	}
      	
      	redirectAttributes.addAttribute("alertType", "success");
-     	if (type.equals("disable")) {
- 			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 비활성화 성공 하였습니다");
- 		} else if (type.equals("enable")) {
- 			redirectAttributes.addAttribute("alertType", "fail");
- 			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 활성화 성공 하였습니다");
+     	if (type == 1) {
+ 			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 비활성화 성공");
+ 		} else if (type == 0) {
+ 			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 활성화 성공");
+ 		} else if (type == 2) {
+ 			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 잠금 성공");
  		}
      	
      	return "redirect:/private/articles/req/" + articlesId; // 성공: 상세 조회로 이동
      }
      
-     // 삭제 처리
+     // 삭제 처리 (hard del)
      @DeleteMapping("/{articlesId}")
      public String deleteProc(@PathVariable("articlesId") int articlesId,
-     		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
-     			this.getClass().getSimpleName(), 
-     			request.getRequestURI(),
-     			request.getMethod());
+     						  RedirectAttributes redirectAttributes) {
      	
      	try {
- 			//articleService.deleteArticleById(articlesId); // 게시글 DB 삭제
+ 			articleService.deleteArticleById(articlesId); // 게시글 DB 삭제
      		
      	} catch (Exception e) {
      		e.printStackTrace();
      		
      		redirectAttributes.addAttribute("alertType", "fail");
- 			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 삭제 실패 하였습니다");
+ 			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 삭제 실패");
      		
  			return "redirect:/private/articles/req/" + articlesId; // 실패: 상세 조회로 이동
      	}
      	
      	redirectAttributes.addAttribute("alertType", "success");
- 		redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 삭제 성공 하였습니다");
+ 		redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 삭제 성공");
      	
  		return "redirect:/private/articles/req"; // 성공: 목록으로 이동
      }
