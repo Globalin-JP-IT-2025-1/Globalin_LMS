@@ -37,7 +37,7 @@
 		
 		    
 		    <div class="mb-3 col-6 d-flex justify-content-center align-items-center gap-2">
-		        <form action="/public/auto/login" method="post">
+		        <form action="/public/auth/login" method="post">
 		        	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		        	<input type="hidden" name="username" id="username" value="" readonly><!-- 서버 송신용1 -->
 		        	<input type="hidden" name="password" id="password" value="" readonly><!-- 서버 송신용2 -->

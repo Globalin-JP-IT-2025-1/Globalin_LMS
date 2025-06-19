@@ -37,7 +37,6 @@
                 <tr onclick="location.href='/public/articles/qna/${articleList[i].articlesId}'">
                     <td>${i + 1}</td>
                     <td>${articleList[i].title}</td>
-                    
                     <td>${authorList[i].name}(${authorList[i].username})</td>
                     <td>${articleList[i].viewCount}</td>
                     <td>${articleList[i].replyCount}</td>
