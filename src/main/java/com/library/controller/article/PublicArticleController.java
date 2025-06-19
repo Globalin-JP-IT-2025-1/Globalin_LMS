@@ -123,6 +123,7 @@ public class PublicArticleController {
 			Map<String, Object> articleWithAuthorAndReplies = articleService.getArticleWithAuthorAndReplies(articlesId);
 			model.addAttribute("article", articleWithAuthorAndReplies.get("article")); // 게시글 상세 정보
 			model.addAttribute("author", articleWithAuthorAndReplies.get("author")); // 작성자 정보
+			model.addAttribute("a_author", articleWithAuthorAndReplies.get("a_author")); // 작성자 정보
 			model.addAttribute("replyList", articleWithAuthorAndReplies.get("replyList")); // 댓글 리스트
 			
 		} catch (Exception e) {
