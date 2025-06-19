@@ -127,29 +127,48 @@ public class ArticleServiceImpl implements ArticleService {
 		return articleMapper.updateArticleInfo(article);
 	}
 	
-	// 비공개글 전환 - 작성자 삭제 시
+	// 2) 비공개글 전환 - 작성자 삭제 시
 	@Override
 	public int updateArticleDisable(int articlesId) {
 		return articleMapper.updateArticleDisable(articlesId);
 	}
 	
-	// 공개글 전환 - 작성자 복구 요청 또는 비밀글 해제 시
+	// 3) 공개글 전환 - 작성자 복구 요청 또는 비밀글 해제 시
 	@Override
 	public int updateArticleEnable(int articlesId) {
 		return articleMapper.updateArticleEnable(articlesId);
 	}
 	
-	// 비밀글 전환(Q&A만) - 작성자 설정
+	// 4) 비밀글 전환(Q&A만) - 작성자 설정
 	@Override
 	public int updateArticleSecret(int articlesId) {
 		return articleMapper.updateArticleSecret(articlesId);
 	}
-    
+	
+	// 5) view count 증가
+	@Override
+	public int updateArticleViewCountUp(int articlesId) {
+		return articleMapper.updateArticleViewCountUp(articlesId);
+	}
+	
+	// 6) reply count 증가
+	@Override
+	public int updateArticleReplyCountUp(int articlesId) {
+		return articleMapper.updateArticleReplyCountUp(articlesId);
+	}
+	
+	// 7) reply count 감소
+	@Override
+	public int updateArticleReplyCountDown(int articlesId) {
+		return articleMapper.updateArticleReplyCountDown(articlesId);
+	}
+	
     // 게시글 삭제 - 관리자 삭제
 	@Override
 	public int deleteArticleById(int articlesId) {
 		return articleMapper.deleteArticleById(articlesId);
 	}
+	
 
 
 }

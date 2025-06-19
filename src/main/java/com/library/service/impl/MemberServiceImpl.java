@@ -149,6 +149,17 @@ public class MemberServiceImpl implements MemberService {
 		// 비밀번호 암호화
 		String encodedPassword = passwordEncoder.encode(member.getPassword());
 		member.setPassword(encodedPassword);
+		
+		System.out.println("ServiceTest: " +
+        		member.getUsername() + ", " +
+        		member.getPassword() + ", " +
+        		member.getName() + ", " +
+        		member.getEmail() + ", " +
+        		member.getMobile() + ", " +
+        		member.getZipcode() + ", " +
+        		member.getAddress() + ", " +
+        		member.getAddressDetail()
+			);
 
 		return memberMapper.insertMember(member);
 	}

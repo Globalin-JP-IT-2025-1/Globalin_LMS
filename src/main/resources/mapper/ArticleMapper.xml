@@ -48,6 +48,27 @@
 	    WHERE ARTICLES_ID = #{articlesId}
     </update>
     
+    <!-- 5) view count 증가 -->
+    <update id="updateArticleViewCountUp" parameterType="int">
+        UPDATE ARTICLES 
+        SET	VIEW_COUNT = VIEW_COUNT + 1
+	    WHERE ARTICLES_ID = #{articlesId}
+    </update>
+    
+    <!-- 6) reply count 증가 -->
+    <update id="updateArticleReplyCountUp" parameterType="int">
+        UPDATE ARTICLES 
+        SET	REPLY_COUNT = REPLY_COUNT + 1
+	    WHERE ARTICLES_ID = #{articlesId}
+    </update>
+    
+    <!-- 7) reply count 감소 -->
+    <update id="updateArticleReplyCountDown" parameterType="int">
+        UPDATE ARTICLES 
+        SET	REPLY_COUNT = REPLY_COUNT - 1
+	    WHERE ARTICLES_ID = #{articlesId} AND REPLY_COUNT > 0
+    </update>
+    
     <!-- 게시글 등록 -->
     <insert id="insertArticle" parameterType="com.library.model.Article">
 	    <selectKey keyProperty="articlesId" resultType="java.lang.Integer" order="BEFORE">

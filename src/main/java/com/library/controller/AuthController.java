@@ -1,11 +1,13 @@
 package com.library.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.model.PageInfo;
 
@@ -46,6 +48,25 @@ public class AuthController {
     	}
     	
         return "layout";
+    }
+    
+    // 로그인 실패 처리
+    @GetMapping("/public/auth/login/fail")
+    public String loginFailProc(HttpSession session, 
+    							RedirectAttributes redirectAttributes) {
+    	
+    	String errorMsg = (String) session.getAttribute("LOGIN_ERROR_MSG");
+    	
+    	redirectAttributes.addFlashAttribute("alertType", "error");
+
+        if (errorMsg != null) {
+        	redirectAttributes.addFlashAttribute("alertMessage", errorMsg);
+        	session.removeAttribute("LOGIN_ERROR_MSG");
+        } else {
+        	redirectAttributes.addFlashAttribute("alertMessage", "로그인 실패");
+        }
+        
+    	return "redirect:/public/auth/login";
     }
 	
     // 로그인 처리 --> Spring Security로 이전

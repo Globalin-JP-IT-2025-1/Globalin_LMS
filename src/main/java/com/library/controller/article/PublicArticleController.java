@@ -85,7 +85,7 @@ public class PublicArticleController {
     	return "layout";
     }
     
-    // not 상세 조회 --> test 중
+    // not 상세 조회 --> ok
     @GetMapping("/not/{articlesId}")
     public String getDetailNot(@PathVariable("articlesId") int articlesId, 
 			    		       Model model) {
