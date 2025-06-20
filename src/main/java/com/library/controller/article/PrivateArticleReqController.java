@@ -115,14 +115,14 @@ public class PrivateArticleReqController {
      		e.printStackTrace();
      		
      		redirectAttributes.addAttribute("alertType", "fail");
-     		redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 등록 실패");
+     		redirectAttributes.addAttribute("alertMessage", "희망 도서신청에 실패하였습니다. 다시 시도해주세요.");
      		redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
      		
      		return "redirect:/private/articles/req/add"; // 실패: 등록 폼으로 이동
      	}
      	
      	redirectAttributes.addAttribute("alertType", "success");
-     	redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 등록 성공");
+     	redirectAttributes.addAttribute("alertMessage", "희망 도서가 신청되었습니다.");
      	
      	return "redirect:/private/articles/req"; // 성공: 목록으로 이동
      }
@@ -140,14 +140,14 @@ public class PrivateArticleReqController {
      		e.printStackTrace();
      		
      		redirectAttributes.addAttribute("alertType", "fail");
- 			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 내용 수정 실패");
+ 			redirectAttributes.addAttribute("alertMessage", "내용 수정에 실패하였습니다. 다시 시도해주세요.");
  			redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
      		
      		return "redirect:/private/articles/req/" + articlesId + "/edit"; // 실패: 상세 조회로 이동
      	}
      	
      	redirectAttributes.addAttribute("alertType", "success");
- 		redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 내용 수정 성공");
+ 		redirectAttributes.addAttribute("alertMessage", "수정이 완료되었습니다.");
  		
      	
      	return "redirect:/private/articles/req/" + articlesId; // 성공: 상세 조회로 이동
@@ -208,13 +208,13 @@ public class PrivateArticleReqController {
      		e.printStackTrace();
      		
      		redirectAttributes.addAttribute("alertType", "fail");
- 			redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 삭제 실패");
+ 			redirectAttributes.addAttribute("alertMessage", "삭제에 실패하였습니다. 다시 시도해주세요.");
      		
  			return "redirect:/private/articles/req/" + articlesId; // 실패: 상세 조회로 이동
      	}
      	
      	redirectAttributes.addAttribute("alertType", "success");
- 		redirectAttributes.addAttribute("alertMessage", "[희망 도서 신청] 삭제 성공");
+ 		redirectAttributes.addAttribute("alertMessage", "정상적으로 삭제되었습니다.");
      	
  		return "redirect:/private/articles/req"; // 성공: 목록으로 이동
      }
