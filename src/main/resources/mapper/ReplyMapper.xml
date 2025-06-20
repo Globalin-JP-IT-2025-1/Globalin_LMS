@@ -18,7 +18,7 @@
     <!-- 2) 비공개 댓글로 전환 : status -->
 	<update id="updateReplyDisable" parameterType="com.library.model.Reply">
         UPDATE REPLIES 
-        SET	STATUS = 2 
+        SET	STATUS = 1 
 	    WHERE REPLIES_ID = #{repliesId}
     </update>
     
@@ -32,7 +32,7 @@
     <!-- 4) 비밀 댓글로 전환 : status -->
     <update id="updateReplySecret" parameterType="int">
         UPDATE REPLIES 
-        SET	STATUS = 1
+        SET	STATUS = 2
 	    WHERE REPLIES_ID = #{repliesId}
     </update>
 	
