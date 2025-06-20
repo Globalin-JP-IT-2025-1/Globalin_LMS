@@ -1,5 +1,7 @@
 package com.library.controller.article;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -66,6 +68,7 @@ public class PrivateReplyController {
     		 						 @PathVariable("articlesId") int articlesId,  // 원본 글 id
     		 						 @PathVariable("repliesId") int repliesId, // 댓글 id
     		 						 @PathVariable("status") int status,  // 요청 작업 코드
+    		 						 HttpServletRequest request,
     		 			    		 RedirectAttributes redirectAttributes) {
      	
      	try {
@@ -92,7 +95,7 @@ public class PrivateReplyController {
      		return "redirect:/public/articles/" + originCat + "/" + articlesId; // 실패: 원본 글 상세 조회로 이동
      	}
      	
-     	redirectAttributes.addAttribute("alertType", "success");
+     	redirectAttributes.addFlashAttribute("alertType", "success");
      	if (status == 1) {
  			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 비활성화 성공");
      	} else if (status == 0) {
@@ -100,6 +103,8 @@ public class PrivateReplyController {
  		} else if (status == 2) {
  			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 잠금 성공");
  		}
+     	
+     	System.out.println(request.getRequestURI());
      	
      	return "redirect:/public/articles/" + originCat + "/" + articlesId; // 성공: 원본 글 상세 조회로 이동
      }
