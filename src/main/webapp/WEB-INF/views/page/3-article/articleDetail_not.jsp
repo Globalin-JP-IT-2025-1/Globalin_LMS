@@ -194,7 +194,7 @@
     function cancleEdit(articlesId) {
     	const confirmCancel = confirm("정말 취소하겠습니까?");
     	if (confirmCancel) {
-            window.location.href = '/public/articles/not/${articlesId}';
+            window.location.href = '/public/articles/not/'+articlesId;
     	}
     }
     
