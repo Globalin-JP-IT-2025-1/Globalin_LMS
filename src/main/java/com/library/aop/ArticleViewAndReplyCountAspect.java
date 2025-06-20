@@ -25,7 +25,7 @@ public class ArticleViewAndReplyCountAspect {
     	Object[] args = joinPoint.getArgs();
     	int articlesId = (int) args[0];
     	
-    	if (articlesId > 1) {
+    	if (articlesId > 0) {
     	    articleService.updateArticleViewCountUp(articlesId);
     	}
 
@@ -52,7 +52,7 @@ public class ArticleViewAndReplyCountAspect {
     	Object[] args = joinPoint.getArgs();
     	int articlesId = (int) args[0];
 
-    	if (articlesId > 1) {
+    	if (articlesId > 0) {
     	    articleService.updateArticleReplyCountDown(articlesId);
     	}
     	

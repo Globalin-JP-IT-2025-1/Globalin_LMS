@@ -104,8 +104,6 @@ public class PrivateReplyController {
  			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 잠금 성공");
  		}
      	
-     	System.out.println(request.getRequestURI());
-     	
      	return "redirect:/public/articles/" + originCat + "/" + articlesId; // 성공: 원본 글 상세 조회로 이동
      }
      
