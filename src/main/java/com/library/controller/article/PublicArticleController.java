@@ -101,7 +101,7 @@ public class PublicArticleController {
 			e.printStackTrace();
 			
 			model.addAttribute("alertType", "fail");
-			model.addAttribute("alertMesssage", "[공지사항] 게시글 상세 조회 실패");
+			model.addAttribute("alertMesssage", "공지사항 게시글 상세 조회되지않았습니다. 다시 시도해주세요.");
 		}
 		
     	pageInfo = PageInfo.builder()
@@ -130,7 +130,7 @@ public class PublicArticleController {
 			e.printStackTrace();
 			
 			model.addAttribute("alertType", "fail");
-			model.addAttribute("alertMesssage", "[Q&A] 게시글 상세 조회 실패");
+			model.addAttribute("alertMesssage", "게시글 상세 조회에 실패하였습니다.");
 		}
     	
     	pageInfo = PageInfo.builder()

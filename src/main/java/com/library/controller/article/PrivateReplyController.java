@@ -49,14 +49,14 @@ public class PrivateReplyController {
      		e.printStackTrace();
      		
      		redirectAttributes.addFlashAttribute("alertType", "fail");
-     		redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 등록 실패");
+     		redirectAttributes.addFlashAttribute("alertMessage", "댓글 등록에 실패하였습니다.");
      		redirectAttributes.addFlashAttribute("reply", reply); // 입력 내용 반환
      		
      		return "redirect:/public/articles/" + originCat + "/" + articlesId; // 실패: 원본 글 상세 조회로 이동
      	}
      	
      	redirectAttributes.addFlashAttribute("alertType", "success");
-     	redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 등록 성공");
+     	redirectAttributes.addFlashAttribute("alertMessage", "댓글이 등록되었습니다.");
      	
      	return "redirect:/public/articles/" + originCat + "/" + articlesId; // 성공: 원본 글 상세 조회로 이동
      }
@@ -85,11 +85,11 @@ public class PrivateReplyController {
      		
      		redirectAttributes.addFlashAttribute("alertType", "fail");
      		if (status == 1) {
-     			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 비활성화 실패");
+     			redirectAttributes.addFlashAttribute("alertMessage", "댓글 삭제에 실패하였습니다. 다시 시도해주세요.");
      		} else if (status == 0) {
-     			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 활성화 실패");
+     			redirectAttributes.addFlashAttribute("alertMessage", "댓글 공개에 실패하였습니다. 다시 시도해주세요.");
      		} else if (status == 2) {
-     			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 잠금 실패");
+     			redirectAttributes.addFlashAttribute("alertMessage", "댓글 비공개에 실패하였습니다. 다시 시도해주세요.");
      		}
      		
      		return "redirect:/public/articles/" + originCat + "/" + articlesId; // 실패: 원본 글 상세 조회로 이동
@@ -97,11 +97,11 @@ public class PrivateReplyController {
      	
      	redirectAttributes.addFlashAttribute("alertType", "success");
      	if (status == 1) {
- 			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 비활성화 성공");
+ 			redirectAttributes.addFlashAttribute("alertMessage", "댓글이 삭제되었습니다.");
      	} else if (status == 0) {
- 			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 활성화 성공");
+ 			redirectAttributes.addFlashAttribute("alertMessage", "댓글이 공개처리 되었습니다.");
  		} else if (status == 2) {
- 			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 잠금 성공");
+ 			redirectAttributes.addFlashAttribute("alertMessage", "댓글이 비공개처리 되었습니다.");
  		}
      	
      	return "redirect:/public/articles/" + originCat + "/" + articlesId; // 성공: 원본 글 상세 조회로 이동
@@ -121,13 +121,13 @@ public class PrivateReplyController {
      		e.printStackTrace();
      		
      		redirectAttributes.addFlashAttribute("alertType", "fail");
- 			redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 삭제 실패");
+ 			redirectAttributes.addFlashAttribute("alertMessage", "댓글이 삭제되지않았습니다. 다시 시도해주세요.");
      		
  			return "redirect:/public/articles/" + originCat + "/" + articlesId; // 실패: 원본 게시글로 이동
      	}
      	
      	redirectAttributes.addFlashAttribute("alertType", "success");
- 		redirectAttributes.addFlashAttribute("alertMessage", "[댓글] 삭제 성공");
+ 		redirectAttributes.addFlashAttribute("alertMessage", "댓글이 삭제되었습니다.");
      	
  		return "redirect:/public/articles/" + originCat + "/" + articlesId; // 성공: 원본 게시글로 이동
      }
