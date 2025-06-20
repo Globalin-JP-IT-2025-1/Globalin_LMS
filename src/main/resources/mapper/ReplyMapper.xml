@@ -4,7 +4,7 @@
 <mapper namespace="com.library.mapper.ReplyMapper">
 	<!-- 게시글별 댓글 목록 조회 -->
 	<select id="getAllRepliesByArticlesId" resultType="com.library.model.Reply" parameterType="int">
-		SELECT * FROM REPLIES WHERE ORIGIN_ARTICLE_ID = #{articlesId}
+		SELECT * FROM REPLIES WHERE ORIGIN_ARTICLE_ID = #{articlesId} AND STATUS != 1
 	</select>
 	
 	<!-- 댓글 수정 -->
