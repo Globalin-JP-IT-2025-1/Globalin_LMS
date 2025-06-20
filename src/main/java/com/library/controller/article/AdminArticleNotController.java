@@ -70,15 +70,15 @@ public class AdminArticleNotController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addAttribute("alertType", "fail");
-    		redirectAttributes.addAttribute("alertMessage", "[공지사항] 등록 실패");
+    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertMessage", "공지사항이 등록되지않았습니다. 다시 시도해주세요.");
     		redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
     		
     		return "redirect:/public/articles/not/add"; // 실패: 등록 폼으로 이동
     	}
     	
-    	redirectAttributes.addAttribute("alertType", "success");
-    	redirectAttributes.addAttribute("alertMessage", "[공지사항] 등록 성공");
+    	redirectAttributes.addFlashAttribute("alertType", "success");
+    	redirectAttributes.addFlashAttribute("alertMessage", "공지사항이 등록되었습니다.");
     	
     	return "redirect:/public/articles/not"; // 성공: 목록으로 이동
     }
@@ -96,15 +96,15 @@ public class AdminArticleNotController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addAttribute("alertType", "fail");
-			redirectAttributes.addAttribute("alertMessage", "[공지사항] 내용 수정 실패");
+    		redirectAttributes.addFlashAttribute("alertType", "fail");
+			redirectAttributes.addFlashAttribute("alertMessage", "공지사항 내용이 수정되지않았습니다. 다시 시도해주세요.");
 			redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
     		
     		return "redirect:/public/articles/not/" + articlesId + "/edit"; // 실패: 상세 조회로 이동
     	}
     	
-    	redirectAttributes.addAttribute("alertType", "success");
-		redirectAttributes.addAttribute("alertMessage", "[공지사항] 내용 수정 성공");
+    	redirectAttributes.addFlashAttribute("alertType", "success");
+		redirectAttributes.addFlashAttribute("alertMessage", "수정되었습니다.");
 		
     	
     	return "redirect:/public/articles/not/" + articlesId; // 성공: 상세 조회로 이동
@@ -131,11 +131,11 @@ public class AdminArticleNotController {
     		
     		redirectAttributes.addAttribute("alertType", "fail");
     		if (type.equals("disable")) {
-    			redirectAttributes.addAttribute("alertMessage", "[공지사항] 비활성화 실패");
+    			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 삭제 실패");
     		} else if (type.equals("enable")) {
-    			redirectAttributes.addAttribute("alertMessage", "[공지사항] 활성화 실패");
+    			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 공개 실패");
     		} else if (type.equals("secret")) {
-    			redirectAttributes.addAttribute("alertMessage", "[공지사항] 잠금 실패");
+    			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 비공개 실패");
     		}
     		
     		return "redirect:/public/articles/not/" + articlesId; // 실패: 상세 조회로 이동
@@ -143,11 +143,11 @@ public class AdminArticleNotController {
     	
     	redirectAttributes.addAttribute("alertType", "success");
     	if (type.equals("disable")) {
-			redirectAttributes.addAttribute("alertMessage", "[공지사항] 비활성화 성공");
+			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 삭제 성공");
 		} else if (type.equals("enable")) {
-			redirectAttributes.addAttribute("alertMessage", "[공지사항] 활성화 성공");
+			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 공개 성공");
 		} else if (type.equals("secret")) {
-			redirectAttributes.addAttribute("alertMessage", "[공지사항] 잠금 성공");
+			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 비공개 성공");
 		}
     	
     	return "redirect:/public/articles/not/" + articlesId; // 성공: 상세 조회로 이동
@@ -164,14 +164,14 @@ public class AdminArticleNotController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addAttribute("alertType", "fail");
-			redirectAttributes.addAttribute("alertMessage", "[공지사항] 삭제 실패");
+    		redirectAttributes.addFlashAttribute("alertType", "fail");
+			redirectAttributes.addFlashAttribute("alertMessage", "공지사항 삭제되지않았습니다. 다시 시도해주세요.");
     		
 			return "redirect:/public/articles/not/" + articlesId; // 실패: 상세 조회로 이동
     	}
     	
-    	redirectAttributes.addAttribute("alertType", "success");
-		redirectAttributes.addAttribute("alertMessage", "[공지사항] 삭제 성공");
+    	redirectAttributes.addFlashAttribute("alertType", "success");
+		redirectAttributes.addFlashAttribute("alertMessage", "공지사항이 삭제되었습니다.");
     	
 		return "redirect:/public/articles/not"; // 성공: 목록으로 이동
     }
