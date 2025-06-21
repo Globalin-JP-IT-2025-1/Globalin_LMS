@@ -1,17 +1,31 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<c:set var="articleList" value="${articleList}" />
-<c:set var="authorList" value="${authorList}" />
+<c:set var="articleList" value="${articleListWithAuthor}" />
 
-<!-- 게시글 목록 조회 - qna -->
+<c:set var="totalCount" value="${totalCount}" />
+<c:set var="totalPages" value="${totalPages}" />
+<c:set var="currentPage" value="${currentPage}" />
+
+<c:set var="blockSize" value="5" />
+<c:set var="startPage" value="${(currentPage - 1) / blockSize * blockSize + 1}" />
+<c:set var="endPage" value="${startPage + blockSize - 1 > totalPages ? totalPages : startPage + blockSize - 1}" />
+
+<style>
+	.articleList tr {
+		cursor: pointer !important;
+	}
+</style>
+
+<!-- 게시글 목록 조회 - 희망 도서 신청 -->
 <div class="container mt-4">
+	<!-- 요약 & 검색창 -->
     <div class="d-flex justify-content-between align-items-center">
-        <div>전체 <strong>${fn:length(articleList)}</strong> 건</div>
+        <div>전체 <strong>${totalCount}</strong> 건</div>
         <div>
 	        <select class="form-select form-select-sm d-inline-block w-auto" id="searchType">
 	            <option id="st_title">제목</option>
@@ -21,33 +35,92 @@
 	        <button class="btn btn-primary btn-sm" id="search">검색</button>
 	    </div>
     </div>
+    
+    <!-- 글 목록 -->
     <div class="overflow-x-auto" >
-    <table class="table mt-3 table-hover">
-        <thead class="table-primary">
-            <tr>
-                <th>NO</th>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>조회수</th>
-                <th>댓글수</th>
-                <th>진행상황</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:forEach var="i" begin="0" end="${fn:length(articleList) - 1}" step="1">
-                <tr onclick="location.href='/private/articles/req/${articleList[i].articlesId}'">
-                    <td>${i + 1}</td>
-                    <td>${articleList[i].title}</td>
-                    <td>${authorList[i].name}(${authorList[i].username})</td>
-                    <td>${articleList[i].viewCount}</td>
-                    <td>${articleList[i].replyCount}</td>
-                    <td>${articleList[i].status}</td>
-                </tr>
-            </c:forEach>
-        </tbody>
-    </table>
+	    <table class="table mt-3 table-hover articleList">
+	        <thead class="table-primary">
+	            <tr>
+	                <th>NO</th>
+	                <th>제목</th>
+	                <th>작성자</th>
+	                <th>작성일</th>
+	                <th>조회수</th>
+	                <th>댓글수</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            <c:forEach var="i" begin="0" end="${fn:length(articleList) - 1}" step="1">
+	                <tr onclick="location.href='/private/articles/req/${articleList[i].articlesId}'">
+	                    <td>${i + (currentPage * 7) - 6}</td>
+	                    <td>${articleList[i].title}</td>
+	                    <td>
+	                    	<c:set var="a_fullname" value="${articleList[i].authorFullname}" />
+	                    	<c:set var="a_username" value="${articleList[i].authorUsername}" />
+	                    	<!-- 로그인하지 않은 경우 -->
+		                    <sec:authorize access="isAnonymous()">
+								<c:choose>
+		                    		<c:when test="${articleList[i].authorId == 0}">
+		                    			${a_fullname}(${a_username})
+		                    		</c:when>
+		                    		<c:otherwise>
+										${fn:substring(a_fullname, 0, 1)}**(${a_username})
+		                    		</c:otherwise>
+		                    	</c:choose>
+		                    </sec:authorize>
+		                    <!-- 로그인한 경우 -->
+		                    <sec:authorize access="isAuthenticated()">
+		                       	<c:choose>
+		                          	<c:when test="${articleList[i].authorId == userDetails.membersId 
+					                          	or userDetails.membersId == 0 
+					                          	or articleList[i].authorId == 0}">                     
+		                            	${a_fullname}(${a_username})
+		                            </c:when>
+		                            <c:otherwise>
+										${fn:substring(a_fullname, 0, 1)}**(${a_username})
+		                            </c:otherwise>
+		                         </c:choose>
+		                    </sec:authorize>
+	                    </td>
+	                    <td><fmt:formatDate value="${articleList[i].updateDate}" pattern="yyyy-MM-dd" /></td>
+	                    <td>${articleList[i].viewCount}</td>
+	                    <td>${articleList[i].replyCount}</td>
+	                </tr>
+	            </c:forEach>
+	        </tbody>
+	    </table>
     </div>
-    <div>
-    	<button class="btn btn-primary" onclick="location.href='/private/articles/req/add'">신청하기</button>
-    </div>
+    
+    <!-- 글 작성하기 버튼 : 관리자+회원만 보이기 -->
+    <div class="d-flex justify-content-end">
+		<sec:authorize access="hasRole('ROLE_USER')">
+   			<button class="btn btn-primary mb-6" onclick="location.href='/private/articles/req/add'">작성하기</button>
+	  	</sec:authorize>
+  	</div>
+    
+    <!-- 페이징 -->
+    <div class="d-flex justify-content-center mt-4">
+	    <nav aria-label="Page navigation">
+	        <ul class="pagination">
+	
+	            <c:if test="${currentPage > 1}">
+	                <li class="page-item">
+	                    <a class="page-link" href="?page=${currentPage - 1}">이전</a>
+	                </li>
+	            </c:if>
+	
+	            <c:forEach var="i" begin="${startPage}" end="${endPage}">
+				    <li class="page-item ${i == currentPage ? 'active' : ''}">
+				        <a class="page-link" href="?page=${i}">${i}</a>
+				    </li>
+				</c:forEach>
+	
+	            <c:if test="${currentPage < totalPages}">
+	                <li class="page-item">
+	                    <a class="page-link" href="?page=${currentPage + 1}">다음</a>
+	                </li>
+	            </c:if>
+	        </ul>
+	    </nav>
+	</div>
 </div>

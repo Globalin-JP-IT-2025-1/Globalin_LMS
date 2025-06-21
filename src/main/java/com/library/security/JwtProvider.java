@@ -26,12 +26,7 @@
 //public class JwtProvider {
 //
 //    private static final String KEY_ROLES = "roles";
-//    private static final long EXPIRE_TIME = 1000 * 60 * 30; // 30 mins
-//
 //    private final UserDetailsService userDetailsService;
-//
-//    @Value("{spring.jwt.secret}")
-//    private String secretKey;
 //
 //    public String generateToken(String username, List<String> roles) {
 //        Claims claims = Jwts.claims()

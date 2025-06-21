@@ -5,12 +5,12 @@ import com.library.model.Member;
 public interface EmailService {
 	
 	// 회원 가입 여부 성공 메일 보내기
-	public void sendUsername(Member member);
+	public void sendRegisterMember(Member member);
 	
-	// 비밀번호 초기화 메일 보내기
+	// 아이디 찾기 메일 보내기
+	public void sendFindUsername(Member member);
+	
+	// 비밀번호 재발급 메일 보내기
 	public void sendResetPassword(Member member, String randomPassword);
 
-	// 회원 가입 축하 메일 보내기
-	public void sendRegister(Member member);
-	
 }

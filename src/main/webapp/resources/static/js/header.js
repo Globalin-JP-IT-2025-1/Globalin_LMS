@@ -41,45 +41,57 @@ document.getElementById("h_submenu").addEventListener("mouseleave", function() {
 /* 다국어 */
 /* 브라우저 로딩 시 기본 언어 세션에 저장*/
 /* 현재 브라우저 세션에 등록된 언어에 따라 css 현재 언어 설정 */
-window.onload = function() {
+document.addEventListener("DOMContentLoaded", function () {
+	// 기본 언어 설정
 	if (!sessionStorage.getItem("lang")) {
-		sessionStorage.setItem("lang", "kr");
+		const defaultLang = "ko";
+	  	sessionStorage.setItem("lang", defaultLang);
+	  	location.href = "/lang/" + defaultLang;
 	}
 
-	let currentLang = sessionStorage.getItem("lang");
-	console.log(currentLang);
+	const langSet = ["ko", "ja", "en"];
+	const currentLang = sessionStorage.getItem("lang");
 
-	let langSet = ["kr", "jp", "en"];
-
+	// 초기 언어에 맞는 CSS 설정
 	langSet.forEach((lang) => {
-		let langParent = document.getElementById(`${lang}`).parentElement;
-
-		if (lang === currentLang) {
-			langParent.classList.add("current_lang");
-		} else {
-			langParent.classList.remove("current_lang");
-		}
+		let btn = document.getElementById(lang);
+	    let parent = btn.parentElement;
+	    if (lang === currentLang) {
+			parent.classList.add("current_lang");
+			btn.classList.add("btn-primary");
+			btn.classList.remove("btn-outline-secondary");
+	    } else {
+			parent.classList.remove("current_lang");
+			btn.classList.add("btn-outline-secondary");
+			btn.classList.remove("btn-primary");
+	    }
 	});
-};
-
-/* 언어 설정 클릭 시 세션 변경, css 변경 */
-window.onload = function() {
-	if (!sessionStorage.getItem("lang")) {
-		sessionStorage.setItem("lang", "kr");
-	}
-	updateLanguage(sessionStorage.getItem("lang"));
-};
-
-function updateLanguage(lang) {
-	sessionStorage.setItem("lang", lang);
+	
+	// 언어 버튼 클릭 이벤트
 	document.querySelectorAll(".lang-btn").forEach((btn) => {
-		btn.parentElement.classList.toggle("current_lang", btn.id === lang);
-	});
-}
-
-document.querySelectorAll(".lang-btn").forEach((btn) => {
-	btn.addEventListener("click", () => updateLanguage(btn.id));
+		btn.addEventListener("click", function () {
+			const selectedLang = this.id;
+			sessionStorage.setItem("lang", selectedLang);
+	
+	      	langSet.forEach((lang) => {
+		        let langBtn = document.getElementById(lang);
+		        let parent = langBtn.parentElement;
+		        if (lang === selectedLang) {
+					parent.classList.add("current_lang");
+					langBtn.classList.add("btn-primary");
+					langBtn.classList.remove("btn-outline-secondary");
+		        } else {
+		        	parent.classList.remove("current_lang");
+		        	langBtn.classList.add("btn-outline-secondary");
+		         	langBtn.classList.remove("btn-primary");
+		        }
+      		});
+			// 서버에 저장 요청
+			location.href = "/lang/" + selectedLang;
+    	});
+  	});
 });
+
 
 /* 스크롤 시 헤더 메뉴 고정 */
 window.addEventListener("scroll", function () {

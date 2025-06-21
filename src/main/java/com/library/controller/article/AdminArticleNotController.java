@@ -45,20 +45,6 @@ public class AdminArticleNotController {
         return "layout";
     }
     
-    // 수정 폼 요청
-    @GetMapping("/edit/{articlesId}")
-    public String showEditForm(Model model) {
-    	
-    	pageInfo = PageInfo.builder()
-    			.pageTitleCode("21")
-    			.pagePath("page/3-article/addForm_article_not.jsp")
-    			.build();
-        
-        setPageInfo(model);
-        
-        return "layout";
-    }
-    
     // 등록 처리
     @PostMapping
     public String insertProc(@ModelAttribute Article article, 
@@ -129,7 +115,7 @@ public class AdminArticleNotController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "fail");
     		if (type.equals("disable")) {
     			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 삭제 실패");
     		} else if (type.equals("enable")) {
@@ -141,7 +127,7 @@ public class AdminArticleNotController {
     		return "redirect:/public/articles/not/" + articlesId; // 실패: 상세 조회로 이동
     	}
     	
-    	redirectAttributes.addAttribute("alertType", "success");
+    	redirectAttributes.addFlashAttribute("alertType", "success");
     	if (type.equals("disable")) {
 			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 삭제 성공");
 		} else if (type.equals("enable")) {

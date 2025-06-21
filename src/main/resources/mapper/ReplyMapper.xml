@@ -2,42 +2,68 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.library.mapper.ReplyMapper">
-	<!-- 게시글별 댓글 목록 조회 -->
-	<select id="getAllRepliesByArticlesId" resultType="com.library.model.Reply" parameterType="int">
-		SELECT * FROM REPLIES WHERE ORIGIN_ARTICLE_ID = #{articlesId} AND STATUS != 1
+	<!-- 조회 -->
+	<!-- 1) 댓글 목록 조회 (게시글 ID 기반) -->
+	<select id="getReplyListByArticlesId" 
+			resultType="com.library.model.ReplyWithAuthor" 
+			parameterType="com.library.model.ReplyListRequest">
+		<![CDATA[
+			SELECT r.REPLIES_ID, r.ORIGIN_ARTICLE_ID, r.AUTHOR_ID, 
+		   		   r.CONTENT, r.CREATE_DATE, r.UPDATE_DATE, r.STATUS,
+				   r.authorUsername, r.authorFullname, 
+				   r.rnum 
+			FROM (
+				SELECT rp.REPLIES_ID, rp.ORIGIN_ARTICLE_ID, rp.AUTHOR_ID, 
+			   		   rp.CONTENT, rp.CREATE_DATE, rp.UPDATE_DATE, rp.STATUS,
+					   m.USERNAME AS authorUsername, m.NAME AS authorFullname, 
+					   ROWNUM AS rnum
+				FROM REPLIES rp
+				JOIN MEMBERS m ON m.MEMBERS_ID = rp.AUTHOR_ID 
+				WHERE rp.ORIGIN_ARTICLE_ID = #{originArticleId} AND rp.STATUS <> 1
+				ORDER BY rp.UPDATE_DATE DESC
+			) r
+			WHERE r.rnum > #{startRow} AND r.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 2) 댓글 수 (게시글 ID 기반) -->
+	<select id="getReplyListCount" 
+			resultType="int" 
+			parameterType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM REPLIES 
+			WHERE ORIGIN_ARTICLE_ID = #{originArticleId} AND STATUS <> 1
+		]]>
 	</select>
 	
 	<!-- 댓글 수정 -->
-	<!-- 1) 정보 수정 : title, content -->
-	<update id="updateReplyInfo" parameterType="com.library.model.Reply">
-        UPDATE REPLIES 
-        SET	CONTENT = #{content}
-	    WHERE REPLIES_ID = #{repliesId}
-    </update>
-    
-    <!-- 2) 비공개 댓글로 전환 : status -->
-	<update id="updateReplyDisable" parameterType="com.library.model.Reply">
+    <!-- 1) 비공개 댓글로 전환 : status -->
+	<update id="updateReplyDisable" 
+			parameterType="int">
         UPDATE REPLIES 
         SET	STATUS = 1 
 	    WHERE REPLIES_ID = #{repliesId}
     </update>
     
-    <!-- 3) 공개 댓글로 전환 : status -->
-    <update id="updateReplyEnable" parameterType="int">
+    <!-- 2) 공개 댓글로 전환 : status -->
+    <update id="updateReplyEnable" 
+    		parameterType="int">
         UPDATE REPLIES 
         SET	STATUS = 0
 	    WHERE REPLIES_ID = #{repliesId}
     </update>
     
-    <!-- 4) 비밀 댓글로 전환 : status -->
-    <update id="updateReplySecret" parameterType="int">
+    <!-- 3) 비밀 댓글로 전환 : status -->
+    <update id="updateReplySecret" 
+    		parameterType="int">
         UPDATE REPLIES 
         SET	STATUS = 2
 	    WHERE REPLIES_ID = #{repliesId}
     </update>
 	
 	<!-- 댓글 등록 -->
-	<insert id="insertReply" parameterType="com.library.model.Reply">
+	<insert id="insertReply" 
+			parameterType="com.library.model.Reply">
 	    <selectKey keyProperty="repliesId" resultType="java.lang.Integer" order="BEFORE">
 	        SELECT SQ_REPLIES.NEXTVAL FROM DUAL
 	    </selectKey>
@@ -50,7 +76,8 @@
     </insert>
 	
 	<!-- 댓글 삭제 -->
-	<delete id="deleteReply" parameterType="int">
+	<delete id="deleteReply" 
+			parameterType="int">
         DELETE FROM REPLIES WHERE REPLIES_ID = #{repliesId}
     </delete>
 

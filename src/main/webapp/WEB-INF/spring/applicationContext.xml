@@ -38,7 +38,6 @@
 	    <constructor-arg ref="redisConnectionFactory"/>
 	    <property name="enableTransactionSupport" value="true"/>
 	</bean>
-    
   
     <!-- Mail 관련 설정 -->
 	<bean id="mailSender" class = "org.springframework.mail.javamail.JavaMailSenderImpl">
@@ -54,6 +53,6 @@
 	            <prop key="mail.debug">true</prop>
 	      </props>
 	   </property>
-	</bean> 
+	</bean>
 	
 </beans>

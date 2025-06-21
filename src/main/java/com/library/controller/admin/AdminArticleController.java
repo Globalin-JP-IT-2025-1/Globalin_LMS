@@ -4,14 +4,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.library.model.ArticleListResponse;
 import com.library.model.PageInfo;
 import com.library.service.ArticleService;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @RequestMapping("/admin/articles")
 @AllArgsConstructor
@@ -26,10 +26,14 @@ public class AdminArticleController {
     
     // 관리용 게시글 전체 목록 조회
     @GetMapping
-    public String getAllArticles(Model model) {
+    public String getArticleList(@RequestParam(defaultValue = "1") int page, 
+    							 Model model) {
+    	ArticleListResponse articleList = articleService.getArticleList(page);
     	
-//		List<Article> articleList = articleService.getAllArticles();
-//		model.addAttribute("articleList", articleList);
+		model.addAttribute("articleListWithAuthor", articleList.getArticleWithAuthorList()); // 게시글 목록
+		model.addAttribute("totalCount", articleList.getTotalCount()); // 게시글 페이징
+    	model.addAttribute("totalPages", articleList.getTotalPages()); // 게시글 페이징
+    	model.addAttribute("currentPage", page); // 게시글 페이징
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("93")

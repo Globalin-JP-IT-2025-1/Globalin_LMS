@@ -2,25 +2,125 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.library.mapper.ArticleMapper">
+	
+	<!-- 게시글 조회  -->
+	<!-- 1) 게시글 전체 목록 조회 : status=1인 게시글 포함 -->
+	<select id="getArticleList" 
+			resultType="com.library.model.ArticleWithAuthor"
+			parameterType="com.library.model.ArticleListRequest">
+		<![CDATA[
+			SELECT a.ARTICLES_ID, a.AUTHOR_ID, a.CATEGORY, 
+				   a.TITLE, a.CONTENT, a.CREATE_DATE, a.UPDATE_DATE, 
+				   a.REPLY_COUNT, a.VIEW_COUNT, a.STATUS,
+			       a.authorUsername, a.authorFullname,
+			       a.rnum
+			FROM (
+				SELECT ar.ARTICLES_ID, ar.AUTHOR_ID, ar.CATEGORY, 
+					   ar.TITLE, ar.CONTENT, ar.CREATE_DATE, ar.UPDATE_DATE, 
+					   ar.REPLY_COUNT, ar.VIEW_COUNT, ar.STATUS,
+					   m.USERNAME AS authorUsername, m.NAME AS authorFullname,
+					   ROWNUM AS rnum
+				FROM ARTICLES ar
+			    JOIN MEMBERS m ON m.MEMBERS_ID = ar.AUTHOR_ID 
+			    ORDER BY ar.UPDATE_DATE DESC
+		    ) a
+			WHERE a.rnum > #{startRow} AND a.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 2) 게시글 목록 조회 (카테고리 기준) : status=1인 게시글 제외 -->
+	<select id="getArticleListByCategory" 
+			resultType="com.library.model.ArticleWithAuthor" 
+			parameterType="com.library.model.ArticleListRequest">
+		<![CDATA[
+			SELECT a.ARTICLES_ID, a.AUTHOR_ID, a.CATEGORY, 
+				   a.TITLE, a.CONTENT, a.CREATE_DATE, a.UPDATE_DATE, 
+				   a.REPLY_COUNT, a.VIEW_COUNT, a.STATUS,
+			       a.authorUsername, a.authorFullname,
+			       a.rnum
+			FROM (
+				SELECT ar.ARTICLES_ID, ar.AUTHOR_ID, ar.CATEGORY, 
+					   ar.TITLE, ar.CONTENT, ar.CREATE_DATE, ar.UPDATE_DATE, 
+					   ar.REPLY_COUNT, ar.VIEW_COUNT, ar.STATUS,
+					   m.USERNAME AS authorUsername, m.NAME AS authorFullname,
+					   ROWNUM AS rnum
+				FROM ARTICLES ar
+			    JOIN MEMBERS m ON m.MEMBERS_ID = ar.AUTHOR_ID 
+			    WHERE ar.CATEGORY = #{category} AND ar.STATUS <> 1
+			    ORDER BY ar.UPDATE_DATE DESC
+		    ) a
+			WHERE a.rnum > #{startRow} AND a.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 3) 희망 도서 신청 게시글 목록 조회 (회원ID 기준) : status=1인 게시글 제외 -->
+	<select id="getArticleListByReqByMembersId" 
+			resultType="com.library.model.ArticleWithAuthor" 
+			parameterType="com.library.model.ArticleListRequest">
+		<![CDATA[
+			SELECT a.ARTICLES_ID, a.AUTHOR_ID, a.CATEGORY, 
+				   a.TITLE, a.CONTENT, a.CREATE_DATE, a.UPDATE_DATE, 
+				   a.REPLY_COUNT, a.VIEW_COUNT, a.STATUS,
+			       a.authorUsername, a.authorFullname,
+			       a.rnum
+			FROM (
+				SELECT ar.ARTICLES_ID, ar.AUTHOR_ID, ar.CATEGORY, 
+					   ar.TITLE, ar.CONTENT, ar.CREATE_DATE, ar.UPDATE_DATE, 
+					   ar.REPLY_COUNT, ar.VIEW_COUNT, ar.STATUS,
+					   m.USERNAME AS authorUsername, m.NAME AS authorFullname,
+					   ROWNUM AS rnum
+				FROM ARTICLES ar
+			    JOIN MEMBERS m ON m.MEMBERS_ID = ar.AUTHOR_ID 
+			    WHERE ar.CATEGORY = 'req' AND ar.STATUS <> 1
+			    ORDER BY ar.UPDATE_DATE DESC
+		    ) a
+			WHERE a.rnum > #{startRow} AND a.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 4) 전체 게시글 수 -->
+	<select id="getArticleListCount" 
+			resultType="int">
+		SELECT COUNT(*) FROM ARTICLES 
+	</select>
+	
+	<!-- 5) 게시글 수 (카테고리 기준) -->
+	<select id="getArticleListCountByCategory" 
+			resultType="int" 
+			parameterType="String">
+		<![CDATA[
+			SELECT COUNT(*) FROM ARTICLES 
+			WHERE CATEGORY = #{category} AND STATUS <> 1
+		]]>
+	</select>
+	
+	<!-- 6) 희망 도서 신청 게시글 수 (회원 ID 기준) -->
+	<select id="getArticleListCountByReqByMembersId" 
+			resultType="int" 
+			parameterType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM ARTICLES 
+			WHERE CATEGORY = 'req' 
+				AND AUTHOR_ID = #{value} 
+				AND STATUS <> 1
+		]]>
+	</select>
+	
+	<!-- 7) 게시글 상세 조회 (게시글 ID 기준) -->
+	<select id="getArticleByArticlesId" 
+			resultType="com.library.model.ArticleWithAuthor" 
+			parameterType="int">
+		SELECT a.*, m.USERNAME AS authorUsername, m.NAME AS authorFullname 
+		FROM ARTICLES a 
+		JOIN MEMBERS m ON a.AUTHOR_ID = m.MEMBERS_ID
+		WHERE a.ARTICLES_ID = #{value}
+	</select>
 
-	<!-- 게시글 목록 전체 조회 - 관리자 -->
-	<select id="getAllArticles" resultType="com.library.model.Article">
-		SELECT * FROM ARTICLES
-	</select>
-	
-	<!-- 게시글 목록 조회 (category 기반) -->
-	<select id="getAllArticlesByCategory" resultType="com.library.model.Article" parameterType="String">
-		SELECT * FROM ARTICLES WHERE CATEGORY = #{category}
-	</select>
-	
-	<!-- 게시글 상세 조회 (articleById 기반) -->
-	<select id="getArticleById" resultType="com.library.model.Article" parameterType="int">
-		SELECT * FROM ARTICLES WHERE ARTICLES_ID = #{articlesId}
-	</select>
 	
 	<!-- 게시글 정보 수정 -->
     <!-- 1) 정보 수정 : title, content -->
-    <update id="updateArticleInfo" parameterType="com.library.model.Article">
+    <update id="updateArticleInfo" 
+    		parameterType="com.library.model.Article">
         UPDATE ARTICLES 
         SET	TITLE = #{title}, 
         	CONTENT = #{content}
@@ -28,49 +128,56 @@
     </update>
     
     <!-- 2) 비공개글 전환 : status -->
-    <update id="updateArticleDisable" parameterType="int">
+    <update id="updateArticleDisable" 
+    		parameterType="int">
         UPDATE ARTICLES 
         SET	STATUS = 2
-	    WHERE ARTICLES_ID = #{articlesId}
+	    WHERE ARTICLES_ID = #{value}
     </update>
     
     <!-- 3) 공개글 전환 : status -->
-    <update id="updateArticleEnable" parameterType="int">
+    <update id="updateArticleEnable" 
+    		parameterType="int">
         UPDATE ARTICLES 
         SET	STATUS = 0
-	    WHERE ARTICLES_ID = #{articlesId}
+	    WHERE ARTICLES_ID = #{value}
     </update>
     
     <!-- 4) 비밀글 전환 : status -->
-    <update id="updateArticleSecret" parameterType="int">
+    <update id="updateArticleSecret" 
+    		parameterType="int">
         UPDATE ARTICLES 
         SET	STATUS = 1
-	    WHERE ARTICLES_ID = #{articlesId}
+	    WHERE ARTICLES_ID = #{value}
     </update>
     
     <!-- 5) view count 증가 -->
-    <update id="updateArticleViewCountUp" parameterType="int">
+    <update id="updateArticleViewCountUp" 
+    		parameterType="int">
         UPDATE ARTICLES 
         SET	VIEW_COUNT = VIEW_COUNT + 1
-	    WHERE ARTICLES_ID = #{articlesId}
+	    WHERE ARTICLES_ID = #{value}
     </update>
     
     <!-- 6) reply count 증가 -->
-    <update id="updateArticleReplyCountUp" parameterType="int">
+    <update id="updateArticleReplyCountUp" 
+    		parameterType="int">
         UPDATE ARTICLES 
         SET	REPLY_COUNT = REPLY_COUNT + 1
-	    WHERE ARTICLES_ID = #{articlesId}
+	    WHERE ARTICLES_ID = #{value}
     </update>
     
     <!-- 7) reply count 감소 -->
-    <update id="updateArticleReplyCountDown" parameterType="int">
+    <update id="updateArticleReplyCountDown" 
+    		parameterType="int">
         UPDATE ARTICLES 
         SET	REPLY_COUNT = REPLY_COUNT - 1
-	    WHERE ARTICLES_ID = #{articlesId} AND REPLY_COUNT > 0
+	    WHERE ARTICLES_ID = #{value} AND REPLY_COUNT > 0
     </update>
     
     <!-- 게시글 등록 -->
-    <insert id="insertArticle" parameterType="com.library.model.Article">
+    <insert id="insertArticle" 
+    		parameterType="com.library.model.Article">
 	    <selectKey keyProperty="articlesId" resultType="java.lang.Integer" order="BEFORE">
 	        SELECT SQ_ARTICLES.NEXTVAL FROM DUAL
 	    </selectKey>
@@ -86,8 +193,10 @@
     </insert>
 
     <!-- 게시글 삭제 -->
-    <delete id="deleteArticle" parameterType="int">
-        DELETE FROM ARTICLES WHERE ARTICLES_ID = #{articlesId}
+    <delete id="deleteArticle" 
+    		parameterType="int">
+        DELETE FROM ARTICLES 
+        WHERE ARTICLES_ID = #{value}
     </delete>
 	
 </mapper>

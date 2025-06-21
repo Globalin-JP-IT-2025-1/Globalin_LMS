@@ -1,32 +1,32 @@
 package com.library.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.library.model.Article;
+import com.library.model.ArticleDetailResponse;
+import com.library.model.ArticleListResponse;
 
 public interface ArticleService {
 	
-	// 게시글 전체 조회 - admin
-	public List<Article> getAllArticles();
+	// 조회
+	// 1) 게시글 전체 조회 - admin
+	public ArticleListResponse getArticleList(int currentPage);
 	
-	// 게시글 목록 조회
-	public List<Article> getAllArticlesByCategory(String category);
+	// 2) 카테고리별 게시글 목록 조회
+	public ArticleListResponse getArticleListByCategory(String category, int currentPage);
 	
-	// 게시글 목록 및 작성자 목록 조회
-	public Map<String, Object> getAllArticlesByCategoryWithAuthor(String category);
-
-	// 회원별 희망 도서 신청 목록 조회 - book-req
-	public List<Article> getArticlesReqByMembersId(int membersId);
+	// 3) 희망 도서 신청 게시글 목록 조회 (회원ID 기준)
+	public ArticleListResponse getArticleListByReqByMembersId(int membersId, int currentPage);
 	
-	// 게시글 상세 조회
-	public Article getArticleById(int articlesId);
+	// 4) 게시글 전체 수
+	public int getArticleListCount();
 	
-	// 게시글 상세 조회 (게시글, 게시글 작성자) - fnq
-	public Map<String, Object> getArticleByIdWithAuthor(int articlesId);
+	// 5) 게시글 수 (카테고리 기준)
+	public int getArticleListCountByCategory(String category);
 	
-	// 게시글 상세 조회 (게시글, 게시글 작성자, 댓글 목록, 댓글 작성자 목록) - not, qna, req
-	public Map<String, Object> getArticleWithAuthorAndReplies(int articlesId);
+	// 6) 희망 도서 신청 글 전체 수 (회원ID 기준) - book-req
+	public int getArticleListCountByReqByMembersId(int membersId);
+	
+	// 7) 게시글 상세 조회 (게시글 & 게시글 작성자, 댓글 & 댓글 작성자 목록) - not, qna, req
+	public ArticleDetailResponse getArticleWithReplyList(int articlesId, int replyCurrentPage);
 	
 	// 게시글 등록
 	public int insertArticle(Article article);
@@ -55,5 +55,6 @@ public interface ArticleService {
 	
     // 게시글 삭제 - 관리자 삭제
 	public int deleteArticleById(int articlesId);
+
 
 }
