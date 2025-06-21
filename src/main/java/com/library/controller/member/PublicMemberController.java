@@ -62,15 +62,15 @@ public class PublicMemberController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addAttribute("alertType", "fail");
-    		redirectAttributes.addAttribute("alertMessage", "회원가입 실패");
-    		redirectAttributes.addAttribute("member", member); // 입력 내용 반환
+    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertMessage", "회원가입 실패");
+    		redirectAttributes.addFlashAttribute("member", member); // 입력 내용 반환
     		
     		return "redirect:/public/members/register"; // 실패: 회원 가입 폼으로 이동
     	}
     	
-    	redirectAttributes.addAttribute("alertType", "success");
-    	redirectAttributes.addAttribute("alertMessage", "회원가입 성공");
+    	redirectAttributes.addFlashAttribute("alertType", "success");
+    	redirectAttributes.addFlashAttribute("alertMessage", "회원가입 성공");
     	
     	return "redirect:/public/auth/login"; // 성공: 로그인 폼으로 이동
     }

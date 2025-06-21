@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.library.model.Article;
+import com.library.model.ArticleListResponse;
 import com.library.model.BookHistory;
 import com.library.model.BookLike;
 import com.library.model.Member;
@@ -227,11 +228,15 @@ public class PrivateMemberController {
     // 회원별 희망 도서 신청 조회
     // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
     @GetMapping("/{membersId}/book-req")
-    public String showMemberBookReq(@PathVariable("membersId") int membersId, 
+    public String showMemberBookReq(@PathVariable("membersId") int membersId,
+    		 						@RequestParam(defaultValue = "1") int page,
     								Model model) {
+    	ArticleListResponse bookReqList = articleService.getArticleListByReqByMembersId(membersId, page);
     	
-    	List<Article> bookReqList = articleService.getArticlesReqByMembersId(membersId);
-    	model.addAttribute("bookReqList", bookReqList);
+    	model.addAttribute("articleListWithAuthor", bookReqList.getArticleWithAuthorList());
+		model.addAttribute("totalCount", bookReqList.getTotalCount());
+    	model.addAttribute("totalPages", bookReqList.getTotalPages());
+    	model.addAttribute("currentPage", page);
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("34")

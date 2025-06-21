@@ -78,14 +78,14 @@ public class AdminBookController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addAttribute("alertType", "fail");
-    		redirectAttributes.addAttribute("alertMessage", "도서 추가 실패");
+    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertMessage", "도서 추가 실패");
     		
     		return "redirect:/admin/books";
     	}
     	
-    	redirectAttributes.addAttribute("alertType", "success");
-    	redirectAttributes.addAttribute("alertMessage", "도서 추가 성공");
+    	redirectAttributes.addFlashAttribute("alertType", "success");
+    	redirectAttributes.addFlashAttribute("alertMessage", "도서 추가 성공");
     	
     	return "redirect:/admin/books";
     }
@@ -122,14 +122,14 @@ public class AdminBookController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addAttribute("alertType", "fail");
-    		redirectAttributes.addAttribute("alertMessage", "도서 추가 실패");
+    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertMessage", "도서 추가 실패");
     		
     		return "redirect:/admin/books";
     	}
     	
-    	redirectAttributes.addAttribute("alertType", "success");
-    	redirectAttributes.addAttribute("alertMessage", "도서 추가 성공");
+    	redirectAttributes.addFlashAttribute("alertType", "success");
+    	redirectAttributes.addFlashAttribute("alertMessage", "도서 추가 성공");
     	
     	return "redirect:/admin/books";
     	
@@ -152,21 +152,21 @@ public class AdminBookController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "fail");
     		if (type.equals("disable")) {
-    			redirectAttributes.addAttribute("alertMessage", "도서 비활성화 실패");
+    			redirectAttributes.addFlashAttribute("alertMessage", "도서 비활성화 실패");
     		} else if (type.equals("enable")) {
-    			redirectAttributes.addAttribute("alertMessage", "도서 활성화 실패");
+    			redirectAttributes.addFlashAttribute("alertMessage", "도서 활성화 실패");
     		}
     		
     		return "redirect:/admin/books"; // 실패: 목록으로 이동
     	}
     	
-    	redirectAttributes.addAttribute("alertType", "success");
+    	redirectAttributes.addFlashAttribute("alertType", "success");
 		if (type.equals("disable")) {
-			redirectAttributes.addAttribute("alertMessage", "도서 비활성화 성공");
+			redirectAttributes.addFlashAttribute("alertMessage", "도서 비활성화 성공");
 		} else if (type.equals("enable")) {
-			redirectAttributes.addAttribute("alertMessage", "도서 활성화 성공");
+			redirectAttributes.addFlashAttribute("alertMessage", "도서 활성화 성공");
 		}
     	
     	return "redirect:/admin/books"; // 성공: 목록으로 이동
@@ -184,14 +184,14 @@ public class AdminBookController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addAttribute("alertType", "fail");
-    		redirectAttributes.addAttribute("alertMessage", "도서 삭제 실패");
+    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertMessage", "도서 삭제 실패");
     		
     		return "redirect:/admin/books/" + booksId; // 실패 : 도서 상세 조회로
     	}
 
-    	redirectAttributes.addAttribute("alertType", "success");
-    	redirectAttributes.addAttribute("alertMessage", "도서 삭제 성공");
+    	redirectAttributes.addFlashAttribute("alertType", "success");
+    	redirectAttributes.addFlashAttribute("alertMessage", "도서 삭제 성공");
     	
     	return "redirect:/admin/books"; // 성공 : 도서 목록 조회로
     	

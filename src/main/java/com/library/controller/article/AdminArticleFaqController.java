@@ -1,7 +1,5 @@
 package com.library.controller.article;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,20 +45,6 @@ public class AdminArticleFaqController {
 		  
 		return "layout";
 	}
-	
-	// 수정 폼 요청
-	@GetMapping("/edit")
-	public String showEditForm(Model model) {
-		
-		pageInfo = PageInfo.builder()
-				.pageTitleCode("22")
-				.pagePath("page/3-article/editForm_article_faq.jsp")
-				.build();
-		  
-		setPageInfo(model);
-		  
-		return "layout";
-	}
     
     // 등록 처리
 	@PostMapping
@@ -68,14 +52,14 @@ public class AdminArticleFaqController {
     						 RedirectAttributes redirectAttributes) {
     	
     	try {
-    		//articleService.insertArticle(article); // 게시글 등록
+    		articleService.insertArticle(article); // 게시글 등록
     		
     	} catch (Exception e) {
     		e.printStackTrace();
     		
     		redirectAttributes.addFlashAttribute("alertType", "fail");
     		redirectAttributes.addFlashAttribute("alertMessage", "[자주 묻는 질문] 등록 실패");
-    		redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
+    		//redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
     		
     		return "redirect:/public/articles/faq/add"; // 실패: 등록 폼으로 이동
     	}
@@ -93,14 +77,14 @@ public class AdminArticleFaqController {
     							 RedirectAttributes redirectAttributes) {
     	
     	try {
-			//articleService.updateArticleInfo(article); // 게시글 내용 수정
+			articleService.updateArticleInfo(article); // 게시글 내용 수정
     		
     	} catch (Exception e) {
     		e.printStackTrace();
     		
     		redirectAttributes.addFlashAttribute("alertType", "fail");
 			redirectAttributes.addFlashAttribute("alertMessage", "[자주 묻는 질문] 내용 수정 실패");
-			redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
+			//redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
     		
     		return "redirect:/public/articles/faq/" + articlesId + "/edit"; // 실패: 상세 조회로 이동
     	}
@@ -116,23 +100,23 @@ public class AdminArticleFaqController {
     // 활성화, 비활성화 처리
     @PutMapping("/{articlesId}/{type}")
     public String updateDisplayProc(@PathVariable("articlesId") int articlesId, 
-    								@PathVariable("type") String type,
+    								@PathVariable("type") int type,
     								RedirectAttributes redirectAttributes) {
     	
     	try {
-    		if (type.equals("disable")) {
-    			//articleService.updateArticleDisable(articlesId); // 게시글 비활성화
-    		} else if (type.equals("enable")) {
-    			//articleService.updateArticleEnable(articlesId); // 게시글 활성화
-    		}
+    		if (type == 1) {
+    			articleService.updateArticleDisable(articlesId); // 게시글 비활성화 (soft del)
+    		} else if (type == 0) {
+    			articleService.updateArticleEnable(articlesId); // 게시글 활성화
+    		} 
     		
     	} catch (Exception e) {
     		e.printStackTrace();
     		
     		redirectAttributes.addFlashAttribute("alertType", "fail");
-    		if (type.equals("disable")) {
+    		if (type == 1) {
     			redirectAttributes.addFlashAttribute("alertMessage", "[자주 묻는 질문] 비활성화 실패");
-    		} else if (type.equals("enable")) {
+    		} else if (type == 0) {
     			redirectAttributes.addFlashAttribute("alertMessage", "[자주 묻는 질문] 활성화 실패");
     		}
     		
@@ -140,34 +124,34 @@ public class AdminArticleFaqController {
     	}
     	
     	redirectAttributes.addFlashAttribute("alertType", "success");
-    	if (type.equals("disable")) {
+    	if (type == 1) {
 			redirectAttributes.addFlashAttribute("alertMessage", "[자주 묻는 질문] 비활성화 성공");
-		} else if (type.equals("enable")) {
+    	} else if (type == 0) {
 			redirectAttributes.addFlashAttribute("alertMessage", "[자주 묻는 질문] 활성화 성공");
 		}
     	
     	return "redirect:/public/articles/faq/" + articlesId; // 성공: 상세 조회로 이동
     }
     
-    // 삭제 처리
+    // 삭제 처리 (hard del)
     @DeleteMapping("/{articlesId}")
     public String deleteProc(@PathVariable("articlesId") int articlesId,
     						 RedirectAttributes redirectAttributes) {
     	
     	try {
-			//articleService.deleteArticleById(articlesId); // 게시글 DB 삭제
+			articleService.deleteArticleById(articlesId); // 게시글 DB 삭제
     		
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addAttribute("alertType", "fail");
-			redirectAttributes.addAttribute("alertMessage", "[자주 묻는 질문] 삭제 실패");
+    		redirectAttributes.addFlashAttribute("alertType", "fail");
+			redirectAttributes.addFlashAttribute("alertMessage", "[자주 묻는 질문] 삭제 실패");
     		
 			return "redirect:/public/articles/faq/" + articlesId; // 실패: 상세 조회로 이동
     	}
     	
-    	redirectAttributes.addAttribute("alertType", "success");
-		redirectAttributes.addAttribute("alertMessage", "[자주 묻는 질문] 삭제 성공");
+    	redirectAttributes.addFlashAttribute("alertType", "success");
+		redirectAttributes.addFlashAttribute("alertMessage", "[자주 묻는 질문] 삭제 성공");
     	
 		return "redirect:/public/articles/faq"; // 성공: 목록으로 이동
     }

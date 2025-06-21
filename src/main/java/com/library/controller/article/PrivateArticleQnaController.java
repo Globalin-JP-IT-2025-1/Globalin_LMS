@@ -9,21 +9,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.model.Article;
-import com.library.model.ArticleDetailResponse;
-import com.library.model.ArticleListResponse;
 import com.library.model.PageInfo;
 import com.library.service.ArticleService;
 
 import lombok.AllArgsConstructor;
 
 @Controller
-@RequestMapping("/private/articles/req")
+@RequestMapping("/private/articles/qna")
 @AllArgsConstructor
-public class PrivateArticleReqController {
+public class PrivateArticleQnaController {
     private final ArticleService articleService;
     private PageInfo pageInfo;
     
@@ -32,68 +29,13 @@ public class PrivateArticleReqController {
     	model.addAttribute("pagePath", pageInfo.getPagePath());
     }
     
-    // req 목록 조회
-    @GetMapping
-    public String getList(@RequestParam(defaultValue = "1") int page, 
-    					  Model model) {
-    	ArticleListResponse articleListWithAuthor = articleService.getArticleListByCategory("req", page);
-		
-		model.addAttribute("articleListWithAuthor", articleListWithAuthor.getArticleWithAuthorList());
-		model.addAttribute("totalCount", articleListWithAuthor.getTotalCount());
-    	model.addAttribute("totalPages", articleListWithAuthor.getTotalPages());
-    	model.addAttribute("currentPage", page);
-		
-    	pageInfo = PageInfo.builder()
-    			.pageTitleCode("24")
-    			.pagePath("page/3-article/articleList_req.jsp")
-    			.build();
-        	
-        setPageInfo(model);
-    	
-        return "layout";
-    }
-    
-    // 상세 조회
-    @GetMapping("/{articlesId}")
-    public String getDetail(@PathVariable("articlesId") int articlesId, 
-						    @RequestParam(defaultValue = "1") int page,
-						    RedirectAttributes redirectAttributes,
-						    Model model) {
-    	try {
-			ArticleDetailResponse ArticleDetail = articleService.getArticleWithReplyList(articlesId, page);
-			
-			model.addAttribute("article", ArticleDetail.getArticleWithAuthor()); // 게시글 상세 정보
-			model.addAttribute("replyList", ArticleDetail.getReplyList().getReplyList()); // 댓글 리스트
-			model.addAttribute("totalCount", ArticleDetail.getReplyList().getTotalCount());
-	    	model.addAttribute("totalPages", ArticleDetail.getReplyList().getTotalPages());
-	    	model.addAttribute("currentPage", page);
-	    	
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-			redirectAttributes.addFlashAttribute("alertType", "fail");
-			redirectAttributes.addFlashAttribute("alertMesssage", "게시글 상세 조회에 실패하였습니다.");
-			
-			return "redirect:/private/articles/qna";
-		}
-    	
-    	pageInfo = PageInfo.builder()
-    			.pageTitleCode("24")
-    			.pagePath("page/3-article/articleDetail_req.jsp")
-    			.build();
-        	
-        setPageInfo(model);
-    	
-        return "layout";
-    }
-    
     // 등록 폼 요청
  	@GetMapping("/add")
  	public String showAddForm(Model model) {
  		
  		pageInfo = PageInfo.builder()
- 				.pageTitleCode("24")
- 				.pagePath("page/3-article/addForm_article_req.jsp")
+ 				.pageTitleCode("23")
+ 				.pagePath("page/3-article/addForm_article_qna.jsp")
  				.build();
  		  
  		setPageInfo(model);
@@ -113,16 +55,16 @@ public class PrivateArticleReqController {
      		e.printStackTrace();
      		
      		redirectAttributes.addFlashAttribute("alertType", "fail");
-     		redirectAttributes.addFlashAttribute("alertMessage", "희망 도서가 신청되지 않았습니다. 다시 시도해주세요.");
-     		redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
+     		redirectAttributes.addFlashAttribute("alertMessage", "Q&A가 등록되지 않았습니다. 다시 시도해주세요.");
+     		//redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
      		
-     		return "redirect:/private/articles/req/add"; // 실패: 등록 폼으로 이동
+     		return "redirect:/public/articles/qna/"; // 실패: 등록 폼으로 이동
      	}
      	
      	redirectAttributes.addFlashAttribute("alertType", "success");
-     	redirectAttributes.addFlashAttribute("alertMessage", "희망 도서가 신청되었습니다.");
+     	redirectAttributes.addFlashAttribute("alertMessage", "Q&A가 등록되었습니다.");
      	
-     	return "redirect:/private/articles/req"; // 성공: 목록으로 이동
+     	return "redirect:/public/articles/qna/"; // 성공: 목록으로 이동
      }
      
 	// 내용 수정 처리
@@ -141,14 +83,14 @@ public class PrivateArticleReqController {
  			redirectAttributes.addFlashAttribute("alertMessage", "내용 수정되지 않았습니다. 다시 시도해주세요.");
  			redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
      		
-     		return "redirect:/private/articles/req/" + articlesId + "/edit"; // 실패: 상세 조회로 이동
+     		return "redirect:/public/articles/qna/" + articlesId + "/edit"; // 실패: 상세 조회로 이동
      	}
      	
      	redirectAttributes.addFlashAttribute("alertType", "success");
  		redirectAttributes.addFlashAttribute("alertMessage", "수정되었습니다.");
  		
      	
-     	return "redirect:/private/articles/req/" + articlesId; // 성공: 상세 조회로 이동
+     	return "redirect:/public/articles/qna/" + articlesId; // 성공: 상세 조회로 이동
      	
     }
      
@@ -178,7 +120,7 @@ public class PrivateArticleReqController {
      			redirectAttributes.addFlashAttribute("alertMessage", "[희망 도서 신청] 비공개 실패");
      		}
      		
-     		return "redirect:/private/articles/req/" + articlesId; // 실패: 상세 조회로 이동
+     		return "redirect:/public/articles/qna/" + articlesId; // 실패: 상세 조회로 이동
      	}
      	
      	redirectAttributes.addFlashAttribute("alertType", "success");
@@ -190,7 +132,7 @@ public class PrivateArticleReqController {
  			redirectAttributes.addFlashAttribute("alertMessage", "[희망 도서 신청] 비공개 성공");
  		}
      	
-     	return "redirect:/private/articles/req/" + articlesId; // 성공: 상세 조회로 이동
+     	return "redirect:/public/articles/qna/" + articlesId; // 성공: 상세 조회로 이동
     }
      
     // 삭제 처리 (hard del)
@@ -207,13 +149,13 @@ public class PrivateArticleReqController {
      		redirectAttributes.addFlashAttribute("alertType", "fail");
  			redirectAttributes.addFlashAttribute("alertMessage", "삭제되지않았습니다. 다시 시도해주세요.");
      		
- 			return "redirect:/private/articles/req/" + articlesId; // 실패: 상세 조회로 이동
+ 			return "redirect:/public/articles/qna/" + articlesId; // 실패: 상세 조회로 이동
      	}
      	
      	redirectAttributes.addFlashAttribute("alertType", "success");
  		redirectAttributes.addFlashAttribute("alertMessage", "삭제되었습니다.");
      	
- 		return "redirect:/private/articles/req"; // 성공: 목록으로 이동
+ 		return "redirect:/public/articles/qna"; // 성공: 목록으로 이동
     }
     
     // 수정 폼 요청 --> js
