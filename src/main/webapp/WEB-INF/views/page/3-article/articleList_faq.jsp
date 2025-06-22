@@ -20,7 +20,7 @@
 <!-- ㄴ 답변  (기본: 숨기기, 원본글 누르면: 펼치기)-->
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center">
-        <div>전체 <strong>${fn:length(articleList)}</strong> 건</div>
+        <div>전체 <strong>${totalCount}</strong> 건</div>
         <div>
 	        <select class="form-select form-select-sm d-inline-block w-auto" id="searchType">
 	            <option id="st_title">제목</option>

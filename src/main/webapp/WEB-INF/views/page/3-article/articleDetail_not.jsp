@@ -39,7 +39,7 @@
                    	<!-- 로그인하지 않은 경우 -->
                     <sec:authorize access="isAnonymous()">
 						<c:choose>
-                    		<c:when test="${articleList[i].authorId == 0}">
+                    		<c:when test="${article.authorId == 0}">
                     			${a_fullname}(${a_username})
                     		</c:when>
                     		<c:otherwise>
@@ -50,9 +50,9 @@
                     <!-- 로그인한 경우 -->
                     <sec:authorize access="isAuthenticated()">
                        	<c:choose>
-                          	<c:when test="${replyList[i].authorId == userDetails.membersId 
+                          	<c:when test="${article.authorId == userDetails.membersId 
                        					or userDetails.membersId == 0 
-			                          	or articleList[i].authorId == 0}">                 
+			                          	or article.authorId == 0}">                 
                             	${a_fullname}(${a_username})
                             </c:when>
                             <c:otherwise>
@@ -76,6 +76,11 @@
 		<div class="btndiv">
 			<!-- 현재 로그인한 사용자가 관리자인 경우에만 보이기 -->
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
+				<form action="/admin/articles/not/${article.articlesId}/1" method="post" id="articleForm" >
+					<input type="hidden" name="_method" value="PUT">
+	            	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
+	            	<button type="submit" class="btn btn-primary delBtn" id="delButton">삭제</button>   
+				</form>
 		        <button class="btn btn-primary updateBtn" type="button" id="editButton" onclick="enableEdit()">수정</button>
 		        <button type="submit" id="cancleButton" class="btn btn-light cancleBtn" style="display: none;" onclick="cancleEdit(${article.articlesId})">취소</button>
 			</sec:authorize>
@@ -126,7 +131,7 @@
    
 	<div class="articleDetail_div4">   
 		<!-- 댓글 목록 조회 -->
-		<c:if test="${fn:length(replyList) > 0}">
+		<c:if test="${not empty replyList}">
 			<div class="position-relative mt-2 mb-4">
 				<c:forEach var="i" begin="0" end="${fn:length(replyList) - 1}" step="1">
 					<div class="d-flex justify-content-between align-items-center mb-2" style="position: relative;">

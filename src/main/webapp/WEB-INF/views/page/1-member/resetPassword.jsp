@@ -3,13 +3,13 @@
 
 <!-- 비밀번호 재발급 요청 -->
 
-<div class=""> <!-- 테스트시 d-none 해제 -->
+<div class="d-none"> <!-- 테스트시 d-none 해제 -->
 	<button onclick="vailFormData()">빈 값 검사</button>
 	<button onclick="testResetPassword()">비밀번호 재발급 테스트</button>
 </div>
 
 <div class="w-100">
-	<div class="card shadow-sm w-60 pt-5">
+	<div class="card shadow-sm w-60 pt-5 my-3">
 		<div class="container d-flex flex-column justify-content-center align-items-center memberCheckForm">
 		    <div class="mb-3 col-6 d-flex gap-2">
 		        <div class="col-3 d-flex align-items-center">아이디</div>

@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <c:set var="articleList" value="${articleListWithAuthor}" />
 
@@ -15,14 +15,34 @@
 <c:set var="startPage" value="${(currentPage - 1) / blockSize * blockSize + 1}" />
 <c:set var="endPage" value="${startPage + blockSize - 1 > totalPages ? totalPages : startPage + blockSize - 1}" />
 
+<sec:authorize access="hasRole('ROLE_USER')">
+    <sec:authentication property="principal" var="userDetails" />
+</sec:authorize>
+
 <style>
-	.articleList tr {
-		cursor: pointer !important;
-	}
+.articleList tr {
+	cursor: pointer !important;
+}
+
+/* 공통 스타일 */
+.articleList td, .articleList th {
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+/* 각 열 너비 */
+.articleList td:nth-child(1), .articleList th:nth-child(1) { width: 6% !important; }
+.articleList td:nth-child(2), .articleList th:nth-child(2) { width: 48% !important; }
+.articleList td:nth-child(3), .articleList th:nth-child(3) { width: 12% !important; }
+.articleList td:nth-child(4), .articleList th:nth-child(4) { width: 12% !important; }
+.articleList td:nth-child(5), .articleList th:nth-child(5) { width: 6% !important; }
+.articleList td:nth-child(6), .articleList th:nth-child(6) { width: 6% !important; }
+
 </style>
 
 <!-- 게시글 목록 조회 - 희망 도서 신청 -->
-<div class="container mt-4">
+<div class="container mt-4 w-100">
 	<!-- 요약 & 검색창 -->
     <div class="d-flex justify-content-between align-items-center">
         <div>전체 <strong>${totalCount}</strong> 건</div>
@@ -50,43 +70,50 @@
 	            </tr>
 	        </thead>
 	        <tbody>
-	            <c:forEach var="i" begin="0" end="${fn:length(articleList) - 1}" step="1">
-	                <tr onclick="location.href='/private/articles/req/${articleList[i].articlesId}'">
-	                    <td>${i + (currentPage * 7) - 6}</td>
-	                    <td>${articleList[i].title}</td>
-	                    <td>
-	                    	<c:set var="a_fullname" value="${articleList[i].authorFullname}" />
-	                    	<c:set var="a_username" value="${articleList[i].authorUsername}" />
-	                    	<!-- 로그인하지 않은 경우 -->
-		                    <sec:authorize access="isAnonymous()">
-								<c:choose>
-		                    		<c:when test="${articleList[i].authorId == 0}">
-		                    			${a_fullname}(${a_username})
-		                    		</c:when>
-		                    		<c:otherwise>
-										${fn:substring(a_fullname, 0, 1)}**(${a_username})
-		                    		</c:otherwise>
-		                    	</c:choose>
-		                    </sec:authorize>
-		                    <!-- 로그인한 경우 -->
-		                    <sec:authorize access="isAuthenticated()">
-		                       	<c:choose>
-		                          	<c:when test="${articleList[i].authorId == userDetails.membersId 
-					                          	or userDetails.membersId == 0 
-					                          	or articleList[i].authorId == 0}">                     
-		                            	${a_fullname}(${a_username})
-		                            </c:when>
-		                            <c:otherwise>
-										${fn:substring(a_fullname, 0, 1)}**(${a_username})
-		                            </c:otherwise>
-		                         </c:choose>
-		                    </sec:authorize>
-	                    </td>
-	                    <td><fmt:formatDate value="${articleList[i].updateDate}" pattern="yyyy-MM-dd" /></td>
-	                    <td>${articleList[i].viewCount}</td>
-	                    <td>${articleList[i].replyCount}</td>
-	                </tr>
-	            </c:forEach>
+	        	<c:choose>
+	        		<c:when test="${empty articleList}">
+	        			<td colspan="6" style="text-align: center;">조회된 게시글이 없습니다</td>
+	        		</c:when>
+		        	<c:when test="${not empty articleList}">
+			            <c:forEach var="i" begin="0" end="${fn:length(articleList) - 1}" step="1">
+			                <tr onclick="location.href='/private/articles/req/${articleList[i].articlesId}'">
+			                    <td>${i + (currentPage * 7) - 6}</td>
+			                    <td class="text-truncate">${articleList[i].title}</td>
+			                    <td>
+			                    	<c:set var="a_fullname" value="${articleList[i].authorFullname}" />
+			                    	<c:set var="a_username" value="${articleList[i].authorUsername}" />
+			                    	<!-- 로그인하지 않은 경우 -->
+				                    <sec:authorize access="isAnonymous()">
+				                    	<c:choose>
+				                    		<c:when test="${articleList[i].authorId == 0}">
+				                    			${a_fullname}(${a_username})
+				                    		</c:when>
+				                    		<c:otherwise>
+												${fn:substring(a_fullname, 0, 1)}**(${a_username})
+				                    		</c:otherwise>
+				                    	</c:choose>
+				                    </sec:authorize>
+				                    <!-- 로그인한 경우 -->
+				                    <sec:authorize access="isAuthenticated()">
+				                       	<c:choose>
+				                          	<c:when test="${articleList[i].authorId == userDetails.membersId 
+						                          		or userDetails.membersId == 0 
+							                          	or articleList[i].authorId == 0}">
+				                            	${a_fullname}(${a_username})
+				                            </c:when>
+				                            <c:otherwise>
+												${fn:substring(a_fullname, 0, 1)}**(${a_username})
+				                            </c:otherwise>
+				                         </c:choose>
+				                    </sec:authorize>
+			                    </td>
+			                    <td><fmt:formatDate value="${articleList[i].updateDate}" pattern="yyyy-MM-dd" /></td>
+			                    <td>${articleList[i].viewCount}</td>
+			                    <td>${articleList[i].replyCount}</td>
+			                </tr>
+	            		</c:forEach>
+	            	</c:when>
+	            </c:choose>
 	        </tbody>
 	    </table>
     </div>

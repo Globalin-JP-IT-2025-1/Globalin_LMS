@@ -23,107 +23,109 @@
 </style>
 
 <!-- 회원 정보 수정 요청 -->
-<div class=""> <!-- 테스트시 d-none 해제 -->
+<div class="d-none"> <!-- 테스트시 d-none 해제 -->
 	<button onclick="vailFormData()">빈 값 검사</button>
 	<button onclick="vailRequestData()">유효성 검사</button>
 	<button onclick="testUpdateMember()">회원 정보 수정 테스트</button>
 </div>
-
-<div class="container d-flex flex-column justify-content-center align-items-center editForm">
-	<div class="mb-3 col-6 d-flex gap-2">
-        <div class="col-3 d-flex align-items-center">아이디</div>
-        <div class="input-group d-flex align-items-center">
-            <input class="form-control bg-secondary-subtle" type="text" id="usernameBox" value="${member.username}" maxlength="20" readonly>
-        </div>
-    </div>
-    
-    <div class="mb-3 col-6 d-flex gap-2">
-    	<div class="col-3 d-flex align-items-center">비밀번호</div>
-        <div class="input-group d-flex align-items-center">
-            <input class="form-control" type="text" id="passwordBox" value="" placeholder="비밀번호 입력" maxlength="20"><!-- 테스트 후 password로 변경하기 -->
-        </div>
-    </div>
-    
-    <div class="mb-3 col-6 d-flex gap-2">
-    	<div class="col-3 d-flex align-items-center">비밀번호 확인</div>
-        <div class="input-group d-flex align-items-center">
-            <input class="form-control" type="text" id="confirmPasswordBox" value="" placeholder="비밀번호 입력" maxlength="20"><!-- 테스트 후 password로 변경하기 -->
-        </div>
-    </div>
-	<div class="mb-3 col-6 d-flex justify-content-end gap-2">
-		<div class="col-1 d-none">
-			<input class="form-control" type="text" id="pwMatchStatus"><!-- 테스트 시 d-none 해제 -->
+<div class="w-100">
+	<div class="card shadow-sm w-60 pt-5 my-3">
+		<div class="container d-flex flex-column justify-content-center align-items-center editForm">
+			<div class="mb-3 col-6 d-flex gap-3">
+		        <div class="col-3 d-flex justify-content-start text-secondary">아이디</div>
+		        <div class="input-group d-flex align-items-center">
+		            <input class="form-control bg-secondary-subtle" type="text" id="usernameBox" value="${member.username}" maxlength="20" readonly>
+		        </div>
+		    </div>
+		    
+		    <div class="mb-3 col-6 d-flex gap-3">
+		        <div class="col-3 d-flex justify-content-start text-secondary">비밀번호</div>
+		        <div class="input-group d-flex align-items-center">
+		            <input class="form-control" type="text" id="passwordBox" value="" placeholder="비밀번호 입력" maxlength="20"><!-- 테스트 후 password로 변경하기 -->
+		        </div>
+		    </div>
+		    
+		    <div class="mb-3 col-6 d-flex gap-3">
+		        <div class="col-3 d-flex justify-content-start text-secondary">비밀번호 확인</div>
+		        <div class="input-group d-flex align-items-center">
+		            <input class="form-control" type="text" id="confirmPasswordBox" value="" placeholder="비밀번호 입력" maxlength="20"><!-- 테스트 후 password로 변경하기 -->
+		        </div>
+		    </div>
+			<div class="mb-3 col-6 d-flex justify-content-end gap-3">
+				<div class="col-1 d-none">
+					<input class="form-control" type="text" id="pwMatchStatus"><!-- 테스트 시 d-none 해제 -->
+				</div>
+				<div class="col-5 d-flex flex-row-reverse" id="pwMessage"></div>
+			</div>
+		    
+		    <div class="mb-3 col-6 d-flex gap-3">
+		        <div class="col-3 d-flex justify-content-start text-secondary">이름</div>
+		        <div class="input-group d-flex align-items-center">
+		            <input class="form-control bg-secondary-subtle" type="text" id="nameBox" value="${member.name}" maxlength="30" readonly>
+		        </div>
+		    </div>
+		    
+		    <div class="mb-3 col-6 d-flex gap-3">
+		        <div class="col-3 d-flex justify-content-start text-secondary">이메일</div>
+		        <div class="input-group d-flex align-items-center">
+		            <input class="form-control" type="text" id="emailBox1" value="${emailParts[0]}" placeholder="이메일 입력" maxlength="30">
+		            <i class="bi bi-at"></i>
+		            <select id="emailBox2" class="form-select">
+			            <option value="gmail.com" ${emailParts[0] eq 'gmail.com' ? 'selected' : ''}>gmail.com</option>
+			            <option value="naver.com" ${emailParts[0] eq 'naver.com' ? 'selected' : ''}>naver.com</option>
+			            <option value="test.com" ${emailParts[0] eq 'test.com' ? 'selected' : ''}>test.com</option>
+			        </select>
+			        <button class="btn btn-primary">중복확인</button>
+		        </div>
+		    </div>
+		    
+		    <div class="mb-3 col-6 d-flex gap-3">
+		        <div class="col-3 d-flex justify-content-start text-secondary">전화번호</div>
+		        <div class="input-group d-flex align-items-center">
+		            <input class="form-control" type="text" id="mobileBox1" value="${mobileParts[0]}" maxlength="3">-
+					<input class="form-control" type="text" id="mobileBox2" value="${mobileParts[1]}" maxlength="4">-
+					<input class="form-control" type="text" id="mobileBox3" value="${mobileParts[2]}" maxlength="4">
+		        </div>
+		    </div>
+		
+			<!-- 주소 파트 -->
+			<div class="mb-3 col-6 d-flex gap-3">
+		        <div class="col-3 d-flex justify-content-start text-secondary">주소</div>
+		        <div class="input-group d-flex align-items-center">
+		            <input class="form-control" type="text" id="addressBox" value="${member.address}" placeholder="주소 자동 입력" readonly>
+		            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressModal">주소찾기</button>
+		        </div>
+		    </div>
+		    
+		    <div class="mb-3 col-6 d-flex gap-3">
+		        <div class="col-3 d-flex justify-content-start text-secondary">상세 주소</div>
+		        <div class="input-group d-flex align-items-center">
+		            <input class="form-control" type="text" id="addressDetailBox" value="${member.addressDetail}" placeholder="상세 주소 입력">
+		        </div>
+		    </div>
+		
+		    <div class="mb-3 col-6 d-flex gap-3">
+		        <div class="col-3 d-flex justify-content-start text-secondary">우편번호</div>
+		        <div class="input-group d-flex align-items-center">
+		        	<input class="form-control" type="text" id="zipcodeBox" value="${member.zipcode}" placeholder="우편번호 자동 입력">
+		        </div>
+		    </div>
+		    
+		    <div class="mb-3 col-6 d-flex justify-content-center align-items-center gap-2">
+		        <button class="mb-3 btn btn-secondary" onclick="cancelEdit()">수정취소</button>
+		        <form action="/private/members/${membersId}" method="post">
+		        	<input type="hidden" name="_method" value="PUT">
+		        	<input class="d-none" type="text" name="password" id="password" value="" readonly><!-- 서버 송신용1 -->
+		        	<input class="d-none" type="text" name="email" id="email" value="${member.email}" readonly><!-- 서버 송신용2 -->
+		        	<input class="d-none" type="text" name="mobile" id="mobile" value="${member.mobile}" readonly><!-- 서버 송신용3 -->
+		        	<input class="d-none" type="text" name="address" id="address" value="${member.address}" readonly><!-- 서버 송신용4 -->
+		        	<input class="d-none" type="text" name="addressDetail" id="addressDetail" value="${member.addressDetail}" readonly><!-- 서버 송신용5 -->
+		        	<input class="d-none" type="text" name="zipcode" id="zipcode" value="${member.zipcode}" readonly><!-- 서버 송신용6 -->
+		        	<input class="mb-3 btn btn-primary" type="submit" value="수정">
+		        </form>
+		    </div>
 		</div>
-		<div class="col-5 d-flex flex-row-reverse" id="pwMessage"></div>
 	</div>
-    
-    <div class="mb-3 col-6 d-flex gap-2">
-    	<div class="col-3 d-flex align-items-center">이름</div>
-        <div class="input-group d-flex align-items-center">
-            <input class="form-control bg-secondary-subtle" type="text" id="nameBox" value="${member.name}" maxlength="30" readonly>
-        </div>
-    </div>
-    
-    <div class="mb-3 col-6 d-flex gap-2">
-    	<div class="col-3 d-flex align-items-center">이메일</div>
-        <div class="input-group d-flex align-items-center">
-            <input class="form-control" type="text" id="emailBox1" value="${emailParts[0]}" placeholder="이메일 입력" maxlength="30">
-            <i class="bi bi-at"></i>
-            <select id="emailBox2" class="form-select">
-	            <option value="gmail.com" ${emailParts[0] eq 'gmail.com' ? 'selected' : ''}>gmail.com</option>
-	            <option value="naver.com" ${emailParts[0] eq 'naver.com' ? 'selected' : ''}>naver.com</option>
-	            <option value="test.com" ${emailParts[0] eq 'test.com' ? 'selected' : ''}>test.com</option>
-	        </select>
-	        <button class="btn btn-primary">중복확인</button>
-        </div>
-    </div>
-    
-    <div class="mb-3 col-6 d-flex gap-2">
-    	<div class="col-3 d-flex align-items-center">전화번호</div>
-        <div class="input-group d-flex align-items-center">
-            <input class="form-control" type="text" id="mobileBox1" value="${mobileParts[0]}" maxlength="3">-
-			<input class="form-control" type="text" id="mobileBox2" value="${mobileParts[1]}" maxlength="4">-
-			<input class="form-control" type="text" id="mobileBox3" value="${mobileParts[2]}" maxlength="4">
-        </div>
-    </div>
-
-	<!-- 주소 파트 -->
-	<div class="mb-3 col-6 d-flex gap-2">
-        <div class="col-3 d-flex align-items-center">주소</div>
-        <div class="input-group d-flex align-items-center">
-            <input class="form-control" type="text" id="addressBox" value="${member.address}" placeholder="주소 자동 입력" readonly>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressModal">주소찾기</button>
-        </div>
-    </div>
-    
-    <div class="mb-3 col-6 d-flex gap-2">
-        <div class="col-3 d-flex align-items-center">상세 주소</div>
-        <div class="input-group d-flex align-items-center">
-            <input class="form-control" type="text" id="addressDetailBox" value="${member.addressDetail}" placeholder="상세 주소 입력">
-        </div>
-    </div>
-
-    <div class="mb-3 col-6 d-flex gap-2">
-        <div class="col-3 d-flex align-items-center">우편번호</div>
-        <div class="input-group d-flex align-items-center">
-        	<input class="form-control" type="text" id="zipcodeBox" value="${member.zipcode}" placeholder="우편번호 자동 입력">
-        </div>
-    </div>
-    
-    <div class="mb-3 col-6 d-flex justify-content-center align-items-center gap-2">
-        <button class="mb-3 btn btn-secondary" onclick="cancelEdit()">수정취소</button>
-        <form action="/private/members/${membersId}" method="post">
-        	<input type="hidden" name="_method" value="PUT">
-        	<input class="d-none" type="text" name="password" id="password" value="" readonly><!-- 서버 송신용1 -->
-        	<input class="d-none" type="text" name="email" id="email" value="${member.email}" readonly><!-- 서버 송신용2 -->
-        	<input class="d-none" type="text" name="mobile" id="mobile" value="${member.mobile}" readonly><!-- 서버 송신용3 -->
-        	<input class="d-none" type="text" name="address" id="address" value="${member.address}" readonly><!-- 서버 송신용4 -->
-        	<input class="d-none" type="text" name="addressDetail" id="addressDetail" value="${member.addressDetail}" readonly><!-- 서버 송신용5 -->
-        	<input class="d-none" type="text" name="zipcode" id="zipcode" value="${member.zipcode}" readonly><!-- 서버 송신용6 -->
-        	<input class="mb-3 btn btn-primary" type="submit" value="수정">
-        </form>
-    </div>
-	
 </div>
 
 <!-- Bootstrap 모달창 -->

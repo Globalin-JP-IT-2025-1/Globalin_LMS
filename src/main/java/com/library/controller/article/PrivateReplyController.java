@@ -40,7 +40,7 @@ public class PrivateReplyController {
     		 @PathVariable("articlesId") int articlesId, 
     		 @ModelAttribute Reply reply, 
     		 RedirectAttributes redirectAttributes) {
-     	
+    	
      	try {
      		reply.setOriginArticleId(articlesId); // 원본 글 설정
      		replyService.insertReply(reply); // 댓글 추가
@@ -51,13 +51,19 @@ public class PrivateReplyController {
      		redirectAttributes.addFlashAttribute("alertType", "fail");
      		redirectAttributes.addFlashAttribute("alertMessage", "댓글 등록에 실패하였습니다.");
      		redirectAttributes.addFlashAttribute("reply", reply); // 입력 내용 반환
-     		
+         	
+        	if (originCat.equals("req")) {
+        		return "redirect:/private/articles/req/" + articlesId; // 실패: 원본 글 상세 조회로 이동
+        	}
      		return "redirect:/public/articles/" + originCat + "/" + articlesId; // 실패: 원본 글 상세 조회로 이동
      	}
      	
      	redirectAttributes.addFlashAttribute("alertType", "success");
      	redirectAttributes.addFlashAttribute("alertMessage", "댓글이 등록되었습니다.");
      	
+     	if (originCat.equals("req")) {
+    		return "redirect:/private/articles/req/" + articlesId; // 실패: 원본 글 상세 조회로 이동
+    	}
      	return "redirect:/public/articles/" + originCat + "/" + articlesId; // 성공: 원본 글 상세 조회로 이동
      }
  	
@@ -92,6 +98,9 @@ public class PrivateReplyController {
      			redirectAttributes.addFlashAttribute("alertMessage", "댓글 비공개에 실패하였습니다. 다시 시도해주세요.");
      		}
      		
+     		if (originCat.equals("req")) {
+        		return "redirect:/private/articles/req/" + articlesId; // 실패: 원본 글 상세 조회로 이동
+        	}
      		return "redirect:/public/articles/" + originCat + "/" + articlesId; // 실패: 원본 글 상세 조회로 이동
      	}
      	
@@ -104,18 +113,21 @@ public class PrivateReplyController {
  			redirectAttributes.addFlashAttribute("alertMessage", "댓글이 비공개처리 되었습니다.");
  		}
      	
+     	if (originCat.equals("req")) {
+    		return "redirect:/private/articles/req/" + articlesId; // 실패: 원본 글 상세 조회로 이동
+    	}
      	return "redirect:/public/articles/" + originCat + "/" + articlesId; // 성공: 원본 글 상세 조회로 이동
      }
      
      // 삭제 처리 (hard del)
-     @DeleteMapping("/{articlesId}")
+     @DeleteMapping("/{repliesId}")
      public String deleteProc(@PathVariable("originCat") String originCat, 
+    		 				  @PathVariable("articlesId") int articlesId, 
     		 				  @PathVariable("repliesId") int repliesId, 
-							  @PathVariable("articlesId") int articlesId, 
 		 			    	  RedirectAttributes redirectAttributes) {
      	
      	try {
- 			replyService.deleteReply(repliesId); // 댓글 DB 삭제
+ 			replyService.deleteReply(articlesId, repliesId); // 댓글 DB 삭제 (aop를 위해 파라미터에 articlesId 추가)
      		
      	} catch (Exception e) {
      		e.printStackTrace();
@@ -123,12 +135,18 @@ public class PrivateReplyController {
      		redirectAttributes.addFlashAttribute("alertType", "fail");
  			redirectAttributes.addFlashAttribute("alertMessage", "댓글이 삭제되지않았습니다. 다시 시도해주세요.");
      		
+ 			if (originCat.equals("req")) {
+        		return "redirect:/private/articles/req/" + articlesId; // 실패: 원본 글 상세 조회로 이동
+        	}
  			return "redirect:/public/articles/" + originCat + "/" + articlesId; // 실패: 원본 게시글로 이동
      	}
      	
      	redirectAttributes.addFlashAttribute("alertType", "success");
  		redirectAttributes.addFlashAttribute("alertMessage", "댓글이 삭제되었습니다.");
      	
+ 		if (originCat.equals("req")) {
+    		return "redirect:/private/articles/req/" + articlesId; // 실패: 원본 글 상세 조회로 이동
+    	}
  		return "redirect:/public/articles/" + originCat + "/" + articlesId; // 성공: 원본 게시글로 이동
      }
      

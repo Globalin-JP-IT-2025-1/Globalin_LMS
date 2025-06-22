@@ -189,7 +189,7 @@
 		    #{articlesId}, #{authorId}, #{category}, 
 		    #{title}, #{content}, #{createDate}, #{updateDate}, 
 		    #{replyCount}, #{viewCount}, #{status}
-		);
+		)
     </insert>
 
     <!-- 게시글 삭제 -->

@@ -3,13 +3,13 @@
 
 <!-- 회원 가입 여부 확인 요청 -->
 
-<div class=""> <!-- 테스트시 d-none 해제 -->
+<div class="d-none"> <!-- 테스트시 d-none 해제 -->
 	<button onclick="vailFormData()">빈 값 검사</button>
 	<button onclick="testMemberCheck()">아이디 찾기 테스트</button>
 </div>
 
 <div class="w-100">
-	<div class="card shadow-sm w-60 pt-5">
+	<div class="card shadow-sm w-60 pt-5 my-3">
 		<div class="container d-flex flex-column justify-content-center align-items-center memberCheckForm">
 		    <div class="mb-3 col-6 d-flex gap-2">
 		    	<div class="col-3 d-flex align-items-center">이메일</div>

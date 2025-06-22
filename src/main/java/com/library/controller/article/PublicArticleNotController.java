@@ -60,10 +60,17 @@ public class PublicArticleNotController {
 			ArticleDetailResponse articleDetail = articleService.getArticleWithReplyList(articlesId, page);
 			
 			model.addAttribute("article", articleDetail.getArticleWithAuthor()); // 게시글 상세 정보
-			model.addAttribute("replyList", articleDetail.getReplyList().getReplyList()); // 댓글 리스트
-			model.addAttribute("totalCount", articleDetail.getReplyList().getTotalCount()); // 댓글 페이징
-	    	model.addAttribute("totalPages", articleDetail.getReplyList().getTotalPages()); // 댓글 페이징
 	    	model.addAttribute("currentPage", page); // 댓글 페이징
+	    	
+	    	if (articleDetail.getReplyListResponse() != null) {
+				model.addAttribute("replyList", articleDetail.getReplyListResponse().getReplyList()); // 댓글 리스트
+				model.addAttribute("totalCount", articleDetail.getReplyListResponse().getTotalCount());
+				model.addAttribute("totalPages", articleDetail.getReplyListResponse().getTotalPages());
+			} else {
+				model.addAttribute("replyList", null);
+				model.addAttribute("totalCount", 0);
+				model.addAttribute("totalPages", 0);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();

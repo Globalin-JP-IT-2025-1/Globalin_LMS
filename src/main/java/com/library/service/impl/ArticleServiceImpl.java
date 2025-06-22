@@ -1,5 +1,7 @@
 package com.library.service.impl;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -40,7 +42,7 @@ public class ArticleServiceImpl implements ArticleService {
 				.endRow(endRow)
 				.build();
 		
-		List<ArticleWithAuthor> articleList = articleMapper.getArticleListByCategory(articlesListRequest);
+		List<ArticleWithAuthor> articleList = articleMapper.getArticleList(articlesListRequest);
 		
 		return ArticleListResponse.builder()
 				.articleWithAuthorList(articleList)
@@ -97,7 +99,7 @@ public class ArticleServiceImpl implements ArticleService {
 				.build();
 	}
 	
-	// 4) 게시글 전체 수 (카테고리 기준)
+	// 4) 게시글 전체 수
 	@Override
 	public int getArticleListCount() {
 		return articleMapper.getArticleListCount();
@@ -130,13 +132,33 @@ public class ArticleServiceImpl implements ArticleService {
 
 	    return ArticleDetailResponse.builder()
 	            .articleWithAuthor(articleWithAuthor)
-	            .replyList(replyList)
+	            .replyListResponse(replyList)
 	            .build();
 	}
 	
 	// 게시글 등록
 	@Override
 	public int insertArticle(Article article) {
+		// 오늘 날짜 설정
+		LocalDateTime currentDate = LocalDateTime.now();
+		Timestamp currentDateTS = Timestamp.valueOf(currentDate);
+		
+		article.setCreateDate(currentDateTS);
+		article.setUpdateDate(currentDateTS);
+		article.setViewCount(0);
+		article.setReplyCount(0);
+		
+		System.out.println(
+				"ArticleServiceImpl - "
+				+ "ArticlesId : " + article.getArticlesId() + ", "
+				+ "AuthorId : " + article.getAuthorId() + ", "
+				+ "Category : " + article.getCategory() + ", "
+				+ "Title : " + article.getTitle() + ", "
+				+ "Content : " + article.getContent() + ", "
+				+ "CreateDate : " + article.getCreateDate() + ", "
+				+ "UpdateDate : " + article.getUpdateDate() + ", "
+				+ "Status : " + article.getStatus());
+		
 		return articleMapper.insertArticle(article);
     }
     

@@ -10,26 +10,16 @@ import com.library.model.Reply;
 import com.library.service.ArticleService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class ArticleViewAndReplyCountAspect {
+public class ArticleReplyCountAspect {
 	
 	@Autowired
 	private ArticleService articleService;
-
-    // 게시글 상세 조회 시 --> ok
-    @After("execution(* com.library.service.impl.ArticleServiceImpl.getArticleWithAuthorAndReplies(..))")
-    public void increaseViewCountAfterGetArticleDetail(JoinPoint joinPoint) {
-    	Object[] args = joinPoint.getArgs();
-    	int articlesId = (int) args[0];
-    	
-    	if (articlesId > 0) {
-    	    articleService.updateArticleViewCountUp(articlesId);
-    	}
-
-    }
 
     // 댓글 등록 시 --> ok
     @After("execution(* com.library.service.impl.ReplyServiceImpl.insertReply(..))")
@@ -37,8 +27,8 @@ public class ArticleViewAndReplyCountAspect {
     	Object[] args = joinPoint.getArgs();
     	Reply reply = (Reply) args[0];
 
-    	System.out.println("작성자id:" + reply.getAuthorId() + 
-    					   ", 댓글 내용: " + reply.getContent() + "- ArticleViewAndReplyCountAspect");
+    	log.info("작성자id:" + reply.getAuthorId() + ", "
+    			+ "댓글 내용: " + reply.getContent() + "- ArticleReplyCountAspect");
 
     	if (reply != null) {
     	    articleService.updateArticleReplyCountUp(reply.getOriginArticleId());
@@ -46,11 +36,13 @@ public class ArticleViewAndReplyCountAspect {
     	
     }
     
-    // 댓글 비활성화 시 (soft delete 시) 
-    @After("execution(* com.library.service.impl.ReplyServiceImpl.updateReplyDisable(..))")
+    // 댓글 삭제 시 (hard delete 시) 
+    @After("execution(* com.library.service.impl.ReplyServiceImpl.deleteReply(..))")
     public void decreaseReplyCountAfterDeleteReply(JoinPoint joinPoint) {
     	Object[] args = joinPoint.getArgs();
     	int articlesId = (int) args[0];
+    	
+    	System.out.println("삭제 대상 댓글 id:" + articlesId + "- ArticleReplyCountAspect");
 
     	if (articlesId > 0) {
     	    articleService.updateArticleReplyCountDown(articlesId);

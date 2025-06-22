@@ -56,13 +56,20 @@ public class PublicArticleQnaController {
     						   RedirectAttributes redirectAttributes,
     						   Model model) {
 		try {
-			ArticleDetailResponse ArticleDetail = articleService.getArticleWithReplyList(articlesId, page);
+			ArticleDetailResponse articleDetail = articleService.getArticleWithReplyList(articlesId, page);
 			
-			model.addAttribute("article", ArticleDetail.getArticleWithAuthor()); // 게시글 상세 정보
-			model.addAttribute("replyList", ArticleDetail.getReplyList().getReplyList()); // 댓글 리스트
-			model.addAttribute("totalCount", ArticleDetail.getReplyList().getTotalCount());
-	    	model.addAttribute("totalPages", ArticleDetail.getReplyList().getTotalPages());
-	    	model.addAttribute("currentPage", page);
+			model.addAttribute("article", articleDetail.getArticleWithAuthor()); // 게시글 상세 정보
+			model.addAttribute("currentPage", page);
+			
+			if (articleDetail.getReplyListResponse() != null) {
+				model.addAttribute("replyList", articleDetail.getReplyListResponse().getReplyList()); // 댓글 리스트
+				model.addAttribute("totalCount", articleDetail.getReplyListResponse().getTotalCount());
+				model.addAttribute("totalPages", articleDetail.getReplyListResponse().getTotalPages());
+			} else {
+				model.addAttribute("replyList", null);
+				model.addAttribute("totalCount", 0);
+				model.addAttribute("totalPages", 0);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();

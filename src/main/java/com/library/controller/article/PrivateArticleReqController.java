@@ -53,20 +53,27 @@ public class PrivateArticleReqController {
         return "layout";
     }
     
-    // 상세 조회
+    // req 상세 조회
     @GetMapping("/{articlesId}")
     public String getDetail(@PathVariable("articlesId") int articlesId, 
 						    @RequestParam(defaultValue = "1") int page,
 						    RedirectAttributes redirectAttributes,
 						    Model model) {
     	try {
-			ArticleDetailResponse ArticleDetail = articleService.getArticleWithReplyList(articlesId, page);
+			ArticleDetailResponse articleDetail = articleService.getArticleWithReplyList(articlesId, page);
 			
-			model.addAttribute("article", ArticleDetail.getArticleWithAuthor()); // 게시글 상세 정보
-			model.addAttribute("replyList", ArticleDetail.getReplyList().getReplyList()); // 댓글 리스트
-			model.addAttribute("totalCount", ArticleDetail.getReplyList().getTotalCount());
-	    	model.addAttribute("totalPages", ArticleDetail.getReplyList().getTotalPages());
-	    	model.addAttribute("currentPage", page);
+			model.addAttribute("article", articleDetail.getArticleWithAuthor()); // 게시글 상세 정보
+			model.addAttribute("currentPage", page);
+			
+			if (articleDetail.getReplyListResponse() != null) {
+				model.addAttribute("replyList", articleDetail.getReplyListResponse().getReplyList()); // 댓글 리스트
+				model.addAttribute("totalCount", articleDetail.getReplyListResponse().getTotalCount());
+				model.addAttribute("totalPages", articleDetail.getReplyListResponse().getTotalPages());
+			} else {
+				model.addAttribute("replyList", null);
+				model.addAttribute("totalCount", 0);
+				model.addAttribute("totalPages", 0);
+			}
 	    	
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,7 +94,7 @@ public class PrivateArticleReqController {
         return "layout";
     }
     
-    // 등록 폼 요청
+    // req 등록 폼 요청
  	@GetMapping("/add")
  	public String showAddForm(Model model) {
  		
@@ -101,7 +108,7 @@ public class PrivateArticleReqController {
  		return "layout";
  	}
  	
-    // 등록 처리
+    // req 등록 처리
  	@PostMapping
      public String insertProc(@ModelAttribute Article article,  
      						  RedirectAttributes redirectAttributes) {
@@ -125,14 +132,14 @@ public class PrivateArticleReqController {
      	return "redirect:/private/articles/req"; // 성공: 목록으로 이동
      }
      
-	// 내용 수정 처리
+	// req 내용 수정 처리
     @PutMapping("/{articlesId}")
     public String updateInfoProc(@PathVariable("articlesId") int articlesId, 
 					    		 @ModelAttribute Article article,
 					     		 RedirectAttributes redirectAttributes) {
     	 
      	try {
- 			//articleService.updateArticleInfo(article); // 게시글 내용 수정
+ 			articleService.updateArticleInfo(article); // 게시글 내용 수정
      		
      	} catch (Exception e) {
      		e.printStackTrace();
@@ -152,7 +159,7 @@ public class PrivateArticleReqController {
      	
     }
      
-    // 활성화, 비활성화 처리
+    // req 활성화, 비활성화 처리
     @PutMapping("/{articlesId}/{type}")
     public String updateDisplayProc(@PathVariable("articlesId") int articlesId, 
 						    		 @PathVariable("status") int type,
@@ -193,7 +200,7 @@ public class PrivateArticleReqController {
      	return "redirect:/private/articles/req/" + articlesId; // 성공: 상세 조회로 이동
     }
      
-    // 삭제 처리 (hard del)
+    // req 삭제 처리 (hard del)
     @DeleteMapping("/{articlesId}")
     public String deleteProc(@PathVariable("articlesId") int articlesId,
      						  RedirectAttributes redirectAttributes) {
@@ -216,6 +223,6 @@ public class PrivateArticleReqController {
  		return "redirect:/private/articles/req"; // 성공: 목록으로 이동
     }
     
-    // 수정 폼 요청 --> js
+    // req 수정 폼 요청 --> js
     
 }

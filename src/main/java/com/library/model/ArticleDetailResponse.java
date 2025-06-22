@@ -15,6 +15,6 @@ import lombok.Setter;
 public class ArticleDetailResponse {
 	
 	private ArticleWithAuthor articleWithAuthor; // 게시글 상세 (작성자 포함)
-	private ReplyListResponse replyList; // 댓글 목록 (작성자 포함) + 페이징
+	private ReplyListResponse replyListResponse; // 댓글 목록 (작성자 포함) + 페이징
 	
 }

@@ -6,7 +6,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <c:set var="articleList" value="${articleListWithAuthor}" />
-
 <c:set var="totalCount" value="${totalCount}" />
 <c:set var="totalPages" value="${totalPages}" />
 <c:set var="currentPage" value="${currentPage}" />
@@ -28,16 +27,19 @@
 }
 
 /* 각 열 너비 */
-.articleList td:nth-child(1), .articleList th:nth-child(1) { width: 6% !important; }
-.articleList td:nth-child(2), .articleList th:nth-child(2) { width: 48% !important; }
-.articleList td:nth-child(3), .articleList th:nth-child(3) { width: 12% !important; }
-.articleList td:nth-child(4), .articleList th:nth-child(4) { width: 12% !important; }
-.articleList td:nth-child(5), .articleList th:nth-child(5) { width: 6% !important; }
-.articleList td:nth-child(6), .articleList th:nth-child(6) { width: 6% !important; }
+.articleList td:nth-child(1), .articleList th:nth-child(1) { max-width: 4% !important; }
+.articleList td:nth-child(2), .articleList th:nth-child(2) { max-width: 32% !important; }
+.articleList td:nth-child(3), .articleList th:nth-child(3) { max-width: 14% !important; }
+.articleList td:nth-child(4), .articleList th:nth-child(4) { max-width: 14% !important; }
+.articleList td:nth-child(5), .articleList th:nth-child(5) { max-width: 8% !important; }
+.articleList td:nth-child(6), .articleList th:nth-child(6) { max-width: 8% !important; }
+.articleList td:nth-child(7), .articleList th:nth-child(7) { max-width: 8% !important; }
+.articleList td:nth-child(8), .articleList th:nth-child(8) { max-width: 8% !important; }
+.articleList td:nth-child(9), .articleList th:nth-child(9) { max-width: 4% !important; }
 
 </style>
 
-<!-- 게시글 목록 조회 - Q&A -->
+<!-- 게시글 목록 조회 - 관리자 -->
 <div class="container mt-4">
 	<!-- 요약 & 검색창 -->
     <div class="d-flex justify-content-between align-items-center">
@@ -58,67 +60,83 @@
 	        <thead class="table-primary">
 	            <tr>
 	                <th>NO</th>
+	                <th>게시글 ID</th>
+	                <th>카테고리</th>
 	                <th>제목</th>
 	                <th>작성자</th>
-	                <th>작성일</th>
+	                <th>작성날짜(수정날짜)</th>
 	                <th>조회수</th>
 	                <th>댓글수</th>
+	                <th>상태</th>
 	            </tr>
 	        </thead>
 	        <tbody>
-	            <c:choose>
-	        		<c:when test="${empty articleList}">
-	        			<td colspan="6" style="text-align: center;">조회된 게시글이 없습니다</td>
+	        	<c:choose>
+		        	<c:when test="${empty articleList}">
+	        			<td colspan="9" style="text-align: center;">조회된 게시글이 없습니다</td>
 	        		</c:when>
 		        	<c:when test="${not empty articleList}">
 			            <c:forEach var="i" begin="0" end="${fn:length(articleList) - 1}" step="1">
-			                <tr onclick="location.href='/public/articles/qna/${articleList[i].articlesId}'">
+			                <tr onclick="location.href='/public/articles/${articleList[i].category}/${articleList[i].articlesId}'">
 			                    <td>${i + (currentPage * 7) - 6}</td>
+			                    <td>${articleList[i].articlesId}</td>         
+			                    <td>
+			                    	<c:choose>
+			                    		<c:when test="${articleList[i].category eq 'not'}">
+			                    			공지사항
+			                    		</c:when>
+			                    		<c:when test="${articleList[i].category eq 'faq'}">
+			                    			자주 묻는 질문
+			                    		</c:when>
+			                    		<c:when test="${articleList[i].category eq 'qna'}">
+			                    			Q&A
+			                    		</c:when>
+			                    		<c:when test="${articleList[i].category eq 'req'}">
+			                    			희망 도서 신청
+			                    		</c:when>
+			                    		<c:otherwise>
+			                    			알 수 없음
+			                    		</c:otherwise>
+			                    	</c:choose>
+			                    </td>         
 			                    <td>${articleList[i].title}</td>         
 			                    <td>
-			                    	<c:set var="a_fullname" value="${articleList[i].authorFullname}" />
-			                    	<c:set var="a_username" value="${articleList[i].authorUsername}" />
-				                    <!-- 로그인하지 않은 경우 -->
-				                    <sec:authorize access="isAnonymous()">
-										<c:choose>
-				                    		<c:when test="${articleList[i].authorId == 0}">
-				                    			${a_fullname}(${a_username})
-				                    		</c:when>
-				                    		<c:otherwise>
-												${fn:substring(a_fullname, 0, 1)}**(${a_username})
-				                    		</c:otherwise>
-				                    	</c:choose>
-				                    </sec:authorize>
-				                    <!-- 로그인한 경우 -->
-				                    <sec:authorize access="isAuthenticated()">
-				                       	<c:choose>
-				                          	<c:when test="${articleList[i].authorId == userDetails.membersId 
-				                          				or userDetails.membersId == 0 
-							                          	or articleList[i].authorId == 0}">                     
-				                            	${a_fullname}(${a_username})
-				                            </c:when>
-				                            <c:otherwise>
-												${fn:substring(a_fullname, 0, 1)}**(${a_username})
-				                            </c:otherwise>
-				                         </c:choose>
-				                    </sec:authorize>
+			                    	${articleList[i].authorFullname}
+			                    	(${articleList[i].authorUsername})
 			                    </td>
-			                    <td><fmt:formatDate value="${articleList[i].updateDate}" pattern="yyyy-MM-dd" /></td>
+			                    <td>
+			                    	<fmt:formatDate value="${articleList[i].createDate}" pattern="yyyy-MM-dd" /><br>
+			                    	(<fmt:formatDate value="${articleList[i].updateDate}" pattern="yyyy-MM-dd" />)
+			                    </td>
 			                    <td>${articleList[i].viewCount}</td>
 			                    <td>${articleList[i].replyCount}</td>
+			                    <td>
+			                    	<c:choose>
+			                    		<c:when test="${articleList[i].status eq 0}">
+			                    			공개글
+			                    		</c:when>
+			                    		<c:when test="${articleList[i].status eq 1}">
+			                    			비공개글
+			                    		</c:when>
+			                    		<c:when test="${articleList[i].status eq 2}">
+			                    			비밀글
+			                    		</c:when>
+			                    		<c:otherwise>
+			                    			알 수 없음
+			                    		</c:otherwise>
+			                    	</c:choose>
+			                    </td>
 			                </tr>
-	            		</c:forEach>
-	            	</c:when>
-	         	</c:choose>
+			            </c:forEach>
+			        </c:when>
+			    </c:choose>
 	        </tbody>
 	    </table>
     </div>
     
-    <!-- 글 작성하기 버튼 : 관리자+회원만 보이기 -->
+    <!-- 글 작성하기 버튼 : 관리자만 보이기 -->
     <div class="d-flex justify-content-end">
-		<sec:authorize access="hasRole('ROLE_USER')">
-   			<button class="btn btn-primary mb-6" onclick="location.href='/private/articles/qna/add'">작성하기</button>
-	  	</sec:authorize>
+   		<button class="btn btn-primary mb-6" onclick="location.href='/admin/articles/not/add'">작성하기</button>
   	</div>
     
     <!-- 페이징 -->

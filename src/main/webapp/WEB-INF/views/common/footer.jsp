@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/static/css/footer.css">
@@ -8,7 +8,7 @@
 <div class="footer">
 	<div class="f_1">
 		<div class="f1_1">
-			<div class="f_title">글로벌인 도서관</div>
+			<div class="f_title"><a href="/">글로벌인 도서관</a></div>
 			<div class="f_title_en">Globalin Library</div>
 		</div>
 
@@ -19,10 +19,27 @@
 		</div>
 
 		<div class="f1_3">
-			<a href="/public/etc/73">개인정보처리방침</a> <a href="/admin/members">Admin Page</a>
+			<a href="/public/etc/73" 
+				class="m_submenu_active_target" 
+				data-submenu="mSubmenu3">개인정보처리방침</a>
+				
+            <!-- 관리자만 보임 -->
+            <sec:authorize access="hasRole('ROLE_ADMIN')">
+				&nbsp;
+				<a href="/admin/books" 
+					class="m_submenu_active_target" 
+					data-submenu="mSubmenu1">Admin Page</a>
+            </sec:authorize>
 		</div>
 	</div>
 	<div class="f_2">
 		Copyright &copy; 2025. GLOBALIN LIBRARY. All Rights Reserved.
 	</div>
 </div>
+
+
+<script
+	src="${pageContext.request.contextPath}/resources/static/js/footer.js"></script>
+
+
+

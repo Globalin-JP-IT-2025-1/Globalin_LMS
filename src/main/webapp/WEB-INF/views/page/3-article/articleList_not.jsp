@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <c:set var="articleList" value="${articleListWithAuthor}" />
 
@@ -15,10 +15,30 @@
 <c:set var="startPage" value="${(currentPage - 1) / blockSize * blockSize + 1}" />
 <c:set var="endPage" value="${startPage + blockSize - 1 > totalPages ? totalPages : startPage + blockSize - 1}" />
 
+<sec:authorize access="hasRole('ROLE_USER')">
+    <sec:authentication property="principal" var="userDetails" />
+</sec:authorize>
+
 <style>
-	.articleList tr {
-		cursor: pointer !important;
-	}
+.articleList tr {
+	cursor: pointer !important;
+}
+
+/* 공통 스타일 */
+.articleList td, .articleList th {
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+/* 각 열 너비 */
+.articleList td:nth-child(1), .articleList th:nth-child(1) { width: 6% !important; }
+.articleList td:nth-child(2), .articleList th:nth-child(2) { width: 48% !important; }
+.articleList td:nth-child(3), .articleList th:nth-child(3) { width: 12% !important; }
+.articleList td:nth-child(4), .articleList th:nth-child(4) { width: 12% !important; }
+.articleList td:nth-child(5), .articleList th:nth-child(5) { width: 6% !important; }
+.articleList td:nth-child(6), .articleList th:nth-child(6) { width: 6% !important; }
+
 </style>
 
 <!-- 게시글 목록 조회 - 공지사항 -->
@@ -134,6 +154,4 @@
 			</c:when>
 		</c:choose>
     </div>
-    
-    
 </div>
