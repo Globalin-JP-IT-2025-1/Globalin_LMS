@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
+<sec:authorize access="hasRole('ROLE_USER')">
+    <sec:authentication property="principal" var="userDetails" />
+</sec:authorize>
 
 <!-- 게시글 작성 폼 - Q&A -->
 <div class="container my-4">
@@ -10,20 +15,20 @@
 		<div class="d-flex flex-column align-items-center gap-3 w-100">
 			<!-- 제목 -->
 			<div class="form-floating w-100">
-				<input type="text" class="form-control" id="titleView" placeholder="제목을 입력해주세요." maxlength="100" />
+				<input type="text" class="form-control" id="titleView" placeholder="제목을 입력해주세요." maxlength="30" />
 				<label for="titleView">제목</label>
 			</div>
 	
 			<!-- 내용 -->
 			<div class="form-floating w-100">
-		        <textarea class="form-control" id="contentView" placeholder="내용을 입력해주세요." maxlength="1000" rows="7" style="height: auto !important;"></textarea>
+		        <textarea class="form-control" id="contentView" placeholder="내용을 입력해주세요." maxlength="300" rows="7" style="height: auto !important;"></textarea>
 		        <label for="contentView">내용</label>
 			</div>
 			
 			<!-- 비밀글 여부 선택 -->
 			<div class="form-check align-self-start">
 				<input class="form-check-input" type="checkbox" id="secretView" />
-				<label class="form-check-label" for="isPrivate">
+				<label class="form-check-label" for="secretView">
 				  비밀글로 저장하기
 				</label>
 			</div>
@@ -33,9 +38,14 @@
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		
 				<!-- 서버 전송용 hidden 필드 -->
+				<!-- 자동 입력 -->
+				<input type="hidden" name="authorId" value="${userDetails.membersId}" readonly />
+				<input type="hidden" name="category" value="qna" readonly />
+				
+				<!-- 폼 입력 -->
 				<input type="hidden" id="title" name="title" readonly />
 				<textarea hidden="true" readonly id="content" name="content"></textarea>
-				<input type="hidden" id="status" name="status" readonly />
+				<input type="hidden" id="status" name="status" value="0" readonly />
 		
 				<!-- 저장 버튼 -->
 				<div class="w-100 d-flex justify-content-end">

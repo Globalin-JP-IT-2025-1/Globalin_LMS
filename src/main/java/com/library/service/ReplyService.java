@@ -26,6 +26,6 @@ public interface ReplyService {
     public int insertReply(Reply reply);
 
     // 댓글 삭제 (hard delete)
-    public int deleteReply(int replyId);
+    public int deleteReply(int articlesId, int replyId);
     
 }

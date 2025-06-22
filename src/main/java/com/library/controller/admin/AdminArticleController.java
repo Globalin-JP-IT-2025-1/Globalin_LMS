@@ -36,7 +36,7 @@ public class AdminArticleController {
     	model.addAttribute("currentPage", page); // 게시글 페이징
     	
     	pageInfo = PageInfo.builder()
-    			.pageTitleCode("93")
+    			.pageTitleCode("92")
     			.pagePath("page/9-admin/articleList_admin.jsp")
     			.build();
         	

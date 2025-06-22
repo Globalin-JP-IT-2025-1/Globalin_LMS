@@ -26,7 +26,7 @@
 </div>
 
 <div class="w-100">
-	<div class="card shadow-sm w-60 pt-5">
+	<div class="card shadow-sm w-60 pt-5 my-3">
 		<div class="container d-flex flex-column justify-content-center align-items-center regForm">
 			<div class="mb-3 col-6 d-flex gap-2">
 		        <div class="col-3 d-flex align-items-center">아이디</div>

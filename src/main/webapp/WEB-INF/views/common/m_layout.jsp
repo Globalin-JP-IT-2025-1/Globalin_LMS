@@ -26,11 +26,11 @@
 		<div class="m_content">
 			<div class="m_submenu_content">
 				<div class="m_submenu_content_tx">
-					<div class="m_submenu_item" id="mSubmenu1" onclick="location.href='${pageSubTitle1Uri}'">${pageSubTitle1}</div>
-					<div class="m_submenu_item" id="mSubmenu2" onclick="location.href='${pageSubTitle2Uri}'">${pageSubTitle2}</div>
-					<div class="m_submenu_item" id="mSubmenu3" onclick="location.href='${pageSubTitle3Uri}'">${pageSubTitle3}</div>
+					<div class="m_submenu_item" id="mSubmenu1" data-submenu="mSubmenu1" data-uri="${pageSubTitle1Uri}">${pageSubTitle1}</div>
+					<div class="m_submenu_item" id="mSubmenu2" data-submenu="mSubmenu2" data-uri="${pageSubTitle2Uri}">${pageSubTitle2}</div>
+					<div class="m_submenu_item" id="mSubmenu3" data-submenu="mSubmenu3" data-uri="${pageSubTitle3Uri}">${pageSubTitle3}</div>
 					<c:if test="${not empty pageSubTitle4}">
-					    <div class="m_submenu_item" id="mSubmenu4" onclick="location.href='${pageSubTitle4Uri}'">
+					    <div class="m_submenu_item" id="mSubmenu4" data-submenu="mSubmenu4" data-uri="${pageSubTitle4Uri}">
 					        ${pageSubTitle4}
 					    </div>
 					</c:if>
@@ -41,3 +41,8 @@
 		</div>
 	</div>
 </div>
+
+<script src="${pageContext.request.contextPath}/resources/static/js/main.js"></script>
+
+
+

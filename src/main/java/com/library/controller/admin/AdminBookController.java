@@ -42,7 +42,7 @@ public class AdminBookController {
 //		model.addAttribute("bookList", bookList);
     	
     	pageInfo = PageInfo.builder()
-    			.pageTitleCode("93")
+    			.pageTitleCode("91")
     			.pagePath("page/9-admin/bookList_admin.jsp")
     			.build();
     	
@@ -57,7 +57,7 @@ public class AdminBookController {
     						  Model model) {
     	
     	pageInfo = PageInfo.builder()
-    			.pageTitleCode("92")
+    			.pageTitleCode("91")
     			.pagePath("page/2-book/addForm_book.jsp")
     			.build();
     	
@@ -101,7 +101,7 @@ public class AdminBookController {
 	//    	model.addAttribute("book", book);
     	
     	pageInfo = PageInfo.builder()
-    			.pageTitleCode("92")
+    			.pageTitleCode("91")
     			.pagePath("page/2-book/editForm_book.jsp")
     			.build();
     	

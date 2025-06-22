@@ -1,7 +1,5 @@
 package com.library.controller.admin;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,9 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.library.model.Member;
+import com.library.model.MemberListResponse;
 import com.library.model.PageInfo;
 import com.library.service.CardNumberService;
 import com.library.service.MemberService;
@@ -33,20 +32,21 @@ public class AdminMemberController {
     	model.addAttribute("pagePath", pageInfo.getPagePath());
     }
     
-    // 회원 목록 조회 --> ok
+    // 회원 목록 조회
     @GetMapping
-    public String getAllMembers(Model model) {
+    public String getMemberList(@RequestParam(defaultValue = "1") int page,
+    							Model model) {
+    	MemberListResponse memberList = memberService.getMemberList(page);
     	
-    	List<Member> memberList = memberService.getAllMembers();
-    	model.addAttribute("memberList", memberList);
-
+		model.addAttribute("memberList", memberList.getMemberList()); // 게시글 목록
+		model.addAttribute("totalCount", memberList.getTotalCount()); // 게시글 페이징
+    	model.addAttribute("totalPages", memberList.getTotalPages()); // 게시글 페이징
+    	model.addAttribute("currentPage", page); // 게시글 페이징
+    	
     	pageInfo = PageInfo.builder()
-			.pageTitleCode("91")
+			.pageTitleCode("93")
 			.pagePath("page/9-admin/memberList.jsp")
 			.build();
-    	
-    	model.addAttribute("alertType", "success");
-    	model.addAttribute("alertMessage", "회원 목록 조회 완료");
     	
     	setPageInfo(model);
     	

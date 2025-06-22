@@ -1,16 +1,20 @@
 package com.library.service;
 
-import java.util.List;
 import java.util.Map;
 
 import com.library.model.Member;
+import com.library.model.MemberListResponse;
 
 public interface MemberService {
 
-	// 회원 목록 조회
-	public List<Member> getAllMembers();
+	// 조회
+	// 1) 회원 목록 조회
+	public MemberListResponse getMemberList(int page);
+	
+	// 2) 회원 전체 수
+	public int getMemberListCount();
 
-	// 회원 정보 조회
+	// 3) 회원 정보 조회
 	// membersId 기반
 	public Member getMemberById(int membersId);
 

@@ -109,7 +109,7 @@
 .m_submenu_content_tx {
 	width: 250px;
 
-	border: 1px solid var(--gray-color);
+	border: 2px solid var(--gray-color);
 
 	display: flex;
 	flex-direction: column;
@@ -135,6 +135,10 @@
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
+}
+
+.active_menu {
+	border-right: 5px solid var(--main-color);
 }
 
 .m_submenu_item:hover {

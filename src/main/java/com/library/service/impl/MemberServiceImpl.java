@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.library.mapper.MemberMapper;
 import com.library.model.Member;
+import com.library.model.MemberListRequest;
+import com.library.model.MemberListResponse;
 import com.library.service.BlacklistedTokenService;
 import com.library.service.MemberService;
 import com.library.util.CommonUtil;
@@ -26,15 +28,41 @@ public class MemberServiceImpl implements MemberService {
 
 	private final MemberMapper memberMapper;
 	private final CommonUtil commonUtil;
+	
+	private static final int MEMBERS_PER_PAGE = 7; // 한 페이지당 게시글 수
 
-
-	// 회원 목록 조회
+	// 조회
+	// 1) 회원 목록 조회
 	@Override
-	public List<Member> getAllMembers() {
-		return memberMapper.getAllMembers();
+	public MemberListResponse getMemberList(int currentPage) {
+		
+		int totalCount = getMemberListCount(); // 전체 개수
+		int totalPages = (int)Math.ceil((double)totalCount / MEMBERS_PER_PAGE);
+    	int startRow = (currentPage - 1) * MEMBERS_PER_PAGE;
+    	int endRow = currentPage * MEMBERS_PER_PAGE;
+    	
+    	MemberListRequest memberListRequest = MemberListRequest.builder()
+				.startRow(startRow)
+				.endRow(endRow)
+				.build();
+		
+		List<Member> memberList = memberMapper.getMemberList(memberListRequest);
+		
+		return MemberListResponse.builder()
+				.memberList(memberList)
+				.totalCount(totalCount) // 전체 게시글 수
+				.totalPages(totalPages) // 전체 페이지 수
+				.build();
 	}
+	
+	// 2) 회원 전체 수
+	@Override
+	public int getMemberListCount() {
+		return memberMapper.getMemberListCount();
+	}
+	
 
-	// 회원 정보 조회
+	// 3) 회원 정보 조회
 	// membersId 기반
 	@Override
 	public Member getMemberById(int membersId) {

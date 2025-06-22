@@ -5,11 +5,13 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.library.model.Member;
+import com.library.model.MemberListRequest;
 
 @Mapper
 public interface MemberMapper {
 	// 조회
-	List<Member> getAllMembers(); // 회원 목록 조회
+	List<Member> getMemberList(MemberListRequest memberListRequest); // 회원 목록 조회
+	int getMemberListCount(); // 회원 전체 수
 	Member getMemberById(int membersId); // 회원 상세 조회 (membersId 기반)
 	Member getMemberByUsername(String username); // 회원 상세 조회 (username 기반)
 	Member getMemberByEmail(String email); // 회원 상세 조회 (email 기반)

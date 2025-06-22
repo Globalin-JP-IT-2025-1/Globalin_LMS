@@ -77,8 +77,5 @@
     
 	<!-- AOP 활성화 -->
     <aop:aspectj-autoproxy />
-
-    <!-- Advice Bean 등록 -->
-	<bean id="loggingAdvice" class="com.library.aop.LoggingAdvice" />
     
 </beans>

@@ -85,8 +85,9 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     // 댓글 삭제 (hard delete)
+	// aop를 위해 파라미터에 articlesId 추가. 실제로 사용은 안 함.
 	@Override
-    public int deleteReply(int replyId) {
+    public int deleteReply(int articlesId, int replyId) {
         return replyMapper.deleteReply(replyId);
     }
     
