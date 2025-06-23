@@ -21,12 +21,12 @@
 		    <div class="mb-3 col-6 d-flex gap-2">
 		    	<div class="col-3 d-flex align-items-center">이메일</div>
 		        <div class="input-group d-flex align-items-center">
-		            <input class="form-control" type="text" id="emailBox1" value="${emailParts[0]}" placeholder="이메일 입력" maxlength="30">
+		            <input class="form-control" type="text" id="emailBox1" value="" placeholder="이메일 입력" maxlength="30">
 		            <i class="bi bi-at"></i>
 		            <select id="emailBox2" class="form-select">
-			            <option value="gmail.com" ${emailParts[0] eq 'gmail.com' ? 'selected' : ''}>gmail.com</option>
-			            <option value="naver.com" ${emailParts[0] eq 'naver.com' ? 'selected' : ''}>naver.com</option>
-			            <option value="test.com" ${emailParts[0] eq 'test.com' ? 'selected' : ''}>test.com</option>
+			            <option value="gmail.com" selected}>gmail.com</option>
+			            <option value="naver.com"}>naver.com</option>
+			            <option value="test.com"}>test.com</option>
 			        </select>
 		        </div>
 		    </div>
@@ -34,14 +34,15 @@
 		    <div class="mb-3 col-6 d-flex gap-2">
 		    	<div class="col-3 d-flex align-items-center">전화번호</div>
 		        <div class="input-group d-flex align-items-center">
-		            <input class="form-control" type="text" id="mobileBox1" value="${mobileParts[0]}" maxlength="3">-
-					<input class="form-control" type="text" id="mobileBox2" value="${mobileParts[1]}" maxlength="4">-
-					<input class="form-control" type="text" id="mobileBox3" value="${mobileParts[2]}" maxlength="4">
+		            <input class="form-control" type="text" id="mobileBox1" value="010" maxlength="3">-
+					<input class="form-control" type="text" id="mobileBox2" value="" maxlength="4">-
+					<input class="form-control" type="text" id="mobileBox3" value="" maxlength="4">
 		        </div>
 		    </div>
 		    
 		    <div class="mb-3 col-6 d-flex justify-content-center align-items-center gap-2">
 		        <form action="/public/members/repass" method="post">
+		        	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
 		        	<input class="d-none" type="text" name="username" id="username" value="" readonly><!-- 서버 송신용1 -->
 		        	<input class="d-none" type="text" name="email" id="email" value="" readonly><!-- 서버 송신용2 -->
 		        	<input class="d-none" type="text" name="mobile" id="mobile" value="" readonly><!-- 서버 송신용3 -->

@@ -51,5 +51,9 @@ public interface MemberService {
 
 	// 비밀번호 초기화
 	public String resetPassword(Member member);
+	
+	// 아이디 & 이메일 중복확인
+	public boolean isUsernameDuplicate(String username);
+	public boolean isEmailDuplicate(String email);
 
 }

@@ -3,8 +3,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="key" value="${apiKey}" />
 
-<!-- Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places"></script>
+<meta name="_csrf" content="${_csrf.token}" />
+<meta name="_csrf_header" content="${_csrf.headerName}" />
 
 <style>
     /* 주소 찾기 모달창 */
@@ -32,8 +32,9 @@
 		        <div class="col-3 d-flex align-items-center">아이디</div>
 		        <div class="input-group d-flex align-items-center">
 		            <input class="form-control" type="text" id="usernameBox" value="" placeholder="아이디 입력" maxlength="20">
-		            <button class="btn btn-primary">중복확인</button>
+		            <button class="btn btn-primary" onclick="checkUsername()">중복확인</button>
 		        </div>
+		        <input type="hidden" id="usernameDupliStatus" value="0">
 		    </div>
 		    
 		    <div class="mb-3 col-6 d-flex gap-2">
@@ -73,8 +74,9 @@
 			            <option value="naver.com">naver.com</option>
 			            <option value="test.com">test.com</option>
 			        </select>
-			        <button class="btn btn-primary">중복확인</button>
+			        <button class="btn btn-primary" onclick="checkEmail()">중복확인</button>
 		        </div>
+		        <input type="hidden" id="emailDupliStatus" value="0">
 		    </div>
 		    
 		    <div class="mb-3 col-6 d-flex gap-2">
@@ -111,7 +113,7 @@
 		    
 		    <div class="mb-3 col-6 d-flex justify-content-center align-items-center gap-2">
 		        <button class="mb-3 btn btn-secondary" onclick="initForm()">초기화</button>
-		        <form action="/public/members" method="post">
+		        <form action="/public/members" method="post" onsubmit="return validateData()">
 		        	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		        	<input class="d-none" type="text" name="username" id="username" value="" readonly><!-- 서버 송신용1 -->
 		        	<input class="d-none" type="text" name="password" id="password" value="" readonly><!-- 서버 송신용2 -->
@@ -130,7 +132,6 @@
 
 <!-- Bootstrap 모달창 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
 	<div class="modal-dialog">
         <div class="modal-content">
@@ -148,6 +149,9 @@
         </div>
     </div>
 </div>
+
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places"></script>
 
 <script type="text/javascript">
 
@@ -173,6 +177,12 @@ function testInsertMember() {
 	alert("회원가입 요청데이터 테스트 완료");
 }
 
+// 실제 submit시 검증
+function validateData() {
+	vailFormData();
+	vailRequestData();
+}
+
 // 빈 칸 검사
 function vailFormData() {
 	
@@ -180,81 +190,93 @@ function vailFormData() {
 		document.getElementById("usernameBox").value.trim() === "") {
 	    alert("아이디가 비어있습니다");
 	    document.getElementById("usernameBox").focus();
-	    return;
+	    return false;
+	}
+	
+	if (document.getElementById("usernameDupliStatus").value.trim() === 0) {
+	    alert("아이디 중복 확인이 필요합니다.");
+	    document.getElementById("usernameBox").focus();
+	    return false;
 	}
 	
 	if (document.getElementById("password").value.trim() === "" || 
 		document.getElementById("passwordBox").value.trim() === "") {
 	    alert("비밀번호가 비어있습니다");
 	    document.getElementById("passwordBox").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("confirmPasswordBox").value.trim() === "") {
 	    alert("비밀번호 확인이 비어있습니다");
 	    document.getElementById("confirmPasswordBox").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("name").value.trim() === "" ||
 		document.getElementById("nameBox").value.trim() === "") {
 	    alert("이름이 비어있습니다");
 	    document.getElementById("nameBox").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("email").value.trim() === "" ||
 		document.getElementById("emailBox1").value.trim() === "" ) {
 	    alert("이메일이 비어있습니다");
 	    document.getElementById("emailBox1").focus();
-	    return;
+	    return false;
+	}
+	
+	if (document.getElementById("emailDupliStatus").value.trim() === 0) {
+	    alert("이메일 중복 확인이 필요합니다.");
+	    document.getElementById("emailBox1").focus();
+	    return false;
 	}
 	
 	if (document.getElementById("mobile").value.trim() === "" ||
 		document.getElementById("mobileBox1").value.trim() === "") {
 	    alert("전화번호가 비어있습니다");
 	    document.getElementById("mobileBox1").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("mobileBox2").value.trim() === "") {
 	    alert("전화번호가 비어있습니다");
 	    document.getElementById("mobileBox2").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("mobileBox3").value.trim() === "") {
 	    alert("전화번호가 비어있습니다");
 	    document.getElementById("mobileBox3").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("zipcode").value.trim() === "" ||
 		document.getElementById("zipcodeBox").value.trim() === "") {
 	    alert("우편번호가 비어있습니다");
 	    document.getElementById("zipcodeBox").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("address").value.trim() === "" ||
 		document.getElementById("addressBox").value.trim() === "") {
 	    alert("주소가 비어있습니다");
 	    document.getElementById("addressBox").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("addressDetail").value.trim() === "" ||
 		document.getElementById("addressDetailBox").value.trim() === "") {
 	    alert("상세 주소가 비어있습니다");
 	    document.getElementById("addressDetailBox").focus();
-	    return;
+	    return false;
 	}
     
 	// 비밀번호 일치 여부
 	if (document.getElementById("pwMatchStatus").value < 0) {
 	    alert("비밀번호가 일치하지 않습니다");
 	    document.getElementById("passwordBox").focus();
-	    return;
+	    return false;
 	}
     
 }
@@ -265,7 +287,7 @@ function vailRequestData() {
 	if (!/.{8,}/.test(document.getElementById("password").value)) {
 	    alert("비밀번호는 8자 이상이어야 합니다.");
 	    document.getElementById("passwordBox").focus();
-	    return;
+	    return false;
 	}
 }
 
@@ -394,10 +416,10 @@ document.getElementById("zipcodeBox").addEventListener("input", function () {
 
 // 주소 검색 자동완성
 function initAutocomplete() {
-    var input = document.getElementById('modal-search');
+    var input = document.getElementById("modal-search");
     var autocomplete = new google.maps.places.Autocomplete(input);
 
-    autocomplete.addListener('place_changed', function () {
+    autocomplete.addListener("place_changed", function () {
         var place = autocomplete.getPlace();
         var jsonData = JSON.stringify(place, null, 2);
 
@@ -410,6 +432,7 @@ function initAutocomplete() {
         selectedAddressDetail = place.name || "";
     });
 }
+
 
 // "주소 가져오기" 버튼 클릭 시 적용
 document.getElementById("getAddressBtn").addEventListener("click", function () {
@@ -450,6 +473,71 @@ function initForm() {
     document.getElementById("address").value = "";
     document.getElementById("addressBox").value = "";
     document.getElementById("addressDetailBox").value = "";
+}
+
+
+// 아이디 중복 확인
+function checkUsername() {
+	var un = document.getElementById("username").value.trim();
+	
+	const token = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+    const header = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+	
+	fetch("/public/members/dupli/username", {
+	    method: "POST",
+	    headers: {
+            "Content-Type": "application/json",
+            [header]: token // CSRF 토큰 삽입
+        },
+	    body: JSON.stringify({ 
+	    	username: un 
+	    })
+	})
+	.then(response => response.json())
+	.then(data => {
+	    if (data.available) {
+	    	document.getElementById("usernameDupliStatus").value = 1;
+	        Swal.fire("사용 가능", "사용 가능한 아이디 입니다.", "success");
+	    } else {
+	    	document.getElementById("usernameDupliStatus").value = 0;
+	        Swal.fire("중복 아이디", "이미 사용 중인 아이디 입니다.", "warning");
+	    }
+	})
+	.catch(error => {
+	    Swal.fire("오류 발생", "서버 오류가 발생했습니다.", "error");
+	});
+	
+}
+
+// 이메일 중복 확인
+function checkEmail() {
+	var em = document.getElementById("email").value.trim();
+	
+	const token = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+    const header = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+    fetch("/public/members/dupli/email", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            [header]: token // CSRF 토큰 삽입
+        },
+	    body: JSON.stringify({ username: em })
+	})
+	.then(response => response.json())
+	.then(data => {
+	    if (data.available) {
+	    	document.getElementById("emailDupliStatus").value = 1;
+	        Swal.fire("사용 가능", "사용 가능한 이메일 입니다.", "success");
+	    } else {
+	    	document.getElementById("emailDupliStatus").value = 0;
+	        Swal.fire("중복 이메일", "이미 사용 중인 이메일 입니다.", "warning");
+	    }
+	})
+	.catch(error => {
+	    Swal.fire("오류 발생", "서버 오류가 발생했습니다.", "error");
+	});
+	
 }
 
 </script>

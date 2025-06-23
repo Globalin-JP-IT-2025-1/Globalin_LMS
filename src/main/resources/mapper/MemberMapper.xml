@@ -83,6 +83,13 @@
 	    WHERE MEMBERS_ID = #{membersId}
     </update>
     
+    <!-- 6) 회원 정보 - 비밀번호 초기화 -->
+    <update id="updateMemberPassword" parameterType="com.library.model.Member">
+        UPDATE MEMBERS 
+        SET PASSWORD = #{password}
+	    WHERE MEMBERS_ID = #{membersId}
+    </update>
+    
     <!-- 회원 등록 -->
     <insert id="insertMember" parameterType="com.library.model.Member">
 	    <selectKey keyProperty="membersId" resultType="java.lang.Integer" order="BEFORE">

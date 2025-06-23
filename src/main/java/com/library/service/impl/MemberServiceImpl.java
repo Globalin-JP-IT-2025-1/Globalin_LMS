@@ -201,8 +201,24 @@ public class MemberServiceImpl implements MemberService {
 		// 비밀번호 암호화
 		String encodedPassword = passwordEncoder.encode(randomPassword);
 		member.setPassword(encodedPassword);
+		
+		memberMapper.updateMemberPassword(member);
 
 		return randomPassword;
+	}
+	
+	// 아이디 중복 확인
+	@Override
+	public boolean isUsernameDuplicate(String username) {
+		Member member = memberMapper.getMemberByUsername(username);
+		return member != null; // 중복임
+	}
+	
+	// 이메일 중복 확인
+	@Override
+	public boolean isEmailDuplicate(String email) {
+		Member member = memberMapper.getMemberByEmail(email);
+		return member != null; // 중복임
 	}
 
 }

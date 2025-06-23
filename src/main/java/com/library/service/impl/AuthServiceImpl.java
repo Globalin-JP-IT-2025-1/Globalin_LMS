@@ -42,9 +42,7 @@ public class AuthServiceImpl implements AuthService {
     // 액세스 토큰 유효성 검사 후 유효한 경우 블랙리스트에 올리기 (로그아웃 성공 시 or 탈퇴 시)
 	@Override
     public void insertBlacklistedToken(String token, int type) {
-    	if (isValidToken(token)) {
-    		blacklistedTokenService.insertBlacklistedToken(token, 0);
-    	}
+    	blacklistedTokenService.insertBlacklistedToken(token, 0);
     }
     
     // DB 리프레시 토큰 삭제 요청 (

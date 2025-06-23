@@ -1,5 +1,8 @@
 package com.library.controller.member;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
@@ -7,11 +10,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.model.Member;
 import com.library.model.PageInfo;
+import com.library.service.EmailService;
 import com.library.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @PropertySource("classpath:application.properties")
 public class PublicMemberController {
     private final MemberService memberService;
-    //private final EmailService emailService;
+    private final EmailService emailService;
     
     @Value("${google.maps.api.key}")
     private String apiKey;
@@ -57,7 +63,7 @@ public class PublicMemberController {
     	
     	try {
     		memberService.insertMember(member); // 회원 등록
-    		// emailService.sendRegister(member); // 메일 보내기
+    		emailService.sendRegisterMember(member); // 메일 보내기
     	
     	} catch (Exception e) {
     		e.printStackTrace();
@@ -107,56 +113,64 @@ public class PublicMemberController {
     @PostMapping("/check")
     public String checkMember(@ModelAttribute Member member,
     						  RedirectAttributes redirectAttributes) {
-		
+		String errorMessage = "";
+		String usernameResult = "";
+    	
     	try {
     		Member memberResult = memberService.getMemberByEmail(member.getEmail());
-    		
     		if (memberResult == null) {
-    			throw new IllegalArgumentException("회원 정보가 존재하지 않습니다.");
+    			errorMessage = "회원 정보가 존재하지 않습니다.";
+    			throw new Exception(errorMessage);
     		}
     		
     		if (!memberResult.getMobile().equals(member.getMobile())) {
-    			throw new IllegalArgumentException("회원 정보가 일치하지 않습니다.");
+    			errorMessage = "회원 정보가 일치하지 않습니다.";
+    			throw new Exception(errorMessage);
     		}
     		
+    		usernameResult = memberResult.getUsername();
     		//emailService.sendUsername(member);
     	} catch (Exception e) {
     		e.printStackTrace();
     		
     		redirectAttributes.addFlashAttribute("alertType", "fail");
-    		redirectAttributes.addFlashAttribute("alertMessage", "아이디 찾기 실패");
+    		redirectAttributes.addFlashAttribute("alertMessage", errorMessage);
     		
     		return "redirect:/public/members/check"; // 실패: 아이디 찾기 페이지로
     	}
     	
     	redirectAttributes.addFlashAttribute("alertType", "success");
-		redirectAttributes.addFlashAttribute("alertMessage", "아이디 찾기 성공. 메일 확인 바랍니다.");
+		redirectAttributes.addFlashAttribute("alertMessage", "아이디 찾기 성공. " + usernameResult + " 메일 확인 바랍니다.");
 		
 		return "redirect:/public/auth/login"; // 성공: 로그인 페이지로
     }
-    
     
     // 비밀번호 재발급 + 이메일 보내기
     @PostMapping("/repass")
     public String resetPassword(@ModelAttribute Member member,
 			  					RedirectAttributes redirectAttributes) {
+    	String errorMessage = "";
+    	String repass = "";
     	
     	try {
     		Member memberResult = memberService.getMemberByUsername(member.getUsername());
     		
     		if (memberResult == null) {
-    			throw new IllegalArgumentException("회원 정보가 존재하지 않습니다.");
+    			errorMessage = "회원 정보가 존재하지 않습니다.";
+    			throw new Exception(errorMessage);
     		}
     		
     		if (!memberResult.getEmail().equals(member.getEmail())) {
-    			throw new IllegalArgumentException("회원 정보가 일치하지 않습니다.");
+    			errorMessage = "회원 정보가 일치하지 않습니다.";
+    			throw new Exception(errorMessage);
     		}
     		
     		if (!memberResult.getMobile().equals(member.getMobile())) {
-    			throw new IllegalArgumentException("회원 정보가 일치하지 않습니다.");
+    			errorMessage = "회원 정보가 일치하지 않습니다.";
+    			throw new Exception(errorMessage);
     		}
     		
-    		//String repass = memberService.resetPassword(member);
+    		repass = memberService.resetPassword(memberResult);
     		//emailService.sendResetPassword(member, repass);
     	} catch (Exception e) {
     		e.printStackTrace();
@@ -168,9 +182,32 @@ public class PublicMemberController {
     	}
     	
     	redirectAttributes.addFlashAttribute("alertType", "success");
-		redirectAttributes.addFlashAttribute("alertMessage", "비밀번호 재발급 성공. 메일 확인 바랍니다.");
+		redirectAttributes.addFlashAttribute("alertMessage", "비밀번호 재발급 성공." + repass + " 메일 확인 바랍니다.");
 		
 		return "redirect:/public/auth/login"; // 성공: 로그인 페이지로
+    }
+    
+    // 아이디 중복확인
+    @PostMapping("/dupli/username")
+    @ResponseBody
+    public Map<String, Boolean> checkUsername(@RequestBody Member member) {
+    	System.out.println(member.getUsername());
+        boolean isAvailable = !memberService.isUsernameDuplicate(member.getUsername());
+        
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("available", isAvailable);  // true면 사용 가능
+        return response;
+    }
+    
+    // 이메일 중복확인
+    @PostMapping("/dupli/email")
+    @ResponseBody
+    public Map<String, Boolean> checkEmail(@RequestBody Member member) {
+        boolean isAvailable = !memberService.isEmailDuplicate(member.getEmail());
+        
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("available", isAvailable);  // true면 사용 가능
+        return response;
     }
 
 }
