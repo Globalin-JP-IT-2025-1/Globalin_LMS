@@ -9,6 +9,9 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -181,10 +184,16 @@ public class PrivateMemberController {
     		
     	}
     	
+    	// 로그아웃
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    	if (auth != null) {
+    	    new SecurityContextLogoutHandler().logout(request, response, auth);
+    	}
+    	
     	redirectAttributes.addFlashAttribute("alertType", "success");
     	redirectAttributes.addFlashAttribute("alertMessage", "회원 탈퇴 성공");
     	
-    	return "redirect:/"; // 성공: 홈으로 이동
+    	return "redirect:/"; // 성공: 홈으로
     }
     
     // 회원별 도서 이용 정보 목록 조회

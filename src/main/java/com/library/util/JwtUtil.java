@@ -82,7 +82,9 @@ public class JwtUtil {
 		
 		try {
 			// 1) 무결성 검사 : 시크릿 키를 사용해 토큰을 파싱하고 검증
-			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+//			if (Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token) == null) {
+//				return false;
+//			}
 			
 			Timestamp expiresDate = extractExpiresDate(token);
 			

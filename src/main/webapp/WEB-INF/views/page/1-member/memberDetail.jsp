@@ -103,13 +103,13 @@
 		    </c:if>
 		    
 		    <div class="mb-3 col-6 d-flex justify-content-center align-items-center gap-2">
-		    	<form action="/private/members/${member.membersId}" method="post">
+		    	<form action="/private/members/${member.membersId}/leave" method="post">
 		    		<input type="hidden" name="_method" value="PUT">
 		        	<input class="d-none" type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		        	<input class="d-none" type="text"name="membersId" id="membersId" value="${member.membersId}" readonly>
 		        	<input class="mb-3 btn btn-secondary" type="submit" value="탈퇴">
 		        </form>
-				<button class="mb-3 btn btn-primary" onclick="window.load.href='/private/members/${member.membersId}/edit'">수정</button>
+				<a class="mb-3 btn btn-primary" href="/private/members/${member.membersId}/edit">수정</a>
 		    </div>
 	    </div>
     </div>

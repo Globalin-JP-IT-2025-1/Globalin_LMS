@@ -22,6 +22,7 @@ public interface MemberMapper {
 	int updateMemberCardnum(Member member); // 3) 관리자 - 회원카드 등록
 	int updateMemberOverdue(Member member); // 4) 도서 시스템 - 도서 연체
 	int updateMemberLoanCount(Member member); // 5) 도서 시스템 - 도서 대출
+	int updateMemberPassword(Member member); // 6) 회원 정보 - 비밀번호 초기화 
 	
 	// 등록&삭제
 	int insertMember(Member member); // 회원 등록

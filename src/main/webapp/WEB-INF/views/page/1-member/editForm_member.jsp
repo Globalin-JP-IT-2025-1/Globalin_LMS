@@ -7,9 +7,6 @@
 <c:set var="emailParts" value="${fn:split(member.email, '@')}" />
 <c:set var="mobileParts" value="${fn:split(member.mobile, '-')}" />
 
-<!-- Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places"></script>
-
 <style>
     /* 주소 찾기 모달창 */
     #addressModal {
@@ -75,8 +72,9 @@
 			            <option value="naver.com" ${emailParts[0] eq 'naver.com' ? 'selected' : ''}>naver.com</option>
 			            <option value="test.com" ${emailParts[0] eq 'test.com' ? 'selected' : ''}>test.com</option>
 			        </select>
-			        <button class="btn btn-primary">중복확인</button>
+			        <button class="btn btn-primary" onclick="checkEmail()">중복확인</button>
 		        </div>
+		        <input type="hidden" id="emailDupliStatus" value="0">
 		    </div>
 		    
 		    <div class="mb-3 col-6 d-flex gap-3">
@@ -114,7 +112,8 @@
 		    <div class="mb-3 col-6 d-flex justify-content-center align-items-center gap-2">
 		        <button class="mb-3 btn btn-secondary" onclick="cancelEdit()">수정취소</button>
 		        <form action="/private/members/${membersId}" method="post">
-		        	<input type="hidden" name="_method" value="PUT">
+		        	<input type="hidden" name="_method" value="PUT" onsubmit="return validateData()">
+		        	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
 		        	<input class="d-none" type="text" name="password" id="password" value="" readonly><!-- 서버 송신용1 -->
 		        	<input class="d-none" type="text" name="email" id="email" value="${member.email}" readonly><!-- 서버 송신용2 -->
 		        	<input class="d-none" type="text" name="mobile" id="mobile" value="${member.mobile}" readonly><!-- 서버 송신용3 -->
@@ -149,6 +148,9 @@
     </div>
 </div>
 
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places"></script>
+
 <script type="text/javascript">
 
 function testUpdateMember() {
@@ -180,6 +182,12 @@ function cancelEdit() {
 	}
 }
 
+//실제 submit시 검증
+function validateData() {
+	vailFormData();
+	vailRequestData();
+}
+
 // 빈 칸 검사
 function vailFormData() {
 	
@@ -187,67 +195,73 @@ function vailFormData() {
 		document.getElementById("passwordBox").value.trim() === "") {
 	    alert("비밀번호가 비어있습니다");
 	    document.getElementById("passwordBox").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("confirmPasswordBox").value.trim() === "") {
 	    alert("비밀번호 확인이 비어있습니다");
 	    document.getElementById("confirmPasswordBox").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("email").value.trim() === "" ||
 		document.getElementById("emailBox1").value.trim() === "" ) {
 	    alert("이메일이 비어있습니다");
 	    document.getElementById("emailBox1").focus();
-	    return;
+	    return false;
+	}
+	
+	if (document.getElementById("emailDupliStatus").value.trim() === 0) {
+	    alert("이메일 중복 확인이 필요합니다.");
+	    document.getElementById("emailBox1").focus();
+	    return false;
 	}
 	
 	if (document.getElementById("mobile").value.trim() === "" ||
 		document.getElementById("mobileBox1").value.trim() === "") {
 	    alert("전화번호가 비어있습니다");
 	    document.getElementById("mobileBox1").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("mobileBox2").value.trim() === "") {
 	    alert("전화번호가 비어있습니다");
 	    document.getElementById("mobileBox2").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("mobileBox3").value.trim() === "") {
 	    alert("전화번호가 비어있습니다");
 	    document.getElementById("mobileBox3").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("zipcode").value.trim() === "" ||
 		document.getElementById("zipcodeBox").value.trim() === "") {
 	    alert("우편번호가 비어있습니다");
 	    document.getElementById("zipcodeBox").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("address").value.trim() === "" ||
 		document.getElementById("addressBox").value.trim() === "") {
 	    alert("주소가 비어있습니다");
 	    document.getElementById("addressBox").focus();
-	    return;
+	    return false;
 	}
 	
 	if (document.getElementById("addressDetail").value.trim() === "" ||
 		document.getElementById("addressDetailBox").value.trim() === "") {
 	    alert("상세 주소가 비어있습니다");
 	    document.getElementById("addressDetailBox").focus();
-	    return;
+	    return false;
 	}
     
 	// 비밀번호 일치 여부
 	if (document.getElementById("pwMatchStatus").value < 0) {
 	    alert("비밀번호가 일치하지 않습니다");
 	    document.getElementById("passwordBox").focus();
-	    return;
+	    return false;
 	}
     
 }
@@ -258,7 +272,7 @@ function vailRequestData() {
 	if (!/.{8,}/.test(document.getElementById("password").value)) {
 	    alert("비밀번호는 8자 이상이어야 합니다.");
 	    document.getElementById("passwordBox").focus();
-	    return;
+	    return false;
 	}
 }
 
@@ -288,7 +302,7 @@ document.getElementById("addressDetailBox").addEventListener("blur", function ()
 });
 
 
-//이메일 합치기 + 값 검사
+// 이메일 합치기 + 값 검사
 document.getElementById("emailBox1").addEventListener("input", function() {
 	let value1 = this.value;
 
@@ -411,5 +425,37 @@ document.addEventListener("DOMContentLoaded", function () {
     initAutocomplete();
     vailPassword();
 });
+
+
+// 이메일 중복 확인
+function checkEmail() {
+	var em = document.getElementById("email").value.trim();
+	
+	const token = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+ const header = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+ fetch("/public/members/dupli/email", {
+     method: "POST",
+     headers: {
+         "Content-Type": "application/json",
+         [header]: token // CSRF 토큰 삽입
+     },
+	    body: JSON.stringify({ username: em })
+	})
+	.then(response => response.json())
+	.then(data => {
+	    if (data.available) {
+	    	document.getElementById("emailDupliStatus").value = 1;
+	        Swal.fire("사용 가능", "사용 가능한 이메일 입니다.", "success");
+	    } else {
+	    	document.getElementById("emailDupliStatus").value = 0;
+	        Swal.fire("중복 이메일", "이미 사용 중인 이메일 입니다.", "warning");
+	    }
+	})
+	.catch(error => {
+	    Swal.fire("오류 발생", "서버 오류가 발생했습니다.", "error");
+	});
+	
+}
 
 </script>
