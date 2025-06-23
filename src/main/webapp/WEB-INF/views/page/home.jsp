@@ -34,34 +34,39 @@
 	        <c:choose>	
 	        	<c:when test="${empty h_membersId}">					
 					<div class="home_2_1">
-						<p>회원 로그인</p>
+						<div class="h2_1_top">회원 로그인</div>
 						<form action="/public/auth/login" method="post">
-						
 							<div class="h2_1_div1" id="loginForm">
-								<input type="text" name="username" id="username" placeholder="아이디 입력" maxlength="10"/>
-								<input type="text" name="password" id="password" placeholder="비밀번호 입력" maxlength="20"/>
-								<div><input type="checkbox" id="acceptAutoLogin"> 자동 로그인 </div>	
-								<div><input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden=""/></div>
+								<div class="w-100"><input type="text" name="username" id="username" placeholder="아이디 입력" maxlength="10"/></div>
+								<div class="w-100"><input type="text" name="password" id="password" placeholder="비밀번호 입력" maxlength="20"/></div>
+								<div class="w-100"><input type="checkbox" id="acceptAutoLogin"> 자동 로그인 </div>	
+								<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden=""/>
 							</div>
-							<div class="h2_1_div2">
+							<div class="h2_1_div2 my-3">
 								<input type="submit" class="loginbtn" value="로그인"/>
 							</div>
 						</form>
+						
 						<div class="h2_1_div3">
-							<a href="#">회원가입</a>&nbsp;|
-							<a href="#">가입여부 확인</a>&nbsp;|
-							<a href="#">비밀번호 재발급</a>
+							<a href="/public/members/register" 
+								class="m_submenu_active_target" 
+				            	data-submenu="mSubmenu4">회원가입</a>&nbsp;|
+							<a href="/public/members/check" 
+								class="m_submenu_active_target" 
+				            	data-submenu="mSubmenu2">아이디 찾기</a>&nbsp;|
+							<a href="/public/members/repass" 
+								class="m_submenu_active_target" 
+				            	data-submenu="mSubmenu3">비밀번호 재발급</a>
 						</div>
 					</div>
 				</c:when>
 	          	<c:otherwise>
-	          	<div class="home_2_1">
-					<div class="h2_1_div4">
-			          <a href="/private/members/${h_membersId}" id="mypage" class="fw-bold text-decoration-none">
-			            <c:out value="${h_fullname}" />(<c:out value="${h_username}" />)</a>
-			          <spring:message code="h.welcome.message1" />
-			        </div>
-			         
+		          	<div class="home_2_1">
+						<div class="h2_1_div4">
+				          <a href="/private/members/${h_membersId}" id="mypage" class="fw-bold text-decoration-none">
+				            <c:out value="${h_fullname}" />(<c:out value="${h_username}" />)</a>
+				          <spring:message code="h.welcome.message1" />
+				        </div>
 						<div class="h2_1_div5">
 							<form action="/private/auth/logout" method="post" class="d-inline">
 				            	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
@@ -112,8 +117,8 @@
 
 			<div class="home_2_3">
 				<div class="h2_3_div1">
-					<p>공지사항</p>
-					<a href="#"><i class="bi bi-plus-circle"></i></a>
+					<div class="h2_3_div1_left">공지사항</div>
+					<div class="h2_3_div1_right"><a href="#"><i class="bi bi-plus-circle"></i></a></div>
 				</div>
 			</div>
 		</div>

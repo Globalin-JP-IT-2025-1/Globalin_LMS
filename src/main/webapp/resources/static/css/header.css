@@ -1,98 +1,12 @@
 @charset "UTF-8";
 
-.header {
-	height: 200px;
-	margin: 0px auto;
-	background-color: white;
-	display: flex;
-	flex-direction: column;
-}
-
-.header ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-
-.header a {
-	text-decoration: none;
-	color: inherit;
-}
-
-.h_1 {
-	height: 150px;
-	width: var(--main-width);
-	margin: 0 auto;
-	position: relative;
-	display: flex;
-	align-items: space-between;
-}
-
-.h_2 {
-	height: 50px;
-	width: var(--main-width);
-	margin: 0 auto;
-	text-align: center;
-	position: relative;
-	z-index: 1000;
-	display: flex;
-	flex-direction: column;
-}
-
-.h_2_bg {
-	border: 1px solid var(--gray-color);
-}
-
-.h1_1 {
-	width: 30%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 10px;
-}
-
-.h1_2 {
-	width: 40%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.h1_3 {
-	width: 30%;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	gap: 5px;
-}
-
-.h1_1 table {
-	border: 1px solid var(--main-color);
-	border-radius: 20px;
-	padding: 0px 5px;
-}
-
-.h1_1 td {
-	border: 0;
-	padding: 5px;
-}
-
-.h1_1 a:hover,
-.current_lang a {
-	background-color: var(--main-color);
-	color: white;
-	font-weight: bold;
-	padding: 5px;
-	border-radius: 10px;
+.lang_icon {
+	size: 1.5rem !important;
+	
 }
 
 .current_lang a {
 	pointer-events: none;
-}
-
-.logo img {
-	width: 300px;
 }
 
 .h_mini_menu td {
@@ -114,45 +28,9 @@
 	text-align: center;
 }
 
-.h2_1 {
-	height: 100%;
-	font-size: 1.2em;
-	font-weight: bold;
-	display: flex;
-}
-
-.menu_each {
-	height: 95%;
-	background-color: white;
-	display: flex;
-}
-
-.menu_all {
-	width: 50px;
-	height: 95%;
-	background-color: white;
-}
-
 #h_submenu.hidden {
-  display: none; /* hidden 클래스가 추가되면 숨김 */
+  display: none;
 }
-
-.h2_2 {
-	height: 200px;
-	position: absolute;
-	top: 100%;
-	font-size: 1.1em;
-	border: 1px solid var(--gray-color);
-	z-index: 999;
-	display: flex;
-}
-
-
-.h_submenu ul {
-	display: flex;
-	flex-direction: column;
-}
-
 
 .menu_e_toggle {
 	all: unset;
@@ -196,7 +74,7 @@
     background-color: white;
 }
 
-/* ✅ 부트스트랩 메뉴/서브메뉴 세련된 스타일 */
+/* 부트스트랩 메뉴/서브메뉴 */
 .navbar-main {
   background-color: var(--main-color);
   padding: 0 !important;
