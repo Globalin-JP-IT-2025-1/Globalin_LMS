@@ -110,11 +110,16 @@ all: unset;
 /* home_2 내부 구성 */
 .home_2_1 {
 	width: 27%;
-
+	padding: 15px;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: 20px;
 }
 /* 아이디, 비번 */
 #username, #password {
-	width: 90%;
+	width: 100%;
 	font-size: 1.5em;
 	border: 2.5px solid var(--main-color);
 	border-radius: 15px;
@@ -123,27 +128,21 @@ all: unset;
 	padding: 10px;
 }
 
-
-
-.home_2_1 > p {
-	margin-left: 10px;
+.home_2_1 .h2_1_top {
 	font-size: 1.5em;
 	font-weight: bolder;
-	margin-bottom: 28px;
-	margin-top: 28px;
-	
 }
 
 .home_2_1 .h2_1_div1{
-	width: 102%;	
+	width: 100%;	
 	display: flex;
 	flex-direction: column;
-	margin-left: 10px;
 	gap:10px;
 }
 
 .home_2_1 .h2_1_div2 {
-	width: 97%;
+	width: 100%;
+	gap:10px;
 }
 
 .home_2_1 .h2_1_div4 {
@@ -183,16 +182,14 @@ all: unset;
 
 .home_2_1 .h2_1_div7 {
 	text-align: center;
-	margin: 10px 0 10px 0;
 }
 
 .home_2_1 .h2_1_div8 {
 	text-align: center;
 	margin: 20px auto;
 	border-radius: 10px;
-	width: 80%;
+	width: 100%;
 	height: 35px;
-	align-content: center;
 	color: red;
 	font-weight: bold;
 }
@@ -202,32 +199,27 @@ all: unset;
 }
 
 
-
 .h2_1_div2 .loginbtn{
 	all: unset;
-	width: 92%;
+	width: 100%;
+	height: 50px;
 	font-size: 1.8em;
 	border-radius: 15px;
-	padding: 5px;
 	background-color: var(--main-color);
 	text-align: center;
 	color: white;
-	margin-top: 20px;
-	margin-left: 10px;
 	cursor: pointer;
 }
 
 .h2_1_div5 .logoutbtn{
 	all: unset;
-	width: 92%;
+	width: 100%;
+	height: 50px;
 	font-size: 1.8em;
 	border-radius: 15px;
-	padding: 5px;
 	background-color: var(--main-color);
 	text-align: center;
 	color: white;
-	margin-top: 20px;
-	margin-left: 10px;
 	cursor: pointer;	
 }
 
@@ -236,11 +228,7 @@ all: unset;
 	
 }
 
-
-
 .home_2_1 .h2_1_div3{
-	margin-left: 10px;
-	margin-top: 27px;
 	font-size: 1em;
 }
 
@@ -252,19 +240,20 @@ all: unset;
 /* home_2_2 개선 전체 */
 .home_2_2 {
 	width: 50%;
-	padding: 20px;
+	padding: 15px;
+	background-color: var(--gray-color);
+	
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
-	background-color: var(--gray-color);
+	justify-content: flex-start;
+	gap: 20px;
 }
 
 /* 상단 탭 메뉴 줄 */
 .h2_2_top {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  margin-bottom: 10px;
 }
 
 .h2_2_left {
@@ -330,6 +319,7 @@ all: unset;
 /* 공지사항 부분 */
 .home_2_3 {
 	width: 30%;
+	padding: 15px;
 }
 
 .border {
@@ -337,18 +327,27 @@ all: unset;
 	margin: 0 auto;
 }
 
-.h2_3_div1 > p {
-	margin-left: 10px;
+.h2_3_div1 {
+	display: flex;
+	justify-content: center;
+	
+}
+
+.h2_3_div1 .h2_3_div1_left {
 	font-size: 1.5em;
-	font-weight: bolder;
+	font-weight: bold;
+}
+
+.h2_3_div1 .h2_3_div1_right {
+	font-size: 1.4em;
+  	color: var(--main-color);
 }
 
 .home_2_3 .h2_3_div1 {
-	width: 90%;
+	width: 100%;
 	display: flex;
-	justify-content: space-between; /* ← 핵심! 좌우 양끝 정렬 */
+	justify-content: space-between;
 	align-items: center;
-	padding: 10px;
 	font-weight: bold;
 	color: var(--main-color);
 }

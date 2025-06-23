@@ -19,7 +19,7 @@
 <div class="container-fluid border-bottom py-4 bg-white">
 	<div class="container d-flex justify-content-between align-items-center">
 		<div class="d-flex align-items-center">
-			<i class="bi bi-globe fs-2 me-3"></i>
+			<div class="lang_icon"><i class="bi bi-globe fs-2 me-3"></i></div>
 			<div class="btn-group btn-group-sm" role="group" aria-label="Language selector">
 		        <button type="button" class="btn btn-outline-secondary lang-btn" id="ko">한글</button>
 		        <button type="button" class="btn btn-outline-secondary lang-btn" id="ja">日本語</button>
@@ -28,8 +28,8 @@
 		</div>
 	
 	    <div class="text-center d-flex flex-column justify-content-center">
-			<div class="h_title h2 text-dark fw-bolder"><a href="/">글로벌인 도서관</a></div>
-			<div class="h_title_en h5 text-dark">Globalin Library</div>
+			<div class="h_title text-dark fw-bolder h1 m-0"><a href="/">글로벌인 도서관</a></div>
+			<div class="h_title_en h5 text-dark m-0">Globalin Library</div>
 	    </div>
 
 	    <div class="text-end">
