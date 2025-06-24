@@ -20,11 +20,11 @@
 	<div class="home_1_bg">
 		<div class="home_1">
 			<div class="home1_item1">
-				<label id="searchType">통합검색</label>
+				<label id="searchType"><spring:message code="main.h1.1" /></label>
 			</div>
 			<div class="home1_item2">
-				<input type="text" id="searchInput" placeholder="검색어를 입력하세요" maxlength="20">
-				<button id="searchBtn">검색</button>
+				<input type="text" id="searchInput" placeholder="<spring:message code="main.h1.2" />" maxlength="20">
+				<button id="searchBtn"><spring:message code="main.h1.3" /></button>
 			</div>
 		</div>
 	</div>
@@ -34,29 +34,29 @@
 	        <c:choose>	
 	        	<c:when test="${empty h_membersId}">					
 					<div class="home_2_1">
-						<div class="h2_1_top">회원 로그인</div>
+						<div class="h2_1_top"><spring:message code="main.h2.1" /></div>
 						<form action="/public/auth/login" method="post">
 							<div class="h2_1_div1" id="loginForm">
-								<div class="w-100"><input type="text" name="username" id="username" placeholder="아이디 입력" maxlength="10"/></div>
-								<div class="w-100"><input type="text" name="password" id="password" placeholder="비밀번호 입력" maxlength="20"/></div>
-								<div class="w-100"><input type="checkbox" id="acceptAutoLogin"> 자동 로그인 </div>	
+								<div class="w-100"><input type="text" name="username" id="username" placeholder="<spring:message code="main.h2.2" />" maxlength="10"/></div>
+								<div class="w-100"><input type="text" name="password" id="password" placeholder="<spring:message code="main.h2.3" />" maxlength="20"/></div>
+								<div class="w-100"><input type="checkbox" id="acceptAutoLogin"><spring:message code="main.h2.4" /></div>	
 								<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden=""/>
 							</div>
 							<div class="h2_1_div2 my-3">
-								<input type="submit" class="loginbtn" value="로그인"/>
+								<input type="submit" class="loginbtn" value="<spring:message code="main.h2.14" />"/>
 							</div>
 						</form>
 						
 						<div class="h2_1_div3">
 							<a href="/public/members/register" 
 								class="m_submenu_active_target" 
-				            	data-submenu="mSubmenu4">회원가입</a>&nbsp;|
+				            	data-submenu="mSubmenu4"><spring:message code="main.h2.15" /></a>&nbsp;|
 							<a href="/public/members/check" 
 								class="m_submenu_active_target" 
-				            	data-submenu="mSubmenu2">아이디 찾기</a>&nbsp;|
+				            	data-submenu="mSubmenu2"><spring:message code="main.h2.16" /></a>&nbsp;|
 							<a href="/public/members/repass" 
 								class="m_submenu_active_target" 
-				            	data-submenu="mSubmenu3">비밀번호 재발급</a>
+				            	data-submenu="mSubmenu3"><spring:message code="main.h2.17" /></a>
 						</div>
 					</div>
 				</c:when>
@@ -67,7 +67,7 @@
 				            <c:out value="${h_fullname}" />(<c:out value="${h_username}" />)</a>
 				          <spring:message code="h.welcome.message1" />
 				        </div>
-						<div class="h2_1_div5">
+						<div class="h2_1_div5"> <!-- 부힉.... 푸힛... 헤헤...  -->
 							<form action="/private/auth/logout" method="post" class="d-inline">
 				            	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
 								<input type="submit" value="<spring:message code='h.minimenu.logout' />" class="logoutbtn">
@@ -92,9 +92,9 @@
 			<div class="home_2_2">
 			  <div class="h2_2_top">
 			    <div class="h2_2_left">
-			      <a href="#" class="active">추천도서</a> |
-			      <a href="#">인기도서</a> |
-			      <a href="#">신작도서</a>
+			      <a href="#" class="active"><spring:message code="main.h2.5" /></a> |
+			      <a href="#"><spring:message code="main.h2.6" /></a> |
+			      <a href="#"><spring:message code="main.h2.7" /></a>
 			    </div>
 			    <div class="h2_2_right">
 			      <a href="#"><i class="bi bi-plus-circle"></i></a>
@@ -119,7 +119,7 @@
 
 			<div class="home_2_3">
 				<div class="h2_3_div1">
-					<div class="h2_3_div1_left">공지사항</div>
+					<div class="h2_3_div1_left"><spring:message code="main.h2.8" /></div>
 					<div class="h2_3_div1_right"><a href="#"><i class="bi bi-plus-circle"></i></a></div>
 				</div>
 			</div>
@@ -128,19 +128,19 @@
 	<div class="home_3_bg">
 	  <div class="home_3">
 	    <div class="home_3_item" onclick="location.href='/public/etc/51'">
-	    	<i class="bi bi-info-circle"></i>이용안내
+	    	<i class="bi bi-info-circle"></i><spring:message code="main.h2.9" />
     	</div>
 	    <div class="home_3_item" onclick="location.href='/public/etc/53'">
-	    	<i class="bi bi-book"></i>대출/반납
+	    	<i class="bi bi-book"></i><spring:message code="main.h2.10" />
     	</div>
 	    <div class="home_3_item" onclick="location.href='/private/articles/req'">
-	    	<i class="bi bi-pencil"></i> 희망도서 신청
+	    	<i class="bi bi-pencil"></i> <spring:message code="main.h2.11" />
     	</div>
 	    <div class="home_3_item" onclick="location.href='/public/books/loan'">
-	    	<i class="bi bi-graph-up-arrow"></i>대출 베스트
+	    	<i class="bi bi-graph-up-arrow"></i><spring:message code="main.h2.12" />
     	</div>
 	    <div class="home_3_item" onclick="location.href='/private/members/${h_membersId}/book-like'">
-	    	<i class="bi bi-bookmark-heart"></i>관심도서 목록
+	    	<i class="bi bi-bookmark-heart"></i><spring:message code="main.h2.13" />
     	</div>
 	  </div>
 	</div>
@@ -148,29 +148,29 @@
 	<div class="home_4_bg">
 		<div class="home_4">
 			<div class="home_4_left">
-				<div class="lib_title"><p><i class="bi bi-bank"></i>&nbsp;도서관 전경</p></div>
+				<div class="lib_title"><p><i class="bi bi-bank"></i>&nbsp;<spring:message code="main.h3.1" /></p></div>
 				<img class="lib_img" src="${pageContext.request.contextPath}/resources/images/library.png"/>
 			</div>
 			<div class="home_4_right">
-				<p class="lib_welcome">글로벌인도서관 홈페이지 방문을 환영합니다.</p>
-				<p>저희 글로벌인 도서관은 2025년 6월 1일 개관하였습니다.<br>
-				여러분들의 많은 관심과 이용 부탁드립니다.<br>
-				다양한 장르의 책을 준비하였으니 대여를 원하시는 분들은 회원가입 후 도서관에 방문하여 회원카드를<br>
-				발급하여주시기 바랍니다.
+				<p class="lib_welcome"><spring:message code="main.h3.2" /></p>
+				<p><spring:message code="main.h3.3" /><br>
+				<spring:message code="main.h3.4" /><br>
+				<spring:message code="main.h3.5" /><br>
+				<spring:message code="main.h3.6" />
 				</p>
 				<table class="lib_table">
 					<tr>
-						<th>이용시간</th>
-						<td>평일 : 오전10시~오후10시<br>휴일 : 오전10시~오후5시30분</td>
+						<th><spring:message code="main.h3.7" /></th>
+						<td><spring:message code="main.h3.8" /><br><spring:message code="main.h3.9" /></td>
 					</tr>
 					<tr>
-						<th>정기 휴관일</th>
-						<td>매주 월요일</td>
+						<th><spring:message code="main.h3.10" /></th>
+						<td><spring:message code="main.h3.11" /></td>
 					</tr>
 				</table>
 				<div class="lib_btn_div">
-					<button class="lib_btn" onclick="location.href='/public/etc/41'">도서관안내 &gt;</button>
-					<button class="lib_btn" onclick="location.href='/public/etc/51'">이용안내 &gt;</button>
+					<button class="lib_btn" onclick="location.href='/public/etc/41'"><spring:message code="main.h3.12" /> &gt;</button>
+					<button class="lib_btn" onclick="location.href='/public/etc/51'"><spring:message code="main.h3.13" /> &gt;</button>
 				</div>
 			</div>
 		</div>
