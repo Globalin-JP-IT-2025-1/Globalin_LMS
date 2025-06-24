@@ -90,7 +90,7 @@ public class MemberBookHistoryServiceImpl implements MemberBookHistoryService {
 		
 		bookHistory.setDueDate(extendDueDateTS);
 		
-		return memberBookHistoryMapper.updateBookHistoryOverdue(bookHistory);
+		return memberBookHistoryMapper.updateBookHistoryDueDate(bookHistory);
 	}
 	
 	// 회원별 도서 정보 이력 등록 - 시스템
