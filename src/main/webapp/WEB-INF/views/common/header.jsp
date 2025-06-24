@@ -28,7 +28,7 @@
 		</div>
 	
 	    <div class="text-center d-flex flex-column justify-content-center">
-			<div class="h_title text-dark fw-bolder h1 m-0"><a href="/"><spring:message code="main.title" /></a></div>
+			<div class="h_title text-dark fw-bolder h1 m-0"><a href="/">글로벌인 도서관</a></div>
 			<div class="h_title_en h5 text-dark m-0">Globalin Library</div>
 	    </div>
 
