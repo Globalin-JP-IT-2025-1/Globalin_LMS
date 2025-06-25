@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.library.service.AuthService;
+import com.library.service.JwtService;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
-	private final AuthService authService;
+	private final JwtService jwtService;
 	
 	// 로그아웃 처리
 	@Override
@@ -57,7 +57,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 				
 				if (aToken != null) {
 					// 유효성 검사 후 유효하면 블랙리스트에 올리기
-					authService.insertBlacklistedToken(aToken, 0);
+					jwtService.insertBlacklistedToken(aToken, 0);
 				}
 			}
 		}

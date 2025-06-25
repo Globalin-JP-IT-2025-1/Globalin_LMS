@@ -1,0 +1,16 @@
+.settings/
+
+.classpath
+.project
+
+build/
+target/
+
+/.apt_generated/
+/.apt_generated_tests/
+
+datasource.properties
+application.properties
+config.properties
+
+*.log

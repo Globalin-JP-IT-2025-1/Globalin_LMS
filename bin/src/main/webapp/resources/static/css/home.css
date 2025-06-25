@@ -1,0 +1,539 @@
+@charset "UTF-8";
+
+.home {
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+
+/* 공통 .home 아이템 */
+.home_1, .home_2, .home_3, .home_4, .home_5 {
+	border: 1px solid var(--gray-color);
+	width: var(--main-width);
+	margin: 0 auto;
+}
+
+.home_1 { /* 통합검색 */
+	height: 400px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.home_1_bg {
+	background-image: url("../images/bg.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.home_2 { /* 로그인, 추천도서, 공지사항 */
+	height: 400px;
+	display: flex;
+	justify-content: center;
+}
+
+.home_3 {
+	height: 200px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 20px;
+}
+
+.home_4 {
+	height: 500px;
+}
+
+.home_5 {
+	height: 150px;
+}
+
+/* 검색창 */
+.home1_item1 {
+	height: 50px;
+}
+
+.home1_item2 {
+	height: 50px;
+	position: relative;
+}
+
+#searchType {
+	width: 150px;
+	height: 100%;
+	font-weight: bold;
+	font-size: 1.5em;
+	text-align: right;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+}
+
+#searchInput {
+	width: 500px;
+	height: 90%;
+	font-size: 1.5em;
+	border: 2.5px solid var(--main-color);
+	border-radius: 11px;
+	text-indent: 10px;
+	padding-right: 40px;
+	align-content: center;
+	padding: 2px;
+}
+
+#searchBtn {
+all: unset;
+    cursor: pointer;
+    width: 100px;
+    height: 82%;
+    text-align: center;
+    padding-top: 2px;
+    color: white;
+    font-size: 1.5em;
+    background-color: var(--main-color);
+    border: 1px solid var(--main-color);
+    border-radius: 0 8px 8px 0;
+    position: absolute;
+    right: 2px;
+}
+
+#searchBtn:hover {
+	background: linear-gradient(45deg, #0059b3, #0073e6);
+}
+
+
+/* home_2 내부 구성 */
+.home_2_1 {
+	width: 27%;
+	padding: 15px;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: 20px;
+}
+/* 아이디, 비번 */
+#username, #password {
+	width: 100%;
+	font-size: 1.5em;
+	border: 2.5px solid var(--main-color);
+	border-radius: 15px;
+	text-indent: 10px;
+	padding-right: 40px;
+	padding: 10px;
+}
+
+.home_2_1 .h2_1_top {
+	font-size: 1.5em;
+	font-weight: bolder;
+}
+
+.home_2_1 .h2_1_div1{
+	width: 100%;	
+	display: flex;
+	flex-direction: column;
+	gap:10px;
+}
+
+.home_2_1 .h2_1_div2 {
+	width: 100%;
+	gap:10px;
+}
+
+.home_2_1 .h2_1_div4 {
+	text-align: center;
+	margin-top: 40px;
+}
+
+.h2_1_div4 >a {
+	font-size: 1.8em;
+}
+
+.h2_1_div4 >a:hover {
+	text-decoration: underline !important;
+}
+
+.home_2_1 .h2_1_div5 {
+	text-align: center;
+}
+
+.home_2_1 .h2_1_div6 {
+	text-align: center;
+	display: flex;
+	justify-content: space-between;
+}
+
+.home_2_1 .h2_1_div6 >button {
+	width: 150px;
+	height: 50px;
+	border: 0 solid;
+	border-radius: 10px;
+	background-color: var(--sub-color);
+	font-size: 1.3em;
+}
+
+
+.home_2_1 .h2_1_div7 {
+	text-align: center;
+}
+
+.home_2_1 .h2_1_div8 {
+	border-radius: 10px;
+	width: 100%;
+	height: 35px;
+	color: red;
+	font-weight: bold;
+	
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	
+	cursor: pointer;
+}
+
+.h2_1_div7 > a:hover,
+.h2_1_div8 > a:hover {
+	text-decoration: underline;
+}
+
+
+.h2_1_div2 .loginbtn{
+	all: unset;
+	width: 100%;
+	height: 50px;
+	font-size: 1.8em;
+	border-radius: 15px;
+	background-color: var(--main-color);
+	text-align: center;
+	color: white;
+	cursor: pointer;
+}
+
+.h2_1_div5 .logoutbtn{
+	all: unset;
+	width: 100%;
+	height: 50px;
+	font-size: 1.8em;
+	border-radius: 15px;
+	background-color: var(--main-color);
+	text-align: center;
+	color: white;
+	cursor: pointer;	
+}
+
+.logoutbtn:hover {
+	background: linear-gradient(45deg, #0059b3, #0073e6);
+	
+}
+
+.home_2_1 .h2_1_div3{
+	font-size: 1em;
+}
+
+.h2_1_div3 > a:hover {
+	text-decoration: underline;
+}
+
+/* 추천 도서 부분 */
+/* home_2_2 개선 전체 */
+.home_2_2 {
+	width: 50%;
+	padding: 15px;
+	background-color: var(--gray-color);
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: 20px;
+}
+
+/* 상단 탭 메뉴 줄 */
+.h2_2_top {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.h2_2_left {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: var(--main-color);
+}
+
+.h2_2_left a {
+  margin-right: 15px;
+  color: var(--main-color);
+  text-decoration: none;
+}
+
+.h2_2_left a.active {
+  background-color: var(--main-color);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 8px;
+}
+
+.h2_2_right {
+  font-size: 1.4em;
+  color: var(--main-color);
+}
+
+/* 도서 카드 리스트 */
+.book_list {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: nowrap;
+}
+
+.book_card {
+  width: 180px;
+  text-align: center;
+  flex-shrink: 0;
+  
+}
+
+.book_img {
+  width: 100%;
+  height: 230px;
+  object-fit: fill;
+  border: 1.5px solid #333;
+  box-shadow: 7px 7px 15px rgba(0, 0, 0, 0.3);
+  
+}
+
+.book_title {
+  margin-top: 10px;
+  font-size: 1em;
+  font-weight: 500;
+}
+
+.book_title span {
+  font-size: 0.9em;
+  color: gray;
+}
+
+
+/* 공지사항 부분 */
+.home_2_3 {
+	width: 30%;
+	padding: 15px;
+}
+
+.border {
+	width:90%;
+	margin: 0 auto;
+}
+
+.h2_3_div1 {
+	display: flex;
+	justify-content: center;
+	
+}
+
+.h2_3_div1 .h2_3_div1_left {
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+.h2_3_div1 .h2_3_div1_right {
+	font-size: 1.4em;
+  	color: var(--main-color);
+}
+
+.home_2_3 .h2_3_div1 {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-weight: bold;
+	color: var(--main-color);
+}
+
+
+/* 🔹 서브 메뉴 버튼 */
+.home_3_bg {
+  padding: 40px 20px;
+}
+
+.home_3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  justify-content: center;
+}
+
+.home_3_item {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+  padding: 30px 20px;
+  transition: all 0.2s ease-in-out;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  min-height: 150px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--main-color);
+  cursor: pointer;
+}
+
+.home_3_item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  background-color: #f0f8ff;
+}
+
+.home_3_item >i {
+  font-size: 50px; /* 아이콘 크기 키우기 */
+}
+
+/* 도서관 소개 */
+.home_4_bg {
+	background-color: #f9f9f9;
+	padding: 30px 40px;
+/* 	border: 0.5px solid var(--gray-color); */
+}
+.home_4 {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	column-gap: 50px; /* 🔧 좌우 간격 넉넉하게 설정 */
+	height: auto;
+}
+
+.home_4_left {
+	width: 45%;
+	padding-left: 20px;
+	padding-bottom: 20px;
+}
+
+.home_4_left .lib_title {
+	font-size: 1.2em;
+	font-weight: bold;
+	color: var(--main-color);
+	margin-bottom: 10px;
+}
+
+.lib_img {
+	width: 100%;
+	height: 360px; 
+	border: 1.5px solid #ccc;
+	border-radius: 6px;
+	display: block; 
+}
+
+
+
+.home_4_right {
+	width: 55%;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	position: relative; /* 버튼 정렬 기준 잡기 */
+	padding-right: 20px; /* 오른쪽 붙는 현상 방지 */
+	padding-bottom: 20px;
+}
+
+
+/* 도서관 안내 문구 스타일 */
+.lib_welcome {
+	color: #333;
+	font-weight: bold;
+	font-size: 1.8em;
+	margin-bottom: 15px;
+}
+
+/* 테이블 스타일 */
+.lib_table {
+	width: 100%;
+	border-collapse: collapse;
+	border: 1px solid #333;
+	margin-bottom: 10px;
+	background-color: white;
+}
+
+/* 테이블 셀 */
+.lib_table th {
+	border: 1px solid #333;
+	padding: 10px;
+	text-align: left;
+	background-color: #f1f3f5;
+}
+
+.lib_table td {
+	border: 1px solid #333;
+	padding: 10px;
+	text-align: left;
+}
+.lib_btn_div {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+}
+/* 버튼 위치 조정 */
+.lib_btn {
+	background-color: var(--main-color);
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 6px;
+	cursor: pointer;
+	height: fit-content;
+	align-self: flex-start;
+	margin-top: auto;
+	margin-left: 5px;
+}
+
+/* 배너 래퍼 스타일 */
+.banner_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  height: 150px;
+}
+
+/* 배너 트랙 스타일 */
+.banner_track {
+  display: flex;
+  gap: 30px; /* 배너 사이 간격 추가 */
+  transition: transform 0.5s ease;
+}
+
+/* 배너 카드 스타일 */
+.banner_card {
+  flex: 0 0 auto;
+  height: 100%;
+  text-align: center;
+}
+
+/* 배너 이미지 스타일 */
+.banner_card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 1.5px solid #ccc;
+}
+/* 슬라이드 애니메이션 */
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-1400px); /* -7 * 200px */
+  }
+}

@@ -1,0 +1,82 @@
+@charset "UTF-8";
+
+div { /* 테스트 */
+	/* border: 0.5px solid red; */
+}
+
+:root {
+	--main-color: #004080;
+	--sub-color: #dceaf7;
+	--gray-color: #f9f9f9;
+
+	--main-width: 1400px;
+}
+
+html {
+	width: 100vw;
+	height: 100vh;
+}
+
+body {
+	font-family: consolas, noto sans kr, meiryo;
+	font-size: 12pt;
+	color: var(--main-color);
+	
+	width: 100%;
+	min-height: 100%;
+	
+	margin: 0 auto;
+	padding: 0;
+}
+
+.layout {
+	flex: 1;
+	
+	width: 100%;
+	height: 100%;
+	min-height: 100vh;
+	
+	margin: 0;
+	padding: 0;
+	
+	display: flex; /* item: header, main, footer */
+	flex-direction: column;
+	/* align-items: center; */
+}
+
+header {
+	background-color: white;
+}
+
+main {
+	/* background-color: white; */
+	
+	flex-grow: 1;
+}
+
+footer {
+	background-color: var(--gray-color);
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+/* 스크롤 맨 위로 올리기 */
+#scrollUpBtn {
+	position: fixed;
+	bottom: 20px;
+	right: 150px;
+	
+	background-color: var(--main-color);
+	color: white;
+	
+	border: none;
+	border-radius: 5px;
+	
+	padding: 10px 15px;
+	
+	cursor: pointer;
+	display: none;
+}

@@ -1,0 +1,150 @@
+@charset "UTF-8";
+
+.lang_icon {
+	size: 1.5rem !important;
+	
+}
+
+.current_lang a {
+	pointer-events: none;
+}
+
+.h_mini_menu td {
+	border: 0;
+	padding: 5px;
+}
+
+.h_mini_menu a:hover,
+.h_member_info a:hover {
+	color: inherit;
+	text-decoration: underline !important;
+}
+
+.h_member_info {
+	width: auto;
+	padding: 0px 10px;
+	background-color: var(--sub-color);
+	border-radius: 15px;
+	text-align: center;
+}
+
+#h_submenu.hidden {
+  display: none;
+}
+
+.menu_e_toggle {
+	all: unset;
+	cursor: pointer;
+	height: 100%;
+	width: 230px;
+}
+
+.menu_a_toggle {
+	all: unset;
+	cursor: pointer;
+	height: 100%;
+	width: 30px;
+	text-align: center;
+}
+
+.menu_e_toggle:hover, .menu_a_toggle:hover {
+	background-color: var(--main-color);
+	color: white;
+}
+
+.menu_e_blank {
+	width: 5px;
+	background-color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.h_submenu_blank {
+	width: 5px;
+	background-color: white;
+}
+
+.menu_fixed {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    margin: 0 auto;
+    background-color: white;
+}
+
+/* 부트스트랩 메뉴/서브메뉴 */
+.navbar-main {
+  background-color: var(--main-color);
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+
+.navbar-main .nav-link,
+.navbar-main .menu_e_toggle,
+.navbar-main .menu_a_toggle {
+  color: white;
+}
+
+
+
+.navbar-main .nav-link:hover,
+.navbar-main .nav-item:hover,
+.navbar-main .menu_a_toggle:hover {
+ 	background-color: var(--sub-color);
+	color: var(--main-color);
+}
+
+
+
+#h_submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.85);
+  color: var(--main-color);
+  border-top: none;
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  display: flex;  
+  border-top: 1px solid var(--gray-color);
+}
+
+#h_submenu a {
+  color: var(--main-color);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 17px;
+  margin-left: 5px;
+  text-align: center;
+ 
+}
+
+.navbar-nav .nav-item {
+	height: 50px;
+	padding: 0 7px;
+	flex: 1;
+	text-align: center;
+}
+
+#h_submenu li:hover {
+  background-color: var(--sub-color);
+  border-radius: 5px;
+  padding-left: 4px;
+}
+
+#h_submenu li {
+  width: 240px;
+}
+
+#logoutBtn {
+	all: unset;
+}
+
+#logoutBtn:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

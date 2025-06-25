@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.library.mapper.MemberBookHistoryMapper">
+    <!-- 회원별 도서 이용 정보 목록 전체 조회 - 회원 -->
+    <select id="getAllBookHistory" resultType="com.library.model.BookHistory" parameterType="int">
+        SELECT * FROM BOOK_HISTORY WHERE MEMBERS_ID = #{membersId}
+    </select>
+    
+    <!-- 회원별 도서 이용 정보 목록 중 연체된 도서만 조회 - 시스템 -->
+    <select id="getOverdueBookHistory" resultType="com.library.model.BookHistory" parameterType="int">
+        SELECT * FROM BOOK_HISTORY WHERE MEMBERS_ID = #{membersId} AND IS_OVERDUE = TRUE
+    </select>
+
+    <!-- 회원별 도서 이용 정보 수정 - 시스템 -->
+    <!-- 1) 도서 반납 처리 : returnedDate -->
+    <update id="updateBookHistoryReturned" parameterType="com.library.model.BookHistory">
+        UPDATE BOOK_HISTORY 
+        SET RETURNED_DATE = #{returnedDate}, 
+        	IS_OVERDUE = #{isOverdue}
+        WHERE MEMBERS_ID = #{membersId}
+    </update>
+    
+    <!-- 2) 도서 연체 처리 : isOverdue -->
+    <update id="updateBookHistoryOverdue" parameterType="com.library.model.BookHistory">
+        UPDATE BOOK_HISTORY 
+        SET	IS_OVERDUE = #{isOverdue}
+        WHERE MEMBERS_ID = #{membersId}
+    </update>
+    
+    <!-- 3) 도서 반납예정일 연장 : dueDate -->
+    <update id="updateBookHistoryDueDate" parameterType="com.library.model.BookHistory">
+        UPDATE BOOK_HISTORY 
+        SET DUE_DATE = #{dueDate}
+        WHERE MEMBERS_ID = #{membersId}
+    </update>
+    
+    <!-- 도서 이용 정보 등록 - 시스템 -->
+    <insert id="insertBookHistory" parameterType="com.library.model.BookHistory">
+	    <selectKey keyProperty="bookHistoryId" resultType="java.lang.Integer" order="BEFORE">
+	        SELECT SQ_BOOK_HISTORY.NEXTVAL FROM DUAL
+	    </selectKey>
+        INSERT INTO BOOK_HISTORY (
+        	BOOK_HISTORY_ID, MEMBERS_ID, BOOKS_ID, LOAN_DATE, DUE_DATE, RETURNED_DATE, IS_OVERDUE
+        ) VALUES (
+        	#{bookHistoryId}, #{membersId}, #{booksId}, #{loanDate}, #{dueDate}, #{returnedDate}, #{isOverdue}
+        )
+    </insert>
+
+    <!-- 도서 이용 정보 삭제 -->
+    <!-- <delete id="deleteBookHistory" parameterType="int">
+        DELETE FROM BOOK_HISTORY WHERE BOOK_HISTORY_ID = #{bookHistoryId}
+    </delete> -->
+</mapper>

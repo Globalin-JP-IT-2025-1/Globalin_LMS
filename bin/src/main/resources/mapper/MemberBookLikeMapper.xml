@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.library.mapper.MemberBookLikeMapper">
+    <!-- 회원별 관심 도서 목록 전체 조회 - 회원 -->
+    <select id="getAllBookLikes" resultType="com.library.model.BookLike" parameterType="int">
+        SELECT * FROM BOOK_LIKE WHERE MEMBERS_ID = #{membersId}
+    </select>
+
+    <!-- 회원별 관심 도서 등록 - 회원 -->
+    <insert id="insertBookLike" parameterType="com.library.model.BookLike">
+	    <selectKey keyProperty="bookLikeId" resultType="java.lang.Integer" order="BEFORE">
+	        SELECT SQ_BOOK_LIKE.NEXTVAL FROM DUAL
+	    </selectKey>
+        INSERT INTO BOOK_LIKE (
+        	BOOK_LIKE_ID, MEMBERS_ID, BOOKS_ID, LIKE_DATE
+        ) VALUES (
+        	#{bookLikeId}, #{membersId}, #{booksId}, #{likeDate}
+        )
+    </insert>
+
+    <!-- 회원별 관심 도서 해제 - 회원 -->
+    <delete id="deleteBookLike" parameterType="int">
+        DELETE FROM BOOK_LIKE WHERE BOOK_LIKE_ID = #{bookLikeId}
+    </delete>
+</mapper>

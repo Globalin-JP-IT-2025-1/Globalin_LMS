@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.library.mapper.CardnumSerialMapper">
+    <!-- 회원 카드번호 시리얼 조회 -->
+    <select id="getCardnumSerial" resultType="com.library.model.CardnumSerial">
+        SELECT * FROM MEMBERS CARDNUM_SERIAL
+    </select>
+
+    <!-- 회원 카드번호 시리얼 업데이트 -->
+    <update id="updateCardnumSerial" parameterType="com.library.model.CardnumSerial">
+        UPDATE CARDNUM_SERIAL 
+        SET CURRENT_DATE = #{currentDate}, SERIAL = #{serial}
+        WHERE CARDNUM_SERIAL_ID = #{cardnumSerialId}
+    </update>
+</mapper>

@@ -9,6 +9,10 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -26,7 +30,7 @@ import com.library.model.BookLike;
 import com.library.model.Member;
 import com.library.model.PageInfo;
 import com.library.service.ArticleService;
-import com.library.service.AuthService;
+import com.library.service.JwtService;
 import com.library.service.MemberBookHistoryService;
 import com.library.service.MemberBookLikeService;
 import com.library.service.MemberService;
@@ -44,7 +48,7 @@ public class PrivateMemberController {
     private final MemberBookHistoryService memberBookHistoryService;
     private final MemberBookLikeService memberBookLikeService;
     private final ArticleService articleService;
-    private final AuthService authService;
+    private final JwtService jwtService;
     
     @Value("${google.maps.api.key}")
     private String apiKey;
@@ -56,11 +60,19 @@ public class PrivateMemberController {
     	model.addAttribute("pagePath", pageInfo.getPagePath());
     }
  
-    // 회원 정보 조회 --> OK
-	// @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
+    // 회원 정보 조회
+    @PreAuthorize("#membersId == principal.membersId or hasRole('ADMIN')")
     @GetMapping("/{membersId}")
     public String getMemberById(@PathVariable("membersId") int membersId, 
+    							Authentication authentication,
     							Model model) {
+    	
+    	if (membersId == -1) {
+    		String username2 = authentication.getName();
+    		Member member2 = memberService.getMemberByUsername(username2);
+    		
+    		return "redirect:/private/members/" + member2.getMembersId();
+    	}
     	
     	Member member = memberService.getMemberById(membersId);
     	//Map<String, Integer> bookOverdueInfo = memberBookHistoryService.getTotalOverdue(membersId);
@@ -78,8 +90,8 @@ public class PrivateMemberController {
         return "layout";
     }
     
-    // 회원 정보 수정 폼으로 이동 --> ok
-    // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
+    // 회원 정보 수정 폼으로 이동
+    @PreAuthorize("#membersId == principal.membersId or hasRole('ADMIN')")
     @GetMapping("/{membersId}/edit")
     public String showEditMemberInfo(@PathVariable("membersId") int membersId, 
     								 Model model) {
@@ -98,8 +110,8 @@ public class PrivateMemberController {
     	return "layout";
     }
 
-    // 회원 정보 수정 --> OK
-    // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
+    // 회원 정보 수정
+    @PreAuthorize("#membersId == principal.membersId or hasRole('ADMIN')")
     @PutMapping("/{membersId}")
     public String updateMemberInfo(@PathVariable("membersId") int membersId, 
     							   @ModelAttribute Member member, 
@@ -123,7 +135,7 @@ public class PrivateMemberController {
  
     // 회원 탈퇴 처리
     // 리프레시 토큰 처리 -> 로그아웃 처리(액세스 토큰, 세션) -> 회원 정보 수정
-    // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
+    @PreAuthorize("#membersId == principal.membersId or hasRole('ADMIN')")
     @PutMapping("/{membersId}/leave")
     @Transactional
     public String leaveMember(@PathVariable("membersId") int membersId, 
@@ -164,11 +176,11 @@ public class PrivateMemberController {
     			}
     			
     			// 비교용 rToken 삭제
-    			authService.deleteRefreshTokens(membersId);
+    			jwtService.deleteRefreshTokens(membersId);
     			
     			// 블랙리스트에 저장
-    			authService.insertBlacklistedToken(aToken, 0);
-    			authService.insertBlacklistedToken(rToken, 1);
+    			jwtService.insertBlacklistedToken(aToken, 0);
+    			jwtService.insertBlacklistedToken(rToken, 1);
     		}
     		
     	} catch (Exception e) {
@@ -181,17 +193,32 @@ public class PrivateMemberController {
     		
     	}
     	
+    	// 로그아웃
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    	if (auth != null) {
+    	    new SecurityContextLogoutHandler().logout(request, response, auth);
+    	}
+    	
     	redirectAttributes.addFlashAttribute("alertType", "success");
     	redirectAttributes.addFlashAttribute("alertMessage", "회원 탈퇴 성공");
     	
-    	return "redirect:/"; // 성공: 홈으로 이동
+    	return "redirect:/"; // 성공: 홈으로
     }
     
     // 회원별 도서 이용 정보 목록 조회
-    // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
+    @PreAuthorize("#membersId == principal.membersId or hasRole('ADMIN')")
     @GetMapping("/{membersId}/book-history")
     public String showMemberBookHistory(@PathVariable("membersId") int membersId, 
+    									Authentication authentication,
     									Model model) {
+    	
+    	if (membersId == -1) {
+    		String username2 = authentication.getName();
+    		Member member2 = memberService.getMemberByUsername(username2);
+    		
+    		return "redirect:/private/members/" + member2.getMembersId();
+    	}
+    	
     	
     	List<BookHistory> bookHistoryList = memberBookHistoryService.getAllBookHistory(membersId);
     	model.addAttribute("bookHistoryList", bookHistoryList);
@@ -207,10 +234,18 @@ public class PrivateMemberController {
     }
     
     // 회원별 관심 도서 목록 조회
-    // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
+    @PreAuthorize("#membersId == principal.membersId or hasRole('ADMIN')")
     @GetMapping("/{membersId}/book-like")
     public String showMemberBookLike(@PathVariable("membersId") int membersId, 
+									 Authentication authentication,
     								 Model model) {
+    	
+    	if (membersId == -1) {
+    		String username2 = authentication.getName();
+    		Member member2 = memberService.getMemberByUsername(username2);
+    		
+    		return "redirect:/private/members" + member2.getMembersId();
+    	}
     	
     	List<BookLike> bookLikeList = memberBookLikeService.getAllBookLikes(membersId);
     	model.addAttribute("bookLikeList", bookLikeList);
@@ -226,11 +261,20 @@ public class PrivateMemberController {
     }
     
     // 회원별 희망 도서 신청 조회
-    // @PreAuthorize("hasRole('ADMIN') or #membersId == authentication.principal.id")
+    @PreAuthorize("#membersId == principal.membersId or hasRole('ADMIN')")
     @GetMapping("/{membersId}/book-req")
     public String showMemberBookReq(@PathVariable("membersId") int membersId,
     		 						@RequestParam(defaultValue = "1") int page,
+    		 						Authentication authentication,
     								Model model) {
+    	
+    	if (membersId == -1) {
+    		String username2 = authentication.getName();
+    		Member member2 = memberService.getMemberByUsername(username2);
+    		
+    		return "redirect:/private/members/" + member2.getMembersId();
+    	}
+    	
     	ArticleListResponse bookReqList = articleService.getArticleListByReqByMembersId(membersId, page);
     	
     	model.addAttribute("articleListWithAuthor", bookReqList.getArticleWithAuthorList());
@@ -247,12 +291,5 @@ public class PrivateMemberController {
     	
     	return "layout";
     }
-    
-    
-    //아이디 중복확인
-    
-    //이메일 중복확인
-    
-   
     
 }

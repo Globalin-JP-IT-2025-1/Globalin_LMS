@@ -1,0 +1,151 @@
+@charset "UTF-8";
+
+.main {
+	/* width: var(--main-width); */
+	height: 100%;
+	
+	margin: 0 auto;
+
+	display: flex; /* item: m_title, m_content */
+	flex-direction: column;
+}
+
+.m_title_bg {
+	width: 100%;
+		
+	background-image: url("../images/bg.jpg") ;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	
+}
+
+.m_title {
+	width: var(--main-width);
+	/* width: 100%; */
+	height: 150px;
+	
+	/* background-image: url("../images/bg.jpg") ;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;  */
+	
+	margin: 0 auto;
+	
+	display: flex;
+	justify-self: flex-end;
+}
+
+.m_content {
+	width: var(--main-width);
+	/* width: 100%; */
+	/* height: 400px; */
+
+	background-color: white;
+	
+	margin: 0 auto;
+
+	display: flex;
+	justify-self: flex-end;
+}
+
+.m_submenu_title {
+	width: 20%;
+
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+}
+
+.m_main_title {
+	width: 80%;
+
+	padding-left: 10px;
+	padding-bottom: 10px;
+
+	gap: 5px;
+
+	display: flex; /* item : m_pageTitle, m_pageRoute */
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: flex-end;
+}
+
+.m_submenu_content {
+	width: 20%;
+
+	/* border: 1px solid var(--gray-color); */
+
+	display: flex;
+	/* flex-direction: column; */
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.m_main_content {
+	width: 80%;
+
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.m_submenu_title_tx {
+	width: 250px;
+	height: 80px;
+
+	background-color: var(--main-color);
+	color: white;
+
+	font-size: 1.5em;
+	font-weight: bold;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.m_submenu_content_tx {
+	width: 250px;
+
+	border: 2px solid var(--gray-color);
+
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.m_pageTitle {
+	font-size: 2em;
+	font-weight: bold;
+}
+
+.m_submenu_item {
+	cursor: pointer;
+
+	width: 100%;
+	height: 50px;
+	
+	box-sizing: border-box;
+	padding-left: 10px;
+	padding: 0px 20px;
+	
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.active_menu {
+	border-right: 5px solid var(--main-color);
+}
+
+.m_submenu_item:hover {
+   background-color: var(--sub-color);
+   font-weight: bold;
+}
+
+.selected {
+   border-right: 10px solid var(--main-color);
+}
