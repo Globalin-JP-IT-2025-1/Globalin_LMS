@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.library.model.PageInfo;
 import com.library.model.book.BookDetailResponse;
 import com.library.model.book.BookListResponse;
+import com.library.model.status.BookStatus;
 import com.library.service.BookService;
 
 import lombok.AllArgsConstructor;
@@ -31,8 +32,8 @@ public class PublicBookController {
 
     // 1) 통합검색 전체 목록 + 키워드 검색 목록
     @GetMapping("/total")
-    public String getBookListByTotal(@RequestParam(value = "type", required = false, defaultValue = "title") String type,
-							         @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+    public String getBookListByTotal(@RequestParam(value = "searchType", required = false, defaultValue = "title") String type,
+							         @RequestParam(value = "searchKeyword", required = false, defaultValue = "") String keyword,
 							         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
 							         Model model) {
         
@@ -156,6 +157,14 @@ public class PublicBookController {
     	
     	try {
 			BookDetailResponse bookDetailResponse = bookService.getBookWithReviewListById(booksId, page);
+			
+			// 비활성화된 도서인 경우 실패 처리
+			if (bookDetailResponse.getBook().getStatus() == BookStatus.DISABLE.getCode()) {
+				redirectAttributes.addFlashAttribute("alertType", "fail");
+				redirectAttributes.addFlashAttribute("alertMesssage", "도서 상세 조회에 실패하였습니다.");
+				
+				return "redirect:/public/books/" + category;
+			}
 			
 			model.addAttribute("book", bookDetailResponse.getBook()); // 도서 상세 정보
 	    	model.addAttribute("currentPage", page); // 북 리뷰 페이징

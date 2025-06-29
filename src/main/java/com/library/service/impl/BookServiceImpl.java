@@ -11,9 +11,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.library.exception.LoanNotAllowedException;
 import com.library.mapper.BookMapper;
 import com.library.model.SearchRequest;
 import com.library.model.book.Book;
@@ -21,7 +23,12 @@ import com.library.model.book.BookDetailResponse;
 import com.library.model.book.BookListRequest;
 import com.library.model.book.BookListResponse;
 import com.library.model.book.ReviewListResponse;
+import com.library.model.member.Member;
+import com.library.model.status.BookHistoryStatus;
+import com.library.model.status.MemberStatus;
 import com.library.service.BookService;
+import com.library.service.MemberBookHistoryService;
+import com.library.service.MemberService;
 import com.library.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +41,11 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper; // 책
     private final ReviewService reviewService; // 책 리뷰
     
+    private final MemberService memberService; // 대출, 반납 회원
+    private final MemberBookHistoryService memberBookHistoryService; // 대출, 반납 기록
+    
     private static final int BOOKS_PER_PAGE = 7; // 한 페이지당 게시글 수
+    private static final int MAX_LOAN_COUNT = 9; // 최대 대출 가능한 도서 권수: 10권(0~9)
     
     @Value("${book.seach.api.key}")
     private String apiKey;
@@ -290,7 +301,7 @@ public class BookServiceImpl implements BookService {
     
     
     // 상세 조회
-    // 1) 상세 조회 (booksId 기준)
+    // 1) 상세 조회 (북 리뷰 포함)
     @Override
     public BookDetailResponse getBookWithReviewListById(int booksId, int reviewCurrentPage) {
     	
@@ -311,6 +322,12 @@ public class BookServiceImpl implements BookService {
 	            .reviewListResponse(reviewListResponse)
 	            .build();
     }
+    
+    // 2) 수정용 상세 조회 (북 리뷰 제외)
+	@Override
+	public Book getBookById(int booksId) {
+		return bookMapper.getBookById(booksId);
+	}
     
     // 수정
     // 1) 책 정보 수정
@@ -385,5 +402,45 @@ public class BookServiceImpl implements BookService {
     public int deleteBook(int booksId) {
         return bookMapper.deleteBook(booksId);
     }
+    
+    // 기타 처리
+    // 대출 처리
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+ 	public void loanBook(int booksId, int membersId) {
+    	// 대출 가능한 지 확인
+    	Member member = memberService.getMemberById(membersId);
+    	
+    	// 준회원, 대출정지 회원, 대출권수가 10권을 넘는 회원은 불가능
+    	if (member != null) {
+    		int status = member.getStatus();
+    		if (status == MemberStatus.JUNIOR.getCode()) {
+    			throw new LoanNotAllowedException("준회원은 대출이 불가능 합니다.");
+    		} else if (status == MemberStatus.LOAN_HOLD.getCode()) {
+    			throw new LoanNotAllowedException("대출 정지되어 대출이 불가능 합니다.");
+    		} else if (member.getLoanCount() == MAX_LOAN_COUNT) {
+    			throw new LoanNotAllowedException("합계 10권 이상은 대출이 불가능 합니다.");
+    		}
+    	}
+		
+		// 1) 도서 : 대출중으로 처리
+		updateBookLoaned(booksId);
+		// 2) 회원 : 대출권수 증가
+        memberService.updateMemberLoanCountUp(membersId);
+        // 3) 회원 : 도서 이용 정보에 추가
+        memberBookHistoryService.insertBookHistory(membersId, booksId, BookHistoryStatus.LOANING.getCode());
+ 	}
+ 	
+ 	// 반납 처리
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+ 	public void returnBook(int booksId, int membersId) {
+    	// 1) 도서 : 정상(대출가능)으로 처리
+		updateBookLoanable(booksId);
+		// 2) 회원 : 대출권수 감소
+        memberService.updateMemberLoanCountDown(membersId);
+        // 3) 회원 : 도서 이용 정보에 추가
+        memberBookHistoryService.insertBookHistory(membersId, booksId, BookHistoryStatus.RETURNED.getCode());
+ 	}
 	
 }

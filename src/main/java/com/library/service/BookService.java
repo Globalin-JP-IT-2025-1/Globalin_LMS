@@ -21,7 +21,8 @@ public interface BookService {
 	public int getBookListCountByKeyword(SearchRequest searchRequest); // 검색에 따른 목록 개수
 	
     // 상세 조회
-	public BookDetailResponse getBookWithReviewListById(int booksId, int reviewCurrentPage); // 상세 조회 (booksId 기반)
+	public BookDetailResponse getBookWithReviewListById(int booksId, int reviewCurrentPage); // 상세 조회 (북 리뷰 포함)
+	public Book getBookById(int booksId); // 수정용 상세 조회
     
 	// 수정
 	public int updateBookInfo(Book book); // 1) 도서 정보 수정
@@ -41,5 +42,9 @@ public interface BookService {
 	
 	// 삭제
 	public int deleteBook(int booksId); // hard del
+	
+	// 기타 처리
+	public void loanBook(int booksId, int membersId); // 대출 처리
+	public void returnBook(int booksId, int membersId); // 반납 처리
     
 }

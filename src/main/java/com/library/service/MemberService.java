@@ -36,10 +36,10 @@ public interface MemberService {
 	public int updateMemberOverdue(Member member);
 
 	// 5) 도서 시스템 - 도서 대출 (loanCount)
-	public int updateMemberLoanCountUp(Member member);
+	public int updateMemberLoanCountUp(int membersId);
 	
 	// 6) 도서 시스템 - 도서 반납 (loanCount)
-	public int updateMemberLoanCountDown(Member member);
+	public int updateMemberLoanCountDown(int membersId);
 
 	// 회원 삭제 - 관리자
 	public int deleteMember(int membersId);

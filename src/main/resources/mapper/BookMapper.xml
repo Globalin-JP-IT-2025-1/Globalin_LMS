@@ -20,8 +20,8 @@
 					   ROWNUM AS rnum
 				FROM BOOKS bk
 			    ORDER BY bk.CREATE_DATE DESC
-		    ) a
-			WHERE a.rnum > #{startRow} AND a.rnum <= #{endRow}
+		    ) b
+			WHERE b.rnum > #{startRow} AND b.rnum <= #{endRow}
 		]]>
 	</select>
 
@@ -43,8 +43,8 @@
 			    WHERE bk.CATEGORY LIKE CONCAT(#{category}, '%')
 			    	AND bk.STATUS <> 1
 			    ORDER BY ar.UPDATE_DATE DESC
-		    ) a
-			WHERE a.rnum > #{startRow} AND a.rnum <= #{endRow}
+		    ) b
+			WHERE b.rnum > #{startRow} AND b.rnum <= #{endRow}
 		]]>
 	</select>
 	
@@ -134,15 +134,12 @@
 	</select>
 
 	<!-- 상세 조회 -->
-	<!-- 1) 도서 상세 조회 (게시글 ID 기준) -->
-	<select id="getBookBybooksId"
+	<!-- 1) 도서 상세 조회 -->
+	<select id="getBookById"
 		resultType="com.library.model.book.Book"
 		parameterType="int">
-		SELECT a.*, m.USERNAME AS authorUsername, m.NAME AS
-		authorFullname
-		FROM BOOKS a
-		JOIN MEMBERS m ON a.AUTHOR_ID = m.MEMBERS_ID
-		WHERE a.BOOKS_ID = #{value}
+		SELECT * FROM BOOKS 
+		WHERE BOOKS_ID = #{value}
 	</select>
 
 

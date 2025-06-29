@@ -1,236 +1,154 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
+<c:set var="bookList" value="${bookList}" />
+
+<c:set var="totalCount" value="${totalCount}" />
+<c:set var="totalPages" value="${totalPages}" />
+<c:set var="currentPage" value="${currentPage}" />
+
+<c:set var="blockSize" value="5" />
+<c:set var="startPage" value="${(currentPage - 1) / blockSize * blockSize + 1}" />
+<c:set var="endPage" value="${startPage + blockSize - 1 > totalPages ? totalPages : startPage + blockSize - 1}" />
+
+<sec:authorize access="hasRole('ROLE_USER')">
+    <sec:authentication property="principal" var="userDetails" />
+</sec:authorize>
 
 <style>
-.search-bar {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    background: #eaf6ff;
-    border-radius: 13px;
-    padding: 22px 20px 22px 16px;
-    margin-bottom: 20px;
-    gap: 16px;
-    box-sizing: border-box;
+.bookList tr {
+	cursor: pointer !important;
 }
-.search-bar select,
-.search-bar input[type="text"] {
-    height: 36px;
-    font-size: 1.08em;
-    border-radius: 7px;
-    border: 1px solid #176bb944;
-    padding: 0 15px;
-    background: #fff;
+
+/* 공통 스타일 */
+.bookList td, .bookList th {
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
 }
-.search-bar input[type="text"] {
-    flex: 1 1 340px;
-    min-width: 180px;
-}
-.search-bar button {
-    background: #176bb9;
-    color: #fff;
-    border: none;
-    border-radius: 7px;
-    height: 36px;
-    min-width: 72px;
-    font-size: 1.08em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.15s;
-}
-.search-bar button:hover {
-    background: #1559a5;
-}
-.table-books {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 1.03em;
-    table-layout: fixed;
-}
-.table-books th, .table-books td {
-    padding: 16px 14px;
-    text-align: left;
-    border-bottom: 1.7px solid #cbeaff;
-}
-.table-books th {
-    background: #eaf6ff;
-    color: #176bb9;
-    font-weight: bold;
-    font-size: 1.08em;
-}
-.table-books td {
-    background: #f6fbfd;
-    font-size: 1em;
-}
-.table-books td.book-cover {
-    width: 90px;
-    min-width: 90px;
-    text-align: center;
-    background: #fff;
-}
-.table-books td.book-title {
-    width: 340px;
-    min-width: 260px;
-    max-width: 900px;
-    font-weight: 500;
-    background: #fff;
-    white-space: normal;
-    word-break: break-all;
-}
-.table-books td.book-status {
-    width: 110px;
-    min-width: 90px;
-    text-align: center;
-    font-weight: bold;
-    color: #1c7ccd;
-    background: #eaf6ff;
-    letter-spacing: 1.5px;
-    font-size: 1.06em;
-}
-.table-books tr:hover td {
-    background: #e2f1fa;
-}
-.button-request {
-    margin-left: 8px;
-    padding: 4px 13px;
-    border-radius: 7px;
-    background: #f5fbff;
-    color: #217bb9;
-    border: 1px solid #b8dbf6;
-    font-size: 0.98em;
-    cursor: pointer;
-}
-.button-request:hover {
-    background: #eaf6ff;
-}
+
+/* 각 열 너비 */
+.bookList td:nth-child(1), .bookList th:nth-child(1) { width: 5% !important; }
+.bookList td:nth-child(2), .bookList th:nth-child(2) { width: 10% !important; }
+.bookList td:nth-child(3), .bookList th:nth-child(3) { width: 65% !important; }
+.bookList td:nth-child(4), .bookList th:nth-child(4) { width: 10% !important; }
+.bookList td:nth-child(5), .bookList th:nth-child(5) { width: 5% !important; }
+.bookList td:nth-child(6), .bookList th:nth-child(6) { width: 5% !important; }
+
 </style>
 
-<div style="display:flex; min-height:600px;">
-    <div style="flex:1; padding:32px 40px 32px 40px;">
-        <!-- ====== 검색 폼 ====== -->
-        <form action="/public/books/total" method="get" class="search-bar">
-            <select name="type">
-                <option value="title" ${param.type == 'title' ? 'selected' : ''}>책제목</option>
-                <option value="author" ${param.type == 'author' ? 'selected' : ''}>저자</option>
-                <option value="publisher" ${param.type == 'publisher' ? 'selected' : ''}>출판사</option>
-                <option value="isbn" ${param.type == 'isbn' ? 'selected' : ''}>ISBN</option>
-            </select>
-            <input type="text" name="keyword" value="${param.keyword}" placeholder="검색어 입력">
-            <button type="submit">검색</button>
-        </form>
-
-        <!-- ====== 검색 상태 안내 ====== -->
-        <div style="margin-bottom:8px;">
-            <c:choose>
-                <c:when test="${empty param.keyword}">
-                    <span style="color:#999;">검색어를 입력하고 검색해 주세요.</span>
-                </c:when>
-                <c:otherwise>
-                    전체 <b>
-                        <c:choose>
-                            <c:when test="${not empty bookList}">${fn:length(bookList)}</c:when>
-                            <c:otherwise>0</c:otherwise>
-                        </c:choose>
-                    </b> 건
-                </c:otherwise>
-            </c:choose>
-        </div>
-
-        <!-- ====== 결과 테이블 ====== -->
-        <c:if test="${not empty param.keyword}">
-            <c:choose>
-                <c:when test="${empty bookList}">
-                    <div style="text-align:center; color:#999; margin-top:30px;">검색 결과가 없습니다.</div>
-                </c:when>
-                <c:otherwise>
-                    <table class="table-books">
-                        <tr>
-                            <th style="width:60px;">NO</th>
-                            <th style="width:90px;">책표지</th>
-                            <th style="min-width:260px; max-width:900px;">책제목</th>
-                            <th>저자</th>
-                            <th>출판사</th>
-                            <th style="width:110px;">상태</th>
-                        </tr>
-                        <c:forEach var="book" items="${bookList}" varStatus="stat">
-                            <tr>
-                                <td style="text-align:center;">${stat.index + 1}</td>
-                                <td class="book-cover">
-                                    <c:choose>
-                                        <c:when test="${not empty book.imageLink}">
-                                            <img src="${book.imageLink}" alt="표지" style="width:64px; height:auto; border:1px solid #dde9f2;">
-                                        </c:when>
-                                        <c:otherwise>
-                                            <img src="/resources/images/no-image.jpg" style="width:64px; height:auto; border:1px solid #eee;">
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-        <!-- ★★★ DB등록 도서만 상세 링크 ★★★ -->
-	<td class="book-title">
-    	<c:set var="normIsbn" value="${book.isbn != null ? fn:replace(book.isbn, '-', '') : ''}" />
-    	<c:set var="isDbBook" value="false" />
-    	<c:forEach var="dbIsbn" items="${dbIsbnList}">
-        	<c:if test="${normIsbn eq dbIsbn}">
-            	<c:set var="isDbBook" value="true" />
-        	</c:if>
-    	</c:forEach>
-    	<c:choose>
-        	<c:when test="${isDbBook}">
-            	<a href="/public/books/detail?booksId=${book.booksId}"
-               	style="color:#217bb9; text-decoration:underline; cursor:pointer;">
-                	${book.title}
-            	</a>
-        	</c:when>
-        	<c:otherwise>
-            	<span style="color:#aaa; cursor:not-allowed;">${book.title}</span>
-        	</c:otherwise>
-    	</c:choose>
-	</td>
-        <td>${book.author}</td>
-        <td>${book.publisher}</td>
-        <td class="book-status">
-            <c:set var="curStatus" value="none" />
-            <c:if test="${dbStatusMap[book.isbn] ne null}">
-                <c:set var="curStatus" value="${dbStatusMap[book.isbn]}" />
-            </c:if>
-            <c:choose>
-                <c:when test="${curStatus eq '0'}">
-                    <span style="color:#2cbb2c;">대여가능</span>
-                </c:when>
-                <c:when test="${curStatus eq '1'}">
-                    <span style="color:#fa6400;">대여중</span>
-                </c:when>
-                <c:otherwise>
-                    <span style="color:#999;">대여불가</span>
-                </c:otherwise>
-            </c:choose>
-        </td>
-    </tr>
-</c:forEach>
-                    </table>
-
-                    <!-- ====== 페이징 (최대 5개 + 이전/다음 버튼) ====== -->
-                    <c:if test="${totalPage > 1}">
-                        <c:set var="startPage" value="${(currentPage-1)/5*5 + 1}" />
-                        <c:set var="endPage" value="${startPage+4 < totalPage ? startPage+4 : totalPage}" />
-                        <div style="text-align:center; margin-top:10px;">
-                            <c:if test="${currentPage > 1}">
-                                <a href="?type=${param.type}&keyword=${param.keyword}&pageNo=${currentPage - 1}">&lt;</a>
-                            </c:if>
-                            <c:forEach var="i" begin="${startPage}" end="${endPage}">
-                                <a href="?type=${param.type}&keyword=${param.keyword}&pageNo=${i}"
-                                   style="${i == currentPage ? 'font-weight:bold;color:#176bb9;' : ''}">
-                                    ${i}
-                                </a>
-                            </c:forEach>
-                            <c:if test="${currentPage < totalPage}">
-                                <a href="?type=${param.type}&keyword=${param.keyword}&pageNo=${currentPage + 1}">&gt;</a>
-                            </c:if>
-                        </div>
-                    </c:if>
-                </c:otherwise>
-            </c:choose>
-        </c:if>
+<!-- 도서 통합검색 목록 조회 -->
+<div class="container mt-4">
+	<!-- 요약 & 검색창 -->
+    <div class="d-flex justify-content-between align-items-center">
+        <div>전체 <strong>${totalCount}</strong> 건</div>
+        <div>
+        	<form action="/public/books/total" method="get" class="d-flex align-items-center gap-2">
+				<select class="form-select form-select-sm w-auto" name="searchType">
+				    <option value="title">책제목</option>
+				    <option value="author">저자</option>
+				    <option value="publisher">출판사</option>
+				    <option value="isbn">ISBN</option>
+			  	</select>
+				<input type="text" class="form-control form-control-sm w-auto" name="searchKeyword" placeholder="검색어 입력">
+				<button type="submit" class="btn btn-primary btn-sm">검색</button>
+			</form>
+	    </div>
+    </div>
+    
+    <!-- 도서 목록 -->
+    <div class="overflow-x-auto" >
+	    <table class="table mt-3 table-hover bookList">
+	    	<thead>
+	        	<tr>
+	        		<th>NO</th>
+	        		<th>도서 표지</th>
+	        		<th>도서 정보</th>
+	        		<th>도서 상태</th>
+	        		<th>조회수</th>
+	        		<th>리뷰수</th>
+	        	</tr>
+	        </thead>
+	        <tbody>
+	        	<c:choose>
+	        		<c:when test="${empty bookList}">
+	        			<td colspan="6" style="text-align: center;">조회된 게시글이 없습니다</td>
+	        		</c:when>
+		        	<c:when test="${not empty bookList}">
+			            <c:forEach var="i" begin="0" end="${fn:length(bookList) - 1}" step="1">
+			                <tr onclick="location.href='/public/articles/not/${bookList[i].booksId}'">
+			                    <td>${i + (currentPage * 7) - 6}</td>
+			                    <td>
+				                    <img src="${bookList[i].imageLink}"
+				                        alt="${bookList[i].title} 책 표지" width="50">
+				                </td>
+				                <td>
+				                    <div class="text-secondary mb-1">
+				                    	총류 > 총류
+				                    </div>
+				                    <div class="fw-bold fs-4 mb-2">${bookList[i].title}</div>
+				                    <div class="d-flex flex-wrap mb-2 gap-3">
+				                        <div><span class="fw-semibold">저자:</span> ${bookList[i].author}</div>
+				                        <div><span class="fw-semibold">출판사:</span> ${bookList[i].publisher}</div>
+				                        <div><span class="fw-semibold">출판연도:</span> <fmt:formatDate value="${bookList[i].publishDate}" pattern="yyyy" /></div>
+				                    </div>
+				                    <div class="d-flex flex-wrap mb-2 gap-3">
+				                        <div><span class="fw-semibold">ISBN:</span> ${bookList[i].isbn}</div>
+				                        <div><span class="fw-semibold">분류기호:</span> ${bookList[i].category}</div>
+				                        <div><span class="fw-semibold">도서관:</span> 글로벌인 도서관</div>
+				                        <div><span class="fw-semibold">자료실:</span> 일반자료실</div>
+				                    </div>
+				                </td>
+				                <td>
+				                    <div class="d-flex flex-column gap-2">
+				                        <div class="mb-2 text-danger fw-semibold">
+				                        	${bookList[i].status}
+				                        </div>
+				                        <button class="btn btn-secondary btn-sm" disabled>도서예약불가</button>
+				                        <button class="btn btn-outline-success btn-sm">관심도서담기</button>
+				                    </div>
+				                </td>
+			                    <td>${bookList[i].viewCount}</td>
+			                    <td>${bookList[i].reviewCount}</td>
+			                </tr>
+			            </c:forEach>
+			        </c:when>
+		        </c:choose>
+	        </tbody>
+	    </table>
+	    
+	  	<c:choose>
+        	<c:when test="${not empty bookList}">
+			    <!-- 페이징 -->
+			    <div class="d-flex justify-content-center mt-4">
+				    <nav aria-label="Page navigation">
+				        <ul class="pagination">
+				
+				            <c:if test="${currentPage > 1}">
+				                <li class="page-item">
+				                    <a class="page-link" href="?page=${currentPage - 1}">이전</a>
+				                </li>
+				            </c:if>
+				
+				            <c:forEach var="i" begin="${startPage}" end="${endPage}">
+							    <li class="page-item ${i == currentPage ? 'active' : ''}">
+							        <a class="page-link" href="?page=${i}">${i}</a>
+							    </li>
+							</c:forEach>
+				
+				            <c:if test="${currentPage < totalPages}">
+				                <li class="page-item">
+				                    <a class="page-link" href="?page=${currentPage + 1}">다음</a>
+				                </li>
+				            </c:if>
+				        </ul>
+				    </nav>
+				</div>
+			</c:when>
+		</c:choose>
     </div>
 </div>

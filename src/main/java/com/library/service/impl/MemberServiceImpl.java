@@ -27,7 +27,6 @@ public class MemberServiceImpl implements MemberService {
 	private final CommonUtil commonUtil;
 	
 	private static final int MEMBERS_PER_PAGE = 7; // 한 페이지당 게시글 수
-	private static final int MAX_LOAN_COUNT = 9; // 최대 대출 가능한 도서 권수: 10권(0~9)
 
 	// 조회
 	// 1) 회원 목록 조회
@@ -132,22 +131,14 @@ public class MemberServiceImpl implements MemberService {
 
 	// 5) 도서 시스템 - 도서 대출 (loanCount)
 	@Override
-	public int updateMemberLoanCountUp(Member member) {
-		if (member.getStatus() == MemberStatus.LOAN_HOLD.getCode()) {
-			return -1;
-		}
-		
-		if (member.getLoanCount() == MAX_LOAN_COUNT) { // 최대 대출 가능한 권수: 10권
-			return -2;
-		}
-		
-		return memberMapper.updateMemberLoanCountUp(member.getMembersId());
+	public int updateMemberLoanCountUp(int membersId) {
+		return memberMapper.updateMemberLoanCountUp(membersId);
 	}
 	
 	// 5) 도서 시스템 - 도서 반납 (loanCount)
 	@Override
-	public int updateMemberLoanCountDown(Member member) {
-		return memberMapper.updateMemberLoanCountDown(member.getMembersId());
+	public int updateMemberLoanCountDown(int membersId) {
+		return memberMapper.updateMemberLoanCountDown(membersId);
 	}
 
 	// 회원 삭제 - 관리자

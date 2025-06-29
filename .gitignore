@@ -14,3 +14,4 @@ application.properties
 config.properties
 
 *.log
+/bin/
