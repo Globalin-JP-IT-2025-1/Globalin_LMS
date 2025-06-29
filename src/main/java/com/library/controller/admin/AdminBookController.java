@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.library.model.Book;
 import com.library.model.PageInfo;
+import com.library.model.book.Book;
 import com.library.service.BookService;
 
 import lombok.AllArgsConstructor;
@@ -197,7 +197,9 @@ public class AdminBookController {
     	
     }
 
+    // 회원 도서 대출 처리
     
+    // 회원 도서 반납 처리
 	
     
 }

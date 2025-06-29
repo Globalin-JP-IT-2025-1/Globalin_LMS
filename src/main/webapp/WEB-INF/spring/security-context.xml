@@ -7,10 +7,14 @@
 						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 	
 	
-	<!-- 인가 어노테이션 활성화 -->
-    <security:global-method-security pre-post-annotations="enabled"/>
+	<!-- 시큐리티 제외 -->
+	<security:http pattern="/resources/**" security="none"/> <!-- 정적 리소스 요청 -->
+	<security:http pattern="/.well-known/appspecific/com.chrome.devtools.json" security="none"/> <!-- 크롬 브라우저 콘솔 -->
+	<security:http pattern="/favicon.ico" security="none"/> <!-- 파비콘 요청 -->
+	<security:http pattern="/lang/**" security="none"/> <!-- 언어 설정 요청 -->
 	
-	<security:http authentication-manager-ref="authenticationManager" entry-point-ref="customAuthEntryPoint" use-expressions="true">
+	<!-- 시큐리티 적용 -->
+	<security:http authentication-manager-ref="authenticationManager" use-expressions="true">
 		<!-- 접근 권한 설정 -->
 		<security:intercept-url pattern="/public/**" access="permitAll" />
 		<security:intercept-url pattern="/private/**" access="hasRole('ROLE_USER')" />
@@ -26,32 +30,40 @@
 	        login-processing-url="/public/auth/login"
 	        authentication-success-handler-ref="customLoginSuccessHandler"
 	        authentication-failure-handler-ref="customLoginFailureHandler" />
+	    
+	    <!-- 자동 로그인 설정 -->
+	    <security:remember-me 
+		    key="uniqueAndSecret" 
+		    token-validity-seconds="1209600" 
+		    user-service-ref="customUserDetailsService" />
     
 	    <!-- 로그아웃 관련 설정 -->
 		<security:logout 
 			logout-url="/private/auth/logout" 
 			invalidate-session="true" 
-			success-handler-ref="customLogoutSuccessHandler" /> <!--delete-cookies="un, fn, id"  쿠키 제외 후 authentication 객체에서 가져오기 성공하면 지우기  -->
+			success-handler-ref="customLogoutSuccessHandler" />
 			
 	    <!-- CSRF 보호 : 비활성화 -->
 		<!-- <security:csrf disabled="true"/> -->
 		
 		<!-- 커스텀 필터 체인 -->
-        <security:custom-filter ref="jwtAuthenticationFilter" position="PRE_AUTH_FILTER" /> <!-- JWT 인증 (PRE_AUTH_FILTER를 되살리고 싶은 경우: before="FORM_LOGIN_FILTER") -->
-		<security:custom-filter ref="autoLoginFilter" before="FORM_LOGIN_FILTER" />
+		<!-- <security:custom-filter ref="autoLoginFilter" before="PRE_AUTH_FILTER" /> --> <!-- JWT 기반 자동 로그인 -->
+        <!-- <security:custom-filter ref="jwtAuthenticationFilter" before="FORM_LOGIN_FILTER" /> --> <!-- JWT 인증 -->
 		
 	</security:http>
 	
+	<!-- 인가 어노테이션 활성화 -->
+    <!-- <security:global-method-security pre-post-annotations="enabled"/> -->
+	
 	<!-- Auto-Login 관련 Bean 등록 -->
-    <bean id="autoLoginFilter" class="com.library.security.AutoLoginFilter" />
-    <bean id="customAuthEntryPoint" class="com.library.security.CustomAuthEntryPoint" />
+    <!-- <bean id="autoLoginFilter" class="com.library.security.AutoLoginFilter" /> -->
 	
 	<!-- JWT 인증 필터 Bean 등록 -->
-    <bean id="jwtAuthenticationFilter" class="com.library.security.JwtAuthenticationFilter" />
+    <!-- <bean id="jwtAuthenticationFilter" class="com.library.security.JwtAuthenticationFilter" /> -->
 	
 	<!-- login/out 핸들러 Bean 등록 -->
 	<bean id="customLoginSuccessHandler" class="com.library.security.CustomLoginSuccessHandler"/> <!-- redirect:/?login=true -->
-	<bean id="customLoginFailureHandler" class="com.library.security.CustomLoginFailureHandler"/> <!-- redirect:/public/auth/login?status=-1 -->
+	<bean id="customLoginFailureHandler" class="com.library.security.CustomLoginFailureHandler"/> <!-- redirect:/public/auth/login/fail -->
 	<bean id="customLogoutSuccessHandler" class="com.library.security.CustomLogoutSuccessHandler"/> <!-- redirect:/?logout=true -->
     
     <!-- 인증 관리자 : 여러 인증 제공자 중 하나 선택하여 위임 -->

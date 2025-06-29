@@ -5,8 +5,8 @@
     <!-- 조회 -->
     <!-- 1) 회원 목록 조회 - 관리자 -->
     <select id="getMemberList" 
-    		resultType="com.library.model.Member"
-    		parameterType="com.library.model.MemberListRequest">
+    		resultType="com.library.model.member.Member"
+    		parameterType="com.library.model.member.MemberListRequest">
         <![CDATA[
 			SELECT m.*, m.rnum
 			FROM (
@@ -26,23 +26,23 @@
 	
 	<!-- 3) 상세 조회 -->
     <!-- 회원 상세 조회 (membersId 기반) -->
-    <select id="getMemberById" resultType="com.library.model.Member" parameterType="int">
+    <select id="getMemberById" resultType="com.library.model.member.Member" parameterType="int">
         SELECT * FROM MEMBERS WHERE MEMBERS_ID = #{membersId}
     </select>
     
     <!-- 회원 상세 조회 (username 기반) -->
-    <select id="getMemberByUsername" resultType="com.library.model.Member" parameterType="String">
+    <select id="getMemberByUsername" resultType="com.library.model.member.Member" parameterType="String">
         SELECT * FROM MEMBERS WHERE USERNAME = #{username}
     </select>
     
     <!-- 회원 상세 조회 (email 기반) -->
-    <select id="getMemberByEmail" resultType="com.library.model.Member" parameterType="String">
+    <select id="getMemberByEmail" resultType="com.library.model.member.Member" parameterType="String">
         SELECT * FROM MEMBERS WHERE EMAIL = #{email}
     </select>
     
     <!-- 회원 정보 수정 -->
     <!-- 1) 회원 - 내 정보 수정 : password, email, mobile, zipcode, address, addressDetail -->
-    <update id="updateMemberInfo" parameterType="com.library.model.Member">
+    <update id="updateMemberInfo" parameterType="com.library.model.member.Member">
         UPDATE MEMBERS 
         SET	PASSWORD = #{password}, 
         	EMAIL = #{email}, 
@@ -54,7 +54,7 @@
     </update>
     
     <!-- 2) 회원 - 탈퇴 : status, leaveDate -->
-    <update id="updateMemberLeave" parameterType="com.library.model.Member">
+    <update id="updateMemberLeave" parameterType="com.library.model.member.Member">
         UPDATE MEMBERS 
         SET STATUS = #{status}, 
         	LEAVE_DATE = #{leaveDate}
@@ -62,7 +62,7 @@
     </update>
     
     <!-- 3) 관리자 - 회원카드 등록 : status, cardNum -->
-    <update id="updateMemberCardnum" parameterType="com.library.model.Member">
+    <update id="updateMemberCardnum" parameterType="com.library.model.member.Member">
         UPDATE MEMBERS 
         SET STATUS = #{status}, 
         	CARD_NUM = #{cardNum}
@@ -70,21 +70,28 @@
     </update>
     
     <!-- 4) 도서 시스템 - 도서 연체 : status -->
-    <update id="updateMemberOverdue" parameterType="com.library.model.Member">
+    <update id="updateMemberOverdue" parameterType="com.library.model.member.Member">
         UPDATE MEMBERS 
         SET STATUS = #{status}
 	    WHERE MEMBERS_ID = #{membersId}
     </update>
     
     <!-- 5) 도서 시스템 - 도서 대출 : loanCount -->
-    <update id="updateMemberLoanCount" parameterType="com.library.model.Member">
+    <update id="updateMemberLoanCountUp" parameterType="com.library.model.member.Member">
         UPDATE MEMBERS 
-        SET LOAN_COUNT = #{loanCount}
+        SET LOAN_COUNT = LOAN_COUNT + 1
+	    WHERE MEMBERS_ID = #{membersId}
+    </update>
+    
+    <!-- 6) 도서 시스템 - 도서 반납 : loanCount -->
+    <update id="updateMemberLoanCountDown" parameterType="com.library.model.member.Member">
+        UPDATE MEMBERS 
+        SET LOAN_COUNT = LOAN_COUNT - 1
 	    WHERE MEMBERS_ID = #{membersId}
     </update>
     
     <!-- 회원 등록 -->
-    <insert id="insertMember" parameterType="com.library.model.Member">
+    <insert id="insertMember" parameterType="com.library.model.member.Member">
 	    <selectKey keyProperty="membersId" resultType="java.lang.Integer" order="BEFORE">
 	        SELECT SQ_MEMBERS.NEXTVAL FROM DUAL
 	    </selectKey>

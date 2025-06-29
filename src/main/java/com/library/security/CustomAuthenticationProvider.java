@@ -13,18 +13,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 	private final CustomUserDetailsService userDetailService;
 	private final PasswordEncoder passwordEncoder;
-
-	public CustomAuthenticationProvider(CustomUserDetailsService userDetailService, PasswordEncoder passwordEncoder) {
-		this.userDetailService = userDetailService;
-		this.passwordEncoder = passwordEncoder;
-	}
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -65,7 +62,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	    	);
 	    }
 	}
-
 
 	@Override
 	public boolean supports(Class<?> authentication) {

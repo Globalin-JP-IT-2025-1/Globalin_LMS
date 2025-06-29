@@ -237,10 +237,6 @@
 			          	class="m_submenu_active_target" 
 			          	data-submenu="mSubmenu3"><spring:message code="menu.9.con3" /></a>
 	          	</li>
-	          	<li><a href="/admin/tokens" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu4"><spring:message code="menu.9.con4" /></a>
-	          	</li>
 			</ul>
 		</div>
 	</div>

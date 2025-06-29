@@ -3,17 +3,16 @@ package com.library.service.impl;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.library.mapper.MemberMapper;
-import com.library.model.Member;
-import com.library.model.MemberListRequest;
-import com.library.model.MemberListResponse;
-import com.library.service.BlacklistedTokenService;
+import com.library.model.member.Member;
+import com.library.model.member.MemberListRequest;
+import com.library.model.member.MemberListResponse;
+import com.library.model.status.MemberStatus;
 import com.library.service.MemberService;
 import com.library.util.CommonUtil;
 
@@ -24,12 +23,11 @@ import lombok.AllArgsConstructor;
 public class MemberServiceImpl implements MemberService {
 	private final PasswordEncoder passwordEncoder;
 
-	private final BlacklistedTokenService blacklistedTokenService;
-
 	private final MemberMapper memberMapper;
 	private final CommonUtil commonUtil;
 	
 	private static final int MEMBERS_PER_PAGE = 7; // 한 페이지당 게시글 수
+	private static final int MAX_LOAN_COUNT = 9; // 최대 대출 가능한 도서 권수: 10권(0~9)
 
 	// 조회
 	// 1) 회원 목록 조회
@@ -96,33 +94,19 @@ public class MemberServiceImpl implements MemberService {
 
 	// 2) 회원 - 탈퇴 (status, leaveDate)
 	@Override
-	public int updateMemberLeave(Member member) {
+	public int updateMemberLeave(int membersId) {
+		
+		// 오늘 날짜 계산
 		LocalDateTime leaveDate = LocalDateTime.now();
 		Timestamp tsLeaveDate = Timestamp.valueOf(leaveDate);
 
-		member.setStatus(3); // 3-대출정지 로 변경
-		member.setLeaveDate(tsLeaveDate); // 탈퇴날짜 추가
+		Member member = Member.builder()
+				.membersId(membersId)
+				.status(MemberStatus.LEAVE.getCode()) // 탈퇴회원
+				.leaveDate(tsLeaveDate) // 탈퇴날짜 추가
+				.build();
 
 		return memberMapper.updateMemberLeave(member);
-	}
-
-	// 회원 탈퇴 토큰 처리
-	@Override
-	@Transactional
-	public int updateMemberLeave(int membersId, Map<String, String> tokens) {
-		Member member = memberMapper.getMemberById(membersId);
-
-		// 회원 정보 수정
-		updateMemberLeave(member);
-
-		// 탈퇴 회원의 토큰을 블랙리스트에 추가
-		// access token
-		blacklistedTokenService.insertBlacklistedToken(tokens.get("aToken"), 0);
-
-		// refresh token
-		blacklistedTokenService.insertBlacklistedToken(tokens.get("rToken"), 1);
-
-		return 1;
 	}
 
 	// 3) 관리자 - 회원카드 등록 (status, cardnum)
@@ -131,7 +115,7 @@ public class MemberServiceImpl implements MemberService {
 	public int updateMemberCardnum(int membersId, String cardNum) {
 		Member member = memberMapper.getMemberById(membersId);
 
-		member.setStatus(1); // 1-정회원 으로 변경
+		member.setStatus(MemberStatus.REGULER.getCode()); // 1-정회원 으로 변경
 		member.setCardNum(cardNum); // 회원카드 추가
 
 		return memberMapper.updateMemberCardnum(member);
@@ -141,18 +125,29 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int updateMemberOverdue(Member member) {
 
-		member.setStatus(2); // 2-대출정지 로 변경
+		member.setStatus(MemberStatus.LOAN_HOLD.getCode()); // 2-대출정지 로 변경
 
 		return memberMapper.updateMemberOverdue(member);
 	}
 
 	// 5) 도서 시스템 - 도서 대출 (loanCount)
 	@Override
-	public int updateMemberLoanCount(Member member) {
-
-		member.setStatus(2); // 2-대출정지 로 변경
-
-		return memberMapper.updateMemberLoanCount(member);
+	public int updateMemberLoanCountUp(Member member) {
+		if (member.getStatus() == MemberStatus.LOAN_HOLD.getCode()) {
+			return -1;
+		}
+		
+		if (member.getLoanCount() == MAX_LOAN_COUNT) { // 최대 대출 가능한 권수: 10권
+			return -2;
+		}
+		
+		return memberMapper.updateMemberLoanCountUp(member.getMembersId());
+	}
+	
+	// 5) 도서 시스템 - 도서 반납 (loanCount)
+	@Override
+	public int updateMemberLoanCountDown(Member member) {
+		return memberMapper.updateMemberLoanCountDown(member.getMembersId());
 	}
 
 	// 회원 삭제 - 관리자
@@ -167,7 +162,7 @@ public class MemberServiceImpl implements MemberService {
 		LocalDateTime now = LocalDateTime.now();
 		Timestamp joinDate = Timestamp.valueOf(now);
 
-		member.setStatus(0); // 준회원
+		member.setStatus(MemberStatus.JUNIOR.getCode()); // 준회원
 		member.setCardNum(null); // 회원 카드 번호 기본값
 		member.setLoanCount(0); // 현재 대출 권수 기본값
 

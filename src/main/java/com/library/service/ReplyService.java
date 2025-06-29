@@ -1,7 +1,7 @@
 package com.library.service;
 
-import com.library.model.Reply;
-import com.library.model.ReplyListResponse;
+import com.library.model.article.Reply;
+import com.library.model.article.ReplyListResponse;
 
 public interface ReplyService {
 	
@@ -12,7 +12,7 @@ public interface ReplyService {
 	// 1) 댓글 수 (게시글 ID 기반)
 	public int getReplyListCount(int articlesId);
     
-    // 댓글 수정
+    // 수정
     // 1) 비공개 (soft delete)
     public int updateReplyDisable(int replyId);
 
@@ -22,10 +22,10 @@ public interface ReplyService {
     // 3) 비밀
     public int updateReplySecret(int replyId);
     
-    // 댓글 작성
+    // 추가
     public int insertReply(Reply reply);
 
-    // 댓글 삭제 (hard delete)
+    // 삭제 (hard delete)
     public int deleteReply(int articlesId, int replyId);
     
 }

@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Service;
 
 import com.library.mapper.CardnumSerialMapper;
-import com.library.model.CardnumSerial;
+import com.library.model.member.CardnumSerial;
 import com.library.service.CardNumberService;
 
 import lombok.AllArgsConstructor;

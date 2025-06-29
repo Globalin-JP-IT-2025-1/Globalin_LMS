@@ -1,63 +1,45 @@
 package com.library.service;
 
-import java.util.List;
-import java.util.Map;
-
-import com.library.model.Book;
+import com.library.model.SearchRequest;
+import com.library.model.book.Book;
+import com.library.model.book.BookDetailResponse;
+import com.library.model.book.BookListResponse;
 
 public interface BookService {
 
-    // ===== DB 직접 연동 =====
-
-    /** 전체 도서 목록(관리자/회원 공통) */
-    List<Book> getAllBooks();
-
-    /** 도서 상세 조회 (PK) */
-    Book getBookById(int booksId);
-
-    /** 도서 추가(관리자) */
-    int insertBook(Book book);
-
-    /** 도서 정보 수정(관리자) */
-    int updateBookInfo(Book book);
-
-    /** 도서 상태 '대여불가'로 변경(관리자) */
-    int updateBookDisable(int booksId);
-
-    /** 도서 상태 '대여가능'으로 변경(관리자) */
-    int updateBookEnable(int booksId);
-
-    /** 도서 삭제(관리자) */
-    int deleteBook(int booksId);
-
-    /** 내 DB에 등록된 모든 ISBN 리스트 반환 */
-    List<String> getAllIsbnList();
-
-    /** 내 DB의 ISBN별 대여상태 Map 반환 (0:대여가능, 1:대여중, 2:예약중 등) */
-    Map<String, Integer> getDbStatusMap();
-
-    /** ISBN 완전일치로 한 권 조회 (DB) */
-    Book getBookByIsbn(String isbn);
-
-    /** 주제별(classNo) 페이징 목록 (DB) */
-    List<Book> getBooksByClassNo(String classNo, int pageNo, int pageSize);
-
-    /** 주제별(classNo) 전체 도서 개수 (DB) */
-    int getBooksCountByClassNo(String classNo);
-
-    /** 대출 횟수 순 TOP 100 (DB) */
-    List<Book> getBestBooksByLoan100();
-
-    /** 찜(좋아요) 순 TOP 100 (DB) */
-    List<Book> getPopularBooksByLike100();
-
-
-    // ===== 외부 도서정보나루 API 연동 =====
-
-    /** 외부 API 통합검색 (실시간, 페이징) */
-    List<Book> searchBooksByNaru(String type, String keyword, int pageNo, int pageSize);
-
-    /** 외부 API 검색 결과 총 개수 */
-    int getSearchBookCount(String type, String keyword);
-
+	// 목록 조회
+	public BookListResponse getBookList(int currentPage); // 1) 목록 조회
+	public BookListResponse getBookListByClassNo(String category, int currentPage); // 2) 주제별 목록 조회
+	public BookListResponse getBookListByLoanCount(int currentPage); // 대출 횟수 순 TOP 100
+	public BookListResponse getBookListByLikeCount(int currentPage); // 찜(좋아요) 순 TOP 100
+	public BookListResponse getBookListByKeywordByDB(String type, String keyword, int page); // DB 통합검색
+	public BookListResponse getBookListByKeywordByExtAPI(String type, String keyword, int page); // 외부 API 통합검색
+	
+	// 목록 개수 (페이징용)
+	public int getBookListCount(); // 전체 목록 개수
+	public int getBookListCountByClassNo(String category); // 주제별 목록 개수
+	public int getBookListCountByKeyword(SearchRequest searchRequest); // 검색에 따른 목록 개수
+	
+    // 상세 조회
+	public BookDetailResponse getBookWithReviewListById(int booksId, int reviewCurrentPage); // 상세 조회 (booksId 기반)
+    
+	// 수정
+	public int updateBookInfo(Book book); // 1) 도서 정보 수정
+	public int updateBookDisable(int booksId); // 2) 도서 상태 - '비공개'로 변경 (soft del)
+	public int updateBookLoanable(int booksId); // 3) 도서 상태 - '정상 (대출 가능)'으로 변경
+	public int updateBookLoaned(int booksId); // 4) 도서 상태 - '대출 중'으로 변경
+	public int updateBookLoanReserved(int booksId); // 5) 도서 상태 - '대출 예약 중'으로 변경 
+    
+	public int updateBookViewCountUp(int booksId); // 6) 책 조회수 증가
+	public int updateBookReviewCountUp(int booksId); // 7) 책 리뷰 개수 증가
+	public int updateBookReviewCountDown(int booksId); // 8) 책 리뷰 개수 감소
+	public int updateBookLoanCountUp(int booksId);  // 9) 대출 누적수 증가
+	public int updateBookLikeCountUp(int booksId);  // 10) 찜 누적수 증가
+	
+	// 추가
+	public int insertBook(Book book);
+	
+	// 삭제
+	public int deleteBook(int booksId); // hard del
+    
 }

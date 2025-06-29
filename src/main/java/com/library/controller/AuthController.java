@@ -27,8 +27,9 @@ public class AuthController {
 	
 	// 로그인 폼 --> ok!!
     @GetMapping("/public/auth/login")
-    public String showLoginForm(@RequestParam(value="status", defaultValue = "1") Integer status, 
-    		HttpServletRequest request, Model model) {
+    public String showLoginForm(@RequestParam(value="status", defaultValue="1") Integer status, 
+    							HttpServletRequest request, 
+    							Model model) {
     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
 				this.getClass().getSimpleName(), 
 				request.getRequestURI(),
@@ -70,12 +71,7 @@ public class AuthController {
     }
 	
     // 로그인 처리 --> Spring Security로 이전
-//    @PostMapping("/public/auth/login")
-//    public String loginProc() {}
-    
     // 로그아웃 처리 --> Spring Security로 이전
-//    @PostMapping("/private/auth/logout") 
-//    public String logoutProc() {}
    
     
 }

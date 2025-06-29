@@ -6,7 +6,7 @@ CREATE TABLE BOOK_HISTORY (
   LOAN_DATE        DATE       NOT NULL, -- 대출일자
   DUE_DATE         DATE		  NOT NULL, -- 반납예정일자
   RETURNED_DATE    DATE		  NOT NULL,	-- 반납완료일자
-  IS_OVERDUE       BOOLEAN    NOT NULL, -- 연체여부: F(정상), T(연체)
+  STATUS      NUMBER(1)   		NOT NULL, -- 연체여부: 0(정상), 1(연체)
 
   -- 제약조건
   CONSTRAINT PK_BOOK_HISTORY PRIMARY KEY (BOOK_HISTORY_ID),

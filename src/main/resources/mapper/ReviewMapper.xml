@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.library.mapper.ReviewMapper">
+	<!-- 조회 -->
+	<!-- 1) 목록 조회 (도서 ID 기반) -->
+	<select id="getReviewListByBooksId" 
+			resultType="com.library.model.book.ReviewWithAuthor" 
+			parameterType="com.library.model.book.ReviewListRequest">
+		<![CDATA[
+			SELECT r.BOOK_REVIEWS_ID, r.BOOKS_ID, r.AUTHOR_ID, 
+		   		   r.CONTENT, r.CREATE_DATE, r.UPDATE_DATE, r.STATUS,
+				   r.authorUsername, r.authorFullname, 
+				   r.rnum 
+			FROM (
+				SELECT rp.BOOK_REVIEWS_ID, rp.BOOKS_ID, rp.AUTHOR_ID, 
+			   		   rp.CONTENT, rp.CREATE_DATE, rp.UPDATE_DATE, rp.STATUS,
+					   m.USERNAME AS authorUsername, m.NAME AS authorFullname, 
+					   ROWNUM AS rnum
+				FROM BOOK_REVIEWS rp
+				JOIN MEMBERS m ON m.MEMBERS_ID = rp.AUTHOR_ID 
+				WHERE rp.BOOKS_ID = #{booksId} AND rp.STATUS <> 1
+				ORDER BY rp.UPDATE_DATE DESC
+			) r
+			WHERE r.rnum > #{startRow} AND r.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 2) 리뷰 수 (도서 ID 기반) -->
+	<select id="getReviewListCount" 
+			resultType="int" 
+			parameterType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM BOOK_REVIEWS 
+			WHERE BOOKS_ID = #{booksId} AND STATUS <> 1
+		]]>
+	</select>
+	
+	<!-- 리뷰 수정 -->
+    <!-- 1) 비공개 댓글로 전환 : status -->
+	<update id="updateReviewDisable" 
+			parameterType="int">
+        UPDATE BOOK_REVIEWS 
+        SET	STATUS = 1 
+	    WHERE BOOK_REVIEWS_ID = #{bookReviewsId}
+    </update>
+    
+    <!-- 2) 공개 댓글로 전환 : status -->
+    <update id="updateReviewEnable" 
+    		parameterType="int">
+        UPDATE BOOK_REVIEWS 
+        SET	STATUS = 0
+	    WHERE BOOK_REVIEWS_ID = #{bookReviewsId}
+    </update>
+    
+    <!-- 3) 비밀 댓글로 전환 : status -->
+    <update id="updateReviewSecret" 
+    		parameterType="int">
+        UPDATE BOOK_REVIEWS 
+        SET	STATUS = 2
+	    WHERE BOOK_REVIEWS_ID = #{bookReviewsId}
+    </update>
+	
+	<!-- 댓글 등록 -->
+	<insert id="insertReview" 
+			parameterType="com.library.model.book.BookReview">
+	    <selectKey keyProperty="bookReviewsId" resultType="java.lang.Integer" order="BEFORE">
+	        SELECT SQ_BOOK_REVIEWS.NEXTVAL FROM DUAL
+	    </selectKey>
+        INSERT INTO BOOK_REVIEWS (
+		    BOOK_REVIEWS_ID, BOOKS_ID, AUTHOR_ID, 
+		   	CONTENT, CREATE_DATE, UPDATE_DATE, STATUS
+		) VALUES (
+		    #{bookReviewsId}, #{booksId}, #{authorId}, 
+		    #{content}, #{createDate}, #{updateDate}, #{status})
+    </insert>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="deleteReview" 
+			parameterType="int">
+        DELETE FROM BOOK_REVIEWS WHERE BOOK_REVIEWS_ID = #{bookReviewsId}
+    </delete>
+
+</mapper>

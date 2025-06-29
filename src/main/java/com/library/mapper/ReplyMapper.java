@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.library.model.Reply;
-import com.library.model.ReplyListRequest;
-import com.library.model.ReplyWithAuthor;
+import com.library.model.article.Reply;
+import com.library.model.article.ReplyListRequest;
+import com.library.model.article.ReplyWithAuthor;
 
 @Mapper
 public interface ReplyMapper {

@@ -7,12 +7,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.library.mapper.ArticleMapper;
-import com.library.model.Article;
-import com.library.model.ArticleDetailResponse;
-import com.library.model.ArticleListRequest;
-import com.library.model.ArticleListResponse;
-import com.library.model.ArticleWithAuthor;
-import com.library.model.ReplyListResponse;
+import com.library.model.SearchRequest;
+import com.library.model.article.Article;
+import com.library.model.article.ArticleDetailResponse;
+import com.library.model.article.ArticleListRequest;
+import com.library.model.article.ArticleListResponse;
+import com.library.model.article.ArticleWithAuthor;
+import com.library.model.article.ReplyListResponse;
 import com.library.service.ArticleService;
 import com.library.service.ReplyService;
 
@@ -38,6 +39,7 @@ public class ArticleServiceImpl implements ArticleService {
     	
 		ArticleListRequest articlesListRequest = ArticleListRequest.builder()
 				.category(null)
+				.searchRequest(null)
 				.startRow(startRow)
 				.endRow(endRow)
 				.build();
@@ -62,6 +64,7 @@ public class ArticleServiceImpl implements ArticleService {
     	
 		ArticleListRequest articlesListRequest = ArticleListRequest.builder()
 				.category(category)
+				.searchRequest(null)
 				.startRow(startRow)
 				.endRow(endRow)
 				.build();
@@ -86,6 +89,7 @@ public class ArticleServiceImpl implements ArticleService {
 		
 		ArticleListRequest articlesListRequest = ArticleListRequest.builder()
 				.category("req")
+				.searchRequest(null)
 				.startRow(startRow)
 				.endRow(endRow)
 				.build();
@@ -99,68 +103,143 @@ public class ArticleServiceImpl implements ArticleService {
 				.build();
 	}
 	
-	// 4) 게시글 전체 수
+	// 4-1) 키워드 검색 (전체) - admin
+	@Override
+	public ArticleListResponse getArticleListByKeyword(String type, String keyword, int currentPage) {
+		
+		SearchRequest searchRequest = SearchRequest.builder()
+				.type(type)
+				.keyword(keyword)
+				.build();
+		
+		int totalCount = getArticleListCountByKeyword(searchRequest);
+		int totalPages = (int)Math.ceil((double)totalCount / ARTICLES_PER_PAGE);
+    	int startRow = (currentPage - 1) * ARTICLES_PER_PAGE;
+    	int endRow = currentPage * ARTICLES_PER_PAGE;
+    	
+    	ArticleListRequest articleListRequest = ArticleListRequest.builder()
+    			.category(null)
+    			.startRow(startRow)
+    			.endRow(endRow)
+    			.searchRequest(searchRequest)
+    			.build();
+    	
+    	List<ArticleWithAuthor> articleList = articleMapper.getArticleListByKeyword(articleListRequest);
+		
+		return ArticleListResponse.builder()
+				.articleWithAuthorList(articleList)
+				.totalCount(totalCount)
+				.totalPages(totalPages)
+				.build();
+	}
+	
+	// 4-2) 키워드 검색 (카테고리별)
+	@Override
+	public ArticleListResponse getArticleListByCategoryByKeyword(String category, String type, String keyword, int currentPage) {
+		
+		SearchRequest searchRequest = SearchRequest.builder()
+				.type(type)
+				.keyword(keyword)
+				.build();
+		
+		int totalCount = getArticleListCountByCategoryByKeyword(category, searchRequest);
+		int totalPages = (int)Math.ceil((double)totalCount / ARTICLES_PER_PAGE);
+    	int startRow = (currentPage - 1) * ARTICLES_PER_PAGE;
+    	int endRow = currentPage * ARTICLES_PER_PAGE;
+    	
+    	List<ArticleWithAuthor> articleList = null;
+    	
+    	ArticleListRequest articleListRequest = ArticleListRequest.builder()
+    			.category(category)
+    			.startRow(startRow)
+    			.endRow(endRow)
+    			.searchRequest(searchRequest)
+    			.build();
+		
+    	switch (category) {
+	        case "not":
+	            articleList = articleMapper.getArticleListByNotByKeyword(articleListRequest);
+	            break;
+	        case "qna":
+	            articleList = articleMapper.getArticleListByQnaByKeyword(articleListRequest);
+	            break;
+	        case "req":
+	            articleList = articleMapper.getArticleListByReqByKeyword(articleListRequest);
+	            break;
+	        default:
+	            articleList = null; // 또는 예외 처리
+	            break;
+    	}
+		
+		return ArticleListResponse.builder()
+				.articleWithAuthorList(articleList)
+				.totalCount(totalCount)
+				.totalPages(totalPages)
+				.build();
+	}
+
+	
+	// 목록 개수
+	// 1) 게시글 전체 수
 	@Override
 	public int getArticleListCount() {
 		return articleMapper.getArticleListCount();
 	}
 	
-	// 5) 게시글 전체 수 (카테고리 기준)
+	// 2) 게시글 전체 수 (카테고리 기준)
 	@Override
 	public int getArticleListCountByCategory(String category) {
 		return articleMapper.getArticleListCountByCategory(category);
 	}
 	
-	// 6) 희망 도서 신청 글 전체 수 (회원ID 기준) - book-req
+	// 3) 희망 도서 신청 글 전체 수 (회원ID 기준) - req
 	@Override
 	public int getArticleListCountByReqByMembersId(int membersId) {
 		return articleMapper.getArticleListCountByReqByMembersId(membersId);
 	}
+	
+	// 4-1) 키워드 검색 목록 수 (전체)
+	@Override
+	public int getArticleListCountByKeyword(SearchRequest searchRequest) {
+		return articleMapper.getArticleListCountByKeyword(searchRequest);
+	}
+	
+	// 4-2) 키워드 검색 목록 수 (카테고리)
+	@Override
+	public int getArticleListCountByCategoryByKeyword(String category, SearchRequest searchRequest) {
+		switch (category) {
+	        case "not":
+	        	return articleMapper.getArticleListCountByNotByKeyword(searchRequest);
+	        case "qna":
+	        	return articleMapper.getArticleListCountByQnaByKeyword(searchRequest);
+	        case "req":
+	        	return articleMapper.getArticleListCountByReqByKeyword(searchRequest);
+	        default:
+	        	return -1; // 또는 예외 처리
+		}
+	}
 
-	// 7) 게시글 상세 조회 (게시글 & 게시글 작성자, 댓글 & 댓글 작성자 목록) - not, qna, req
+	// 상세 조회
+	// 1) 게시글 상세 조회 (게시글 & 게시글 작성자, 댓글 & 댓글 작성자 목록) - not, qna, req
 	@Override
 	public ArticleDetailResponse getArticleWithReplyList(int articlesId, int replyCurrentPage) {
 	    // 게시글 & 작성자 가져오기
 	    ArticleWithAuthor articleWithAuthor = articleMapper.getArticleByArticlesId(articlesId);
 
 	    // 기본 값 설정
-	    ReplyListResponse replyList = null;
-
-	    if (articleWithAuthor.getReplyCount() > 0) {
-	        replyList = replyService.getReplyListByArticlesId(articlesId, replyCurrentPage);
+	    ReplyListResponse replyListResponse = null;
+	    
+	    if (articleWithAuthor != null) {
+	    	if (articleWithAuthor.getReplyCount() > 0) {
+	    		replyListResponse = replyService.getReplyListByArticlesId(articlesId, replyCurrentPage);
+	    	}
 	    }
 
 	    return ArticleDetailResponse.builder()
 	            .articleWithAuthor(articleWithAuthor)
-	            .replyListResponse(replyList)
+	            .replyListResponse(replyListResponse)
 	            .build();
 	}
-	
-	// 게시글 등록
-	@Override
-	public int insertArticle(Article article) {
-		// 오늘 날짜 설정
-		LocalDateTime currentDate = LocalDateTime.now();
-		Timestamp currentDateTS = Timestamp.valueOf(currentDate);
-		
-		article.setCreateDate(currentDateTS);
-		article.setUpdateDate(currentDateTS);
-		article.setViewCount(0);
-		article.setReplyCount(0);
-		
-		System.out.println(
-				"ArticleServiceImpl - "
-				+ "ArticlesId : " + article.getArticlesId() + ", "
-				+ "AuthorId : " + article.getAuthorId() + ", "
-				+ "Category : " + article.getCategory() + ", "
-				+ "Title : " + article.getTitle() + ", "
-				+ "Content : " + article.getContent() + ", "
-				+ "CreateDate : " + article.getCreateDate() + ", "
-				+ "UpdateDate : " + article.getUpdateDate() + ", "
-				+ "Status : " + article.getStatus());
-		
-		return articleMapper.insertArticle(article);
-    }
     
 	// 게시글 수정 
     // 1) 내용 수정 (제목, 내용) - 작성자
@@ -205,10 +284,37 @@ public class ArticleServiceImpl implements ArticleService {
 		return articleMapper.updateArticleReplyCountDown(articlesId);
 	}
 	
+
+	// 게시글 등록
+	@Override
+	public int insertArticle(Article article) {
+		// 오늘 날짜 설정
+		LocalDateTime currentDate = LocalDateTime.now();
+		Timestamp currentDateTS = Timestamp.valueOf(currentDate);
+		
+		article.setCreateDate(currentDateTS);
+		article.setUpdateDate(currentDateTS);
+		article.setViewCount(0);
+		article.setReplyCount(0);
+		
+		System.out.println(
+				"ArticleServiceImpl - "
+				+ "ArticlesId : " + article.getArticlesId() + ", "
+				+ "AuthorId : " + article.getAuthorId() + ", "
+				+ "Category : " + article.getCategory() + ", "
+				+ "Title : " + article.getTitle() + ", "
+				+ "Content : " + article.getContent() + ", "
+				+ "CreateDate : " + article.getCreateDate() + ", "
+				+ "UpdateDate : " + article.getUpdateDate() + ", "
+				+ "Status : " + article.getStatus());
+		
+		return articleMapper.insertArticle(article);
+    }
+	
     // 게시글 삭제 - 관리자 삭제
 	@Override
 	public int deleteArticleById(int articlesId) {
 		return articleMapper.deleteArticleById(articlesId);
 	}
-	
+
 }

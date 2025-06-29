@@ -1,12 +1,13 @@
 package com.library.service;
 
-import com.library.model.Article;
-import com.library.model.ArticleDetailResponse;
-import com.library.model.ArticleListResponse;
+import com.library.model.SearchRequest;
+import com.library.model.article.Article;
+import com.library.model.article.ArticleDetailResponse;
+import com.library.model.article.ArticleListResponse;
 
 public interface ArticleService {
 	
-	// 조회
+	// 목록 조회
 	// 1) 게시글 전체 조회 - admin
 	public ArticleListResponse getArticleList(int currentPage);
 	
@@ -16,21 +17,35 @@ public interface ArticleService {
 	// 3) 희망 도서 신청 게시글 목록 조회 (회원ID 기준)
 	public ArticleListResponse getArticleListByReqByMembersId(int membersId, int currentPage);
 	
-	// 4) 게시글 전체 수
+	// 4-1) 키워드 검색 (전체) - admin
+	public ArticleListResponse getArticleListByKeyword(String type, String keyword, int currentPage);
+	
+	// 4-2) 키워드 검색 (카테고리별)
+	public ArticleListResponse getArticleListByCategoryByKeyword(String category, String type, String keyword, int currentPage);
+	
+	
+	// 목록 개수
+	// 1) 게시글 전체 수
 	public int getArticleListCount();
 	
-	// 5) 게시글 수 (카테고리 기준)
+	// 2) 게시글 수 (카테고리 기준)
 	public int getArticleListCountByCategory(String category);
 	
-	// 6) 희망 도서 신청 글 전체 수 (회원ID 기준) - book-req
+	// 3) 희망 도서 신청 글 전체 수 (회원ID 기준) - book-req
 	public int getArticleListCountByReqByMembersId(int membersId);
 	
-	// 7) 게시글 상세 조회 (게시글 & 게시글 작성자, 댓글 & 댓글 작성자 목록) - not, qna, req
-	public ArticleDetailResponse getArticleWithReplyList(int articlesId, int replyCurrentPage);
+	// 4-1) 키워드 검색 목록 수 (전체)
+	public int getArticleListCountByKeyword(SearchRequest searchRequest);
 	
-	// 게시글 등록
-	public int insertArticle(Article article);
+	// 4-2) 키워드 검색 목록 수 (카테고리)
+	public int getArticleListCountByCategoryByKeyword(String category, SearchRequest searchRequest);
+	
+	
+	// 상세 조회
+	// 1) 게시글 상세 조회 (게시글 & 게시글 작성자, 댓글 & 댓글 작성자 목록) - not, qna, req
+	public ArticleDetailResponse getArticleWithReplyList(int articlesId, int replyCurrentPage);
     
+	
 	// 게시글 수정 
     // 1) 내용 수정 (제목, 내용) - 작성자
 	public int updateArticleInfo(Article article);
@@ -52,6 +67,11 @@ public interface ArticleService {
 	
 	// 7) reply count 감소
 	public int updateArticleReplyCountDown(int articlesId);
+	
+
+	// 게시글 등록
+	public int insertArticle(Article article);
+	
 	
     // 게시글 삭제 - 관리자 삭제
 	public int deleteArticleById(int articlesId);

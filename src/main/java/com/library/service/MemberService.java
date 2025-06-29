@@ -1,9 +1,7 @@
 package com.library.service;
 
-import java.util.Map;
-
-import com.library.model.Member;
-import com.library.model.MemberListResponse;
+import com.library.model.member.Member;
+import com.library.model.member.MemberListResponse;
 
 public interface MemberService {
 
@@ -29,10 +27,7 @@ public interface MemberService {
 	public int updateMemberInfo(Member member);
 
 	// 2) 회원 - 탈퇴 (status, leaveDate)
-	public int updateMemberLeave(Member member);
-
-	// 회원 탈퇴 토큰 처리
-	public int updateMemberLeave(int membersId, Map<String, String> tokens);
+	public int updateMemberLeave(int membersId);
 
 	// 3) 관리자 - 회원카드 등록 (status, cardnum)
 	public int updateMemberCardnum(int membersId, String cardNum);
@@ -41,7 +36,10 @@ public interface MemberService {
 	public int updateMemberOverdue(Member member);
 
 	// 5) 도서 시스템 - 도서 대출 (loanCount)
-	public int updateMemberLoanCount(Member member);
+	public int updateMemberLoanCountUp(Member member);
+	
+	// 6) 도서 시스템 - 도서 반납 (loanCount)
+	public int updateMemberLoanCountDown(Member member);
 
 	// 회원 삭제 - 관리자
 	public int deleteMember(int membersId);

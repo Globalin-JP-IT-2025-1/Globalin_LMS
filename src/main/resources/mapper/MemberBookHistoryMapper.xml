@@ -3,33 +3,33 @@
 
 <mapper namespace="com.library.mapper.MemberBookHistoryMapper">
     <!-- 전체 조회 -->
-    <select id="getAllBookHistory" resultType="com.library.model.BookHistory" parameterType="int">
+    <select id="getBookHistoryList" resultType="com.library.model.book.BookHistory" parameterType="int">
         SELECT * FROM BOOK_HISTORY WHERE MEMBERS_ID = #{membersId}
     </select>
     <!-- 연체 도서만 조회 (IS_OVERDUE = 1) -->
-    <select id="getOverdueBookHistory" resultType="com.library.model.BookHistory" parameterType="int">
+    <select id="getOverdueBookHistory" resultType="com.library.model.book.BookHistory" parameterType="int">
         SELECT * FROM BOOK_HISTORY WHERE MEMBERS_ID = #{membersId} AND IS_OVERDUE = 1
     </select>
     <!-- 반납 처리 -->
-    <update id="updateBookHistoryReturned" parameterType="com.library.model.BookHistory">
+    <update id="updateBookHistoryReturned" parameterType="com.library.model.book.BookHistory">
         UPDATE BOOK_HISTORY 
         SET RETURNED_DATE = #{returnedDate}, IS_OVERDUE = #{isOverdue}
         WHERE MEMBERS_ID = #{membersId} AND BOOKS_ID = #{booksId}
     </update>
     <!-- 연체 처리 -->
-    <update id="updateBookHistoryOverdue" parameterType="com.library.model.BookHistory">
+    <update id="updateBookHistoryOverdue" parameterType="com.library.model.book.BookHistory">
         UPDATE BOOK_HISTORY 
         SET IS_OVERDUE = #{isOverdue}
         WHERE MEMBERS_ID = #{membersId} AND BOOKS_ID = #{booksId}
     </update>
     <!-- 반납예정일 연장 -->
-    <update id="updateBookHistoryDueDate" parameterType="com.library.model.BookHistory">
+    <update id="updateBookHistoryDueDate" parameterType="com.library.model.book.BookHistory">
         UPDATE BOOK_HISTORY 
         SET DUE_DATE = #{dueDate}
         WHERE MEMBERS_ID = #{membersId} AND BOOKS_ID = #{booksId}
     </update>
     <!-- 도서 대출 이력 등록: 날짜 자동 -->
-    <insert id="insertBookHistory" parameterType="com.library.model.BookHistory">
+    <insert id="insertBookHistory" parameterType="com.library.model.book.BookHistory">
         <selectKey keyProperty="bookHistoryId" resultType="java.lang.Integer" order="BEFORE">
             SELECT SQ_BOOK_HISTORY.NEXTVAL FROM DUAL
         </selectKey>

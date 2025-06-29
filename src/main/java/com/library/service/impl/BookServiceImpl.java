@@ -7,250 +7,383 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.library.mapper.BookMapper;
-import com.library.model.Book;
+import com.library.model.SearchRequest;
+import com.library.model.book.Book;
+import com.library.model.book.BookDetailResponse;
+import com.library.model.book.BookListRequest;
+import com.library.model.book.BookListResponse;
+import com.library.model.book.ReviewListResponse;
 import com.library.service.BookService;
+import com.library.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service("bookService")
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
+    private final BookMapper bookMapper; // 책
+    private final ReviewService reviewService; // 책 리뷰
+    
+    private static final int BOOKS_PER_PAGE = 7; // 한 페이지당 게시글 수
+    
+    @Value("${book.seach.api.key}")
+    private String apiKey;
 
-    private final BookMapper bookMapper;
-
-    /** [1] 외부 도서정보나루 API 기반 통합검색 + DB 연동정보(booksId/status) 매칭 */
+    // 조회
+    // 1) 전체 목록 조회 - 통합검색
     @Override
-    public List<Book> searchBooksByNaru(String type, String keyword, int pageNo, int pageSize) {
-        List<Book> result = new ArrayList<>();
-        try {
-            String serviceKey = "a12b0286b0eb37032ee7bbf8f07cbb803f960697da604553b6d0c74140b00287";
-            StringBuilder apiUrl = new StringBuilder("http://data4library.kr/api/srchBooks?")
-                    .append("authKey=").append(serviceKey)
-                    .append("&format=json")
-                    .append("&pageNo=").append(pageNo)
-                    .append("&pageSize=").append(pageSize);
-
-            if (keyword != null && !keyword.trim().isEmpty()) {
-                apiUrl.append("&keyword=").append(URLEncoder.encode(keyword, "UTF-8"));
-                apiUrl.append("&searchType=").append(type);
-            }
-            System.out.println("[API URL] " + apiUrl);
-
-            URL url = new URL(apiUrl.toString());
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setConnectTimeout(5000);
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) sb.append(line);
-            br.close();
-
-            String response = sb.toString();
-            System.out.println("[API RESPONSE] " + response);
-
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(response);
-            JsonNode docsNode = root.path("response").path("docs");
-
-            for (JsonNode node : docsNode) {
-                JsonNode book = node.path("doc");
-                Book b = new Book();
-                b.setTitle(book.path("bookname").asText());
-                b.setAuthor(book.path("authors").asText());
-                b.setPublisher(book.path("publisher").asText());
-                String year = book.path("publication_year").asText();
-                if (year != null && !year.isEmpty()) {
-                    try {
-                        b.setPublishDate(Timestamp.valueOf(year + "-01-01 00:00:00"));
-                    } catch (Exception e) {
-                        b.setPublishDate(null);
-                    }
-                }
-                String isbn13 = book.has("isbn13") ? book.path("isbn13").asText() : book.path("isbn").asText();
-                b.setIsbn(isbn13);
-                b.setCategory(book.path("class_no").asText());
-                b.setImageLink(book.path("bookImageURL").asText());
-                b.setDescription(null);
-                // 기본값: 외부책(booksId=0)
-                b.setBooksId(0);
-                b.setCreateDate(null);
-                b.setLoanCount(0);
-                b.setLikeCount(0);
-                b.setStatus(0);
-                result.add(b);
-            }
-
-            // === [중요] API 결과와 내 DB 도서 매칭 ===
-            List<Book> dbBooks = bookMapper.getAllBooks();
-            Map<String, Book> dbIsbnMap = new HashMap<>();
-            for (Book dbBook : dbBooks) {
-                if (dbBook.getIsbn() != null)
-                    dbIsbnMap.put(dbBook.getIsbn().replaceAll("-", "").trim(), dbBook);
-            }
-            for (Book apiBook : result) {
-                String normIsbn = apiBook.getIsbn() != null ? apiBook.getIsbn().replaceAll("-", "").trim() : "";
-                if (dbIsbnMap.containsKey(normIsbn)) {
-                    Book db = dbIsbnMap.get(normIsbn);
-                    apiBook.setBooksId(db.getBooksId());
-                    apiBook.setStatus(db.getStatus());
-                    // 필요하다면 createDate, loanCount 등도 추가로 세팅 가능
-                }
-            }
-
-            // ISBN 단독검색일 때 완전일치만 필터링 (이하 생략 가능)
-            if ("isbn".equals(type) && keyword != null && !keyword.trim().isEmpty()) {
-                List<Book> filtered = new ArrayList<>();
-                for (Book b : result) {
-                    if (b.getIsbn() != null && b.getIsbn().replaceAll("-", "").trim().equals(keyword.replaceAll("-", "").trim())) {
-                        filtered.add(b);
-                    }
-                }
-                return filtered;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
+    public BookListResponse getBookList(int currentPage) {
+    	
+    	int totalCount = getBookListCount(); // 전체 개수
+		int totalPages = (int)Math.ceil((double)totalCount / BOOKS_PER_PAGE);
+    	int startRow = (currentPage - 1) * BOOKS_PER_PAGE;
+    	int endRow = currentPage * BOOKS_PER_PAGE;
+    	
+    	BookListRequest bookListRequest = BookListRequest.builder()
+    			.category(null)
+    			.searchRequest(null)
+    			.startRow(startRow)
+				.endRow(endRow)
+    			.build();
+    	
+    	List<Book> bookList = bookMapper.getBookList(bookListRequest);
+    	
+        return BookListResponse.builder()
+        		.bookList(bookList)
+        		.totalCount(totalCount)
+        		.totalPages(totalPages)
+        		.build();
     }
-
-    /** [2] 외부 API 검색 결과 개수 */
+    
+    // 2) 카테고리별 목록 조회 - 주제별검색
     @Override
-    public int getSearchBookCount(String type, String keyword) {
-        try {
-            String serviceKey = "a12b0286b0eb37032ee7bbf8f07cbb803f960697da604553b6d0c74140b00287";
-            StringBuilder apiUrl = new StringBuilder("http://data4library.kr/api/srchBooks?");
-            apiUrl.append("authKey=").append(serviceKey)
-                  .append("&format=json")
-                  .append("&pageNo=1")
-                  .append("&pageSize=1");
-
-            if (keyword != null && !keyword.trim().isEmpty()) {
-                apiUrl.append("&keyword=").append(URLEncoder.encode(keyword, "UTF-8"));
-                apiUrl.append("&searchType=").append(type);
-            }
-
-            URL url = new URL(apiUrl.toString());
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setConnectTimeout(5000);
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) sb.append(line);
-            br.close();
-
-            String response = sb.toString();
-
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(response);
-            JsonNode responseNode = root.path("response");
-            int numFound = responseNode.path("numFound").asInt(0);
-
-            return numFound;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
+    public BookListResponse getBookListByClassNo(String category, int currentPage) {
+        
+    	int totalCount = getBookListCount(); // 전체 개수
+		int totalPages = (int)Math.ceil((double)totalCount / BOOKS_PER_PAGE);
+    	int startRow = (currentPage - 1) * BOOKS_PER_PAGE;
+    	int endRow = currentPage * BOOKS_PER_PAGE;
+    	
+    	BookListRequest bookListRequest = BookListRequest.builder()
+    			.category(category)
+    			.searchRequest(null)
+    			.startRow(startRow)
+				.endRow(endRow)
+    			.build();
+    	
+    	List<Book> bookList = bookMapper.getBookListByCategory(bookListRequest);
+    	
+        return BookListResponse.builder()
+        		.bookList(bookList)
+        		.totalCount(totalCount)
+        		.totalPages(totalPages)
+        		.build();
     }
-
-    // ========== DB 직접 연동 ==========
-
+    
+    // 3) LoanCount 기준 목록 조회 - 대출 베스트
     @Override
-    public List<Book> getAllBooks() {
-        return bookMapper.getAllBooks();
+    public BookListResponse getBookListByLoanCount(int currentPage) {
+    	
+    	int totalCount = 100; // 전체 개수
+		int totalPages = (int)Math.ceil((double)totalCount / BOOKS_PER_PAGE);
+    	int startRow = (currentPage - 1) * BOOKS_PER_PAGE;
+    	int endRow = currentPage * BOOKS_PER_PAGE;
+    	
+    	BookListRequest bookListRequest = BookListRequest.builder()
+    			.category(null)
+    			.searchRequest(null)
+    			.startRow(startRow)
+				.endRow(endRow)
+    			.build();
+    	
+    	List<Book> bookList = bookMapper.getBookListByLoanCount(bookListRequest);
+    	
+        return BookListResponse.builder()
+        		.bookList(bookList)
+        		.totalCount(totalCount)
+        		.totalPages(totalPages)
+        		.build();
     }
-
+    
+    // 4) LikeCount 기준 목록 조회 - 인기도서
     @Override
-    public List<String> getAllIsbnList() {
-        List<Book> dbBooks = getAllBooks();
-        List<String> isbnList = new ArrayList<>();
-        for (Book b : dbBooks) {
-            if (b.getIsbn() != null) isbnList.add(b.getIsbn().trim());
-        }
-        return isbnList;
+    public BookListResponse getBookListByLikeCount(int currentPage) {
+    	
+    	int totalCount = 100; // 전체 개수
+		int totalPages = (int)Math.ceil((double)totalCount / BOOKS_PER_PAGE);
+    	int startRow = (currentPage - 1) * BOOKS_PER_PAGE;
+    	int endRow = currentPage * BOOKS_PER_PAGE;
+    	
+    	BookListRequest bookListRequest = BookListRequest.builder()
+    			.category(null)
+    			.searchRequest(null)
+    			.startRow(startRow)
+				.endRow(endRow)
+    			.build();
+    	
+    	List<Book> bookList = bookMapper.getBookListByLikeCount(bookListRequest);
+    	
+        return BookListResponse.builder()
+        		.bookList(bookList)
+        		.totalCount(totalCount)
+        		.totalPages(totalPages)
+        		.build();
+        
     }
-
+    
+    // 키워드 조회
+    // DB 통합검색
     @Override
-    public Map<String, Integer> getDbStatusMap() {
-        List<Book> dbBooks = getAllBooks();
-        Map<String, Integer> statusMap = new HashMap<>();
-        for (Book b : dbBooks) {
-            if (b.getIsbn() != null)
-                statusMap.put(b.getIsbn().trim(), b.getStatus());
-        }
-        return statusMap;
+    public BookListResponse getBookListByKeywordByDB(String type, String keyword, int currentPage) {
+    	
+    	SearchRequest searchRequest = SearchRequest.builder()
+    			.type(type)
+    			.keyword(keyword)
+    			.build();
+    	
+    	int totalCount = getBookListCountByKeyword(searchRequest); // 전체 개수
+    	int totalPages = (int)Math.ceil((double)totalCount / BOOKS_PER_PAGE);
+    	int startRow = (currentPage - 1) * BOOKS_PER_PAGE;
+    	int endRow = currentPage * BOOKS_PER_PAGE;
+    	
+    	BookListRequest bookListRequest = BookListRequest.builder()
+    			.category(null)
+    			.searchRequest(searchRequest)
+    			.startRow(startRow)
+    			.endRow(endRow)
+    			.build();
+    	
+    	List<Book> bookList = bookMapper.getBookListByKeyword(bookListRequest);
+    	
+    	return BookListResponse.builder()
+    			.bookList(bookList)
+    			.totalCount(totalCount)
+    			.totalPages(totalPages)
+    			.build();
     }
-
+    
+    // 도서정보나루 API 기반 통합검색
     @Override
-    public Book getBookByIsbn(String isbn) {
-        if (isbn == null) return null;
-        return bookMapper.getBookByIsbn(isbn.trim());
+    public BookListResponse getBookListByKeywordByExtAPI(String type, String keyword, int currentPage) {
+    	
+    	int totalCount = 0;
+    	int totalPages = 0;
+    	List<Book> bookList = null;
+    	
+    	try {
+    		String serviceKey = apiKey;
+    		StringBuilder apiUrl = new StringBuilder("http://data4library.kr/api/srchBooks?")
+    				.append("authKey=").append(URLEncoder.encode(serviceKey, "UTF-8"))
+    				.append("&format=json");
+    		
+    		if (keyword != null && !keyword.trim().isEmpty()) {
+    			String encodedKeyword = URLEncoder.encode(keyword, "UTF-8");
+    			
+    			// type이 title, author, publisher 중 하나일 때만 해당 파라미터로 추가
+    			if ("title".equals(type) || "author".equals(type) || "publisher".equals(type)) {
+    				apiUrl.append("&").append(type).append("=").append(encodedKeyword);
+    			} else {
+    				// 그 외에는 keyword 파라미터로 처리
+    				apiUrl.append("&keyword=").append(encodedKeyword);
+    			}
+    		}
+    		
+    		log.info("[API URL] " + apiUrl);
+    		
+    		URL url = new URL(apiUrl.toString());
+    		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    		conn.setRequestMethod("GET");
+    		conn.setConnectTimeout(5000);
+    		
+    		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+    		StringBuilder sb = new StringBuilder();
+    		String line;
+    		while ((line = br.readLine()) != null) sb.append(line);
+    		br.close();
+    		
+    		String response = sb.toString();
+    		log.info("[API RESPONSE] " + response);
+    		
+    		ObjectMapper mapper = new ObjectMapper();
+    		JsonNode root = mapper.readTree(response);
+    		
+    		// 전체 개수 추출
+    		totalCount = root.path("response").path("numFound").asInt();
+    		totalPages = (int) Math.ceil((double) totalCount / BOOKS_PER_PAGE);
+    		
+    		// 도서 정보 추출
+    		JsonNode docsNode = root.path("response").path("docs");
+    		bookList = new ArrayList<>();
+    		
+    		for (JsonNode node : docsNode) {
+    			JsonNode bookNode = node.path("doc");
+    			
+    			// 데이터 가공
+    			String year = bookNode.path("publication_year").asText();
+    			Timestamp publishDate = null;
+    			if (year != null && !year.isEmpty()) {
+    				try {
+    					publishDate = Timestamp.valueOf(year + "-01-01 00:00:00");
+    				} catch (Exception e) {
+    					log.error("날짜 변환 에러 : " + e);
+    				}
+    			}
+    			String isbn = bookNode.has("isbn13") 
+    					? bookNode.path("isbn13").asText() 
+    							: bookNode.path("isbn").asText();
+    			
+    			
+    			Book book = Book.builder()
+    					.booksId(0) // 외부책
+    					.title(bookNode.path("bookname").asText())
+    					.author(bookNode.path("authors").asText())
+    					.publisher(bookNode.path("publisher").asText())
+    					.publishDate(publishDate)
+    					.isbn(isbn)
+    					.category(bookNode.path("class_no").asText())
+    					.imageLink(bookNode.path("bookImageURL").asText())
+    					.description(bookNode.path("bookDtlUrl").asText())
+    					.build();
+    			
+    			bookList.add(book);
+    		}
+    		
+    	} catch (Exception e) {
+    		log.error("도서 API 호출 중 오류 발생 : ", e);
+    		
+    	}
+    	return BookListResponse.builder()
+    			.bookList(bookList)
+    			.totalCount(totalCount)
+    			.totalPages(totalPages)
+    			.build();
     }
-
+    
+    // 목록 개수 (페이징용)
+    // 1) 전체 목록 개수
     @Override
-    public List<Book> getBooksByClassNo(String classNo, int pageNo, int pageSize) {
-        int offset = (pageNo - 1) * pageSize;
-        return bookMapper.getBooksByClassNo(classNo, offset, pageSize);
+    public int getBookListCount() {
+        return bookMapper.getBookListCount();
     }
-
+    
+    // 2) 카테고리별 목록 개수
     @Override
-    public int getBooksCountByClassNo(String classNo) {
-        return bookMapper.getBooksCountByClassNo(classNo);
+    public int getBookListCountByClassNo(String category) {
+        return bookMapper.getBookListCountByCategory(category);
     }
-
+    
+    // 3) 키워드 조회 목록 개수
     @Override
-    public List<Book> getPopularBooksByLike100() {
-        return bookMapper.getPopularBooksByLike();
+    public int getBookListCountByKeyword(SearchRequest searchRequest) {
+        return bookMapper.getBookListCountByKeyword(searchRequest);
     }
-
+    
+    
+    // 상세 조회
+    // 1) 상세 조회 (booksId 기준)
     @Override
-    public List<Book> getBestBooksByLoan100() {
-        return bookMapper.getBestBooksByLoan();
+    public BookDetailResponse getBookWithReviewListById(int booksId, int reviewCurrentPage) {
+    	
+    	// 도서 정보 가져오기
+	    Book book = bookMapper.getBookById(booksId);
+
+	    // 기본 값 설정
+	    ReviewListResponse reviewListResponse = null;
+	    
+	    if (book != null) {
+	    	if (book.getReviewCount() > 0) {
+	    		reviewListResponse = reviewService.getReviewListByBooksId(book.getBooksId(), reviewCurrentPage);
+	    	}
+	    }
+    	
+    	return BookDetailResponse.builder()
+	            .book(book)
+	            .reviewListResponse(reviewListResponse)
+	            .build();
     }
-
-    @Override
-    public Book getBookById(int booksId) {
-        return bookMapper.getBookById(booksId);
-    }
-
-    // ========== 관리자 전용 (추가/수정/삭제 등) ==========
-
-    @Override
-    public int insertBook(Book book) {
-        return bookMapper.insertBook(book);
-    }
-
+    
+    // 수정
+    // 1) 책 정보 수정
     @Override
     public int updateBookInfo(Book book) {
         return bookMapper.updateBookInfo(book);
     }
 
+    // 2) 도서 비공개 (soft del)
     @Override
     public int updateBookDisable(int booksId) {
         return bookMapper.updateBookDisable(booksId);
     }
-
+    
+	// 3) 대여중으로 변경
+	@Override
+	public int updateBookLoaned(int booksId) {
+		return bookMapper.updateBookLoaned(booksId);
+	}
+	
+	// 4) 대여가능으로 변경
+	@Override
+	public int updateBookLoanable(int booksId) {
+		return bookMapper.updateBookLoanable(booksId);
+	}
+	
+	// 4) 대출 예약 중으로 변경
+	@Override
+	public int updateBookLoanReserved(int booksId) {
+		return bookMapper.updateBookLoanReserved(booksId);
+	}
+	
+	// 6) 책 조회수 증가
     @Override
-    public int updateBookEnable(int booksId) {
-        return bookMapper.updateBookEnable(booksId);
+	public int updateBookViewCountUp(int booksId) {
+		return bookMapper.updateBookViewCountUp(booksId);
+	}
+    
+    // 7) 책 리뷰 개수 증가
+	@Override
+	public int updateBookReviewCountUp(int booksId) {
+		return bookMapper.updateBookReviewCountUp(booksId);
+	}
+	
+	// 8) 책 리뷰 개수 감소
+	@Override
+	public int updateBookReviewCountDown(int booksId) {
+		return bookMapper.updateBookReviewCountDown(booksId);
+	}
+	
+	// 9) 대출 누적수 증가
+	@Override
+	public int updateBookLoanCountUp(int booksId) {
+		return bookMapper.updateBookLoanCountUp(booksId);
+		
+	}
+	
+	// 10) 찜 누적수 증가
+	@Override
+	public int updateBookLikeCountUp(int booksId) {
+		return bookMapper.updateBookLikeCountUp(booksId);
+	}
+	
+	// 도서 추가
+	@Override
+    public int insertBook(Book book) {
+        return bookMapper.insertBook(book);
     }
-
+	
+	// 도서 삭제 (hard del)
     @Override
     public int deleteBook(int booksId) {
         return bookMapper.deleteBook(booksId);
     }
+	
 }
