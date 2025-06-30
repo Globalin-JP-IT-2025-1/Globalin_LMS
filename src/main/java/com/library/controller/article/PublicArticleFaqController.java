@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.library.model.ArticleListResponse;
 import com.library.model.PageInfo;
+import com.library.model.article.ArticleListResponse;
 import com.library.service.ArticleService;
 
 import lombok.AllArgsConstructor;

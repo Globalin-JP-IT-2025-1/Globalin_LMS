@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.library.model.Book;
+import com.library.exception.LoanNotAllowedException;
 import com.library.model.PageInfo;
+import com.library.model.book.Book;
+import com.library.model.status.BookStatus;
 import com.library.service.BookService;
 
 import lombok.AllArgsConstructor;
@@ -91,14 +93,14 @@ public class AdminBookController {
     }
     
     
-    // 도서 수정 폼 --> js로 변경 예정
+    // 도서 수정 폼
     @GetMapping("/{booksId}/edit")
     public String showEditBook(@PathVariable("booksId") int booksId, 
     						   HttpServletRequest request, 
     						   Model model) {
 
-	//    	Book book = bookService.getBookById(booksId);
-	//    	model.addAttribute("book", book);
+    	Book book = bookService.getBookById(booksId);
+    	model.addAttribute("book", book);
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("91")
@@ -118,7 +120,8 @@ public class AdminBookController {
     							   RedirectAttributes redirectAttributes) {
     	
     	try {
-    		//bookService.updateBookInfo(book);
+    		bookService.updateBookInfo(book);
+    		
     	} catch (Exception e) {
     		e.printStackTrace();
     		
@@ -136,26 +139,26 @@ public class AdminBookController {
     }
     
     // 도서 정보 수정 요청 - 비활성화, 활성화
-    @PutMapping("/{booksId}/{type}")
+    @PutMapping("/{booksId}/{status}")
     public String editBookDisableProc(@PathVariable("booksId") int booksId, 
-    		   						  @PathVariable("type") String type, 
+    		   						  @PathVariable("status") int status, 
     		   						  HttpServletRequest request, 
     		   						  RedirectAttributes redirectAttributes) {
     	
     	try {
-    		if (type.equals("disable")) {
-    			//bookService.updateBookDisable(booksId); // 도서 비활성화
-    		} else if (type.equals("enable")) {
-    			//bookService.updateBookEnable(booksId); // 도서 활성화
+    		if (status == BookStatus.DISABLE.getCode()) { // 1
+    			bookService.updateBookDisable(booksId); // 도서 비활성화
+    		} else if (status == BookStatus.LOANABLE.getCode()) { // 0
+    			bookService.updateBookLoanable(booksId); // 도서 활성화
     		} 
     		
     	} catch (Exception e) {
     		e.printStackTrace();
     		
     		redirectAttributes.addFlashAttribute("alertType", "fail");
-    		if (type.equals("disable")) {
+    		if (status == BookStatus.DISABLE.getCode()) { // 1
     			redirectAttributes.addFlashAttribute("alertMessage", "도서 비활성화 실패");
-    		} else if (type.equals("enable")) {
+    		} else if (status == BookStatus.LOANABLE.getCode()) { // 0
     			redirectAttributes.addFlashAttribute("alertMessage", "도서 활성화 실패");
     		}
     		
@@ -163,14 +166,13 @@ public class AdminBookController {
     	}
     	
     	redirectAttributes.addFlashAttribute("alertType", "success");
-		if (type.equals("disable")) {
+    	if (status == BookStatus.DISABLE.getCode()) { // 1
 			redirectAttributes.addFlashAttribute("alertMessage", "도서 비활성화 성공");
-		} else if (type.equals("enable")) {
+		} else if (status == BookStatus.LOANABLE.getCode()) { // 0
 			redirectAttributes.addFlashAttribute("alertMessage", "도서 활성화 성공");
 		}
     	
     	return "redirect:/admin/books"; // 성공: 목록으로 이동
-    	
     }
 
     // 도서 정보 삭제 요청
@@ -180,7 +182,7 @@ public class AdminBookController {
     							 RedirectAttributes redirectAttributes) {
     	
     	try {
-    		//bookService.deleteBook(booksId);
+    		bookService.deleteBook(booksId);
     	} catch (Exception e) {
     		e.printStackTrace();
     		
@@ -197,7 +199,65 @@ public class AdminBookController {
     	
     }
 
+    // 회원 도서 대출 처리
+    @PutMapping("/{booksId}/loan/{membersId}")
+    public String loanBookProc(@PathVariable("booksId") int booksId,
+                               @PathVariable("membersId") int membersId,
+                               HttpServletRequest request,
+                               RedirectAttributes redirectAttributes) {
+        try {
+            // 도서 대출 처리 서비스 호출
+        	// 1) 도서 : 대출중으로 처리 -> 2) 회원 : 대출권수 증가 -> 3) 회원 : 도서 이용 정보에 추가
+           bookService.loanBook(booksId, membersId);
+            
+           redirectAttributes.addFlashAttribute("alertType", "success");
+           redirectAttributes.addFlashAttribute("alertMessage", "도서 대출 처리 성공");
+
+        } catch (LoanNotAllowedException  e) {
+            log.error("도서 대출 처리 실패 : " + e);
+
+            redirectAttributes.addFlashAttribute("alertType", "fail");
+            redirectAttributes.addFlashAttribute("alertMessage", "도서 대출 처리 실패 : " + e.getMessage());
+
+            return "redirect:/admin/books"; // 실패 시 목록으로 이동
+        } catch (Exception e) {
+            log.error("도서 대출 처리 실패 : " + e);
+
+            redirectAttributes.addFlashAttribute("alertType", "fail");
+            redirectAttributes.addFlashAttribute("alertMessage", "도서 대출 처리 실패 : " + e);
+
+            return "redirect:/admin/books"; // 실패 시 목록으로 이동
+        }
+
+        return "redirect:/admin/books"; // 성공 시 목록으로 이동
+    }
+
     
+    // 회원 도서 반납 처리
+    @PutMapping("/{booksId}/return/{membersId}")
+    public String returnBookProc(@PathVariable("booksId") int booksId,
+                               @PathVariable("membersId") int membersId,
+                               HttpServletRequest request,
+                               RedirectAttributes redirectAttributes) {
+        try {
+            // 도서 대출 처리 서비스 호출
+        	// 1) 도서 : 대출중으로 처리 -> 2) 회원 : 대출권수 증가 -> 3) 회원 : 도서 이용 정보에 추가
+           bookService.loanBook(booksId, membersId);
+            
+           redirectAttributes.addFlashAttribute("alertType", "success");
+           redirectAttributes.addFlashAttribute("alertMessage", "도서 반납 처리 성공");
+
+        } catch (Exception e) {
+            log.error("도서 대출 처리 실패 : " + e);
+
+            redirectAttributes.addFlashAttribute("alertType", "fail");
+            redirectAttributes.addFlashAttribute("alertMessage", "도서 반납 처리 실패 : " + e);
+
+            return "redirect:/admin/books"; // 실패 시 목록으로 이동
+        }
+
+        return "redirect:/admin/books"; // 성공 시 목록으로 이동
+    }
 	
     
 }

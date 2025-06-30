@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.library.model.ArticleDetailResponse;
-import com.library.model.ArticleListResponse;
 import com.library.model.PageInfo;
+import com.library.model.article.ArticleDetailResponse;
+import com.library.model.article.ArticleListResponse;
 import com.library.service.ArticleService;
 
 import lombok.AllArgsConstructor;

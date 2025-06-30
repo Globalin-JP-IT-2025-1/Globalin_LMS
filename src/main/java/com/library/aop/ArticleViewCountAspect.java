@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 import com.library.service.ArticleService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -23,6 +25,8 @@ public class ArticleViewCountAspect {
     public void increaseViewCountAfterGetArticleDetail(JoinPoint joinPoint) {
     	Object[] args = joinPoint.getArgs();
     	int articlesId = (int) args[0];
+    	
+    	log.info("게시글id:" + articlesId + " - ArticleViewCountAspect");
     	
     	if (articlesId > 0) {
     	    articleService.updateArticleViewCountUp(articlesId);

@@ -1,23 +1,20 @@
 package com.library.controller.member;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.library.model.Member;
 import com.library.model.PageInfo;
-import com.library.service.EmailService;
+import com.library.model.member.Member;
+import com.library.model.validation.OnRegister;
 import com.library.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 @PropertySource("classpath:application.properties")
 public class PublicMemberController {
     private final MemberService memberService;
-    private final EmailService emailService;
     
     @Value("${google.maps.api.key}")
     private String apiKey;
@@ -58,12 +54,16 @@ public class PublicMemberController {
     
     // 회원 등록 처리 --> ok
     @PostMapping
-    public String insertMember(@ModelAttribute Member member, 
+    public String insertMember(@Validated(OnRegister.class) @ModelAttribute Member member, 
+							   BindingResult result,
     						   RedirectAttributes redirectAttributes) {
+    	
+    	if (result.hasErrors()) {
+            return "redirect:/public/members/register"; // 유효성 실패: 회원 가입 폼으로 이동
+        }
     	
     	try {
     		memberService.insertMember(member); // 회원 등록
-    		emailService.sendRegisterMember(member); // 메일 보내기
     	
     	} catch (Exception e) {
     		e.printStackTrace();
@@ -109,12 +109,13 @@ public class PublicMemberController {
     	return "layout";
     }
 
-    // 아이디 찾기 + 이메일 보내기
+    // 아이디 찾기 + 알림 띄우기
     @PostMapping("/check")
     public String checkMember(@ModelAttribute Member member,
     						  RedirectAttributes redirectAttributes) {
-		String errorMessage = "";
-		String usernameResult = "";
+		
+    	String errorMessage = null;
+		String usernameResult = null;
     	
     	try {
     		Member memberResult = memberService.getMemberByEmail(member.getEmail());
@@ -129,7 +130,7 @@ public class PublicMemberController {
     		}
     		
     		usernameResult = memberResult.getUsername();
-    		//emailService.sendUsername(member);
+    		
     	} catch (Exception e) {
     		e.printStackTrace();
     		
@@ -140,17 +141,19 @@ public class PublicMemberController {
     	}
     	
     	redirectAttributes.addFlashAttribute("alertType", "success");
-		redirectAttributes.addFlashAttribute("alertMessage", "아이디 찾기 성공. " + usernameResult + " 메일 확인 바랍니다.");
+		redirectAttributes.addFlashAttribute("alertMessage", "아이디 찾기 성공 하였습니다 : " + usernameResult);
 		
 		return "redirect:/public/auth/login"; // 성공: 로그인 페이지로
     }
     
-    // 비밀번호 재발급 + 이메일 보내기
+    
+    // 비밀번호 재발급 + 임시 비밀번호 알림 띄우기
     @PostMapping("/repass")
     public String resetPassword(@ModelAttribute Member member,
 			  					RedirectAttributes redirectAttributes) {
-    	String errorMessage = "";
-    	String repass = "";
+    	
+    	String errorMessage = null;
+    	String repass = null;
     	
     	try {
     		Member memberResult = memberService.getMemberByUsername(member.getUsername());
@@ -171,43 +174,20 @@ public class PublicMemberController {
     		}
     		
     		repass = memberService.resetPassword(memberResult);
-    		//emailService.sendResetPassword(member, repass);
+    		
     	} catch (Exception e) {
     		e.printStackTrace();
     		
     		redirectAttributes.addFlashAttribute("alertType", "fail");
-    		redirectAttributes.addFlashAttribute("alertMessage", "비밀번호 재발급 실패");
+    		redirectAttributes.addFlashAttribute("alertMessage", "비밀번호 재설정을 실패 하였습니다 : " + errorMessage);
     		
     		return "redirect:/public/members/repass"; // 실패: 비밀번호 재발급 페이지로
     	}
     	
     	redirectAttributes.addFlashAttribute("alertType", "success");
-		redirectAttributes.addFlashAttribute("alertMessage", "비밀번호 재발급 성공." + repass + " 메일 확인 바랍니다.");
+		redirectAttributes.addFlashAttribute("alertMessage", "비밀번호 재설정을 완료 하였습니다 : " + repass + "\n로그인 후 재설정 바랍니다.");
 		
 		return "redirect:/public/auth/login"; // 성공: 로그인 페이지로
-    }
-    
-    // 아이디 중복확인
-    @PostMapping("/dupli/username")
-    @ResponseBody
-    public Map<String, Boolean> checkUsername(@RequestBody Member member) {
-    	System.out.println(member.getUsername());
-        boolean isAvailable = !memberService.isUsernameDuplicate(member.getUsername());
-        
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("available", isAvailable);  // true면 사용 가능
-        return response;
-    }
-    
-    // 이메일 중복확인
-    @PostMapping("/dupli/email")
-    @ResponseBody
-    public Map<String, Boolean> checkEmail(@RequestBody Member member) {
-        boolean isAvailable = !memberService.isEmailDuplicate(member.getEmail());
-        
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("available", isAvailable);  // true면 사용 가능
-        return response;
     }
 
 }

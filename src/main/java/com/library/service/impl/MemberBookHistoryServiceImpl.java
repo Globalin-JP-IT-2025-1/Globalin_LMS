@@ -11,7 +11,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.library.mapper.MemberBookHistoryMapper;
-import com.library.model.BookHistory;
+import com.library.model.book.BookHistory;
 import com.library.service.MemberBookHistoryService;
 
 import lombok.AllArgsConstructor;
@@ -23,8 +23,8 @@ public class MemberBookHistoryServiceImpl implements MemberBookHistoryService {
 	
 	// 회원별 도서 이용 정보 목록 전체 조회
 	@Override
-	public List<BookHistory> getAllBookHistory(int membersId) {
-		return memberBookHistoryMapper.getAllBookHistory(membersId);
+	public List<BookHistory> getBookHistoryList(int membersId) {
+		return memberBookHistoryMapper.getBookHistoryList(membersId);
 	}
 	
 	// 회원별 도서 이용 정보 목록 중 연체 목록 조회
@@ -71,11 +71,11 @@ public class MemberBookHistoryServiceImpl implements MemberBookHistoryService {
 		return memberBookHistoryMapper.updateBookHistoryReturned(bookHistory);
 	}
 	
-	// 2) 도서 연체 처리 : isOverdue
+	// 2) 도서 연체 처리 : status
 	@Override
 	public int updateBookHistoryOverdue(BookHistory bookHistory) {
 		
-		bookHistory.setOverdue(true);
+		bookHistory.setStatus(1); // 1-연체중
 		
 		return memberBookHistoryMapper.updateBookHistoryOverdue(bookHistory);
 	}
@@ -90,12 +90,12 @@ public class MemberBookHistoryServiceImpl implements MemberBookHistoryService {
 		
 		bookHistory.setDueDate(extendDueDateTS);
 		
-		return memberBookHistoryMapper.updateBookHistoryOverdue(bookHistory);
+		return memberBookHistoryMapper.updateBookHistoryDueDate(bookHistory);
 	}
 	
 	// 회원별 도서 정보 이력 등록 - 시스템
 	@Override
-	public int insertBookHistory(int membersId, int booksId) {
+	public int insertBookHistory(int membersId, int booksId, int code) {
 		
 		LocalDateTime currentDate = LocalDateTime.now();
 		LocalDateTime dueDate = currentDate.plusDays(7);
@@ -107,7 +107,7 @@ public class MemberBookHistoryServiceImpl implements MemberBookHistoryService {
 				.loanDate(Timestamp.valueOf(currentDate)) // 대출 날짜: 오늘
 				.dueDate(dueDateTS) // 반납 예정 날짜: 대출 날짜 + 7
 				.returnedDate(null) // 반납 완료 날짜: 기본값
-				.isOverdue(false) // 연체 여부: false
+				.status(code) // 0-정상
 				.build();
 		
 		return memberBookHistoryMapper.insertBookHistory(bookHistory);

@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.library.model.BookHistory;
+import com.library.model.book.BookHistory;
 
 @Mapper
 public interface MemberBookHistoryMapper {
 	
 	// 회원별 도서 이용 목록 전체 조회 - 회원
-	public List<BookHistory> getAllBookHistory(int membersId);
+	public List<BookHistory> getBookHistoryList(int membersId);
 	
 	// 회원별 도서 이용 목록 중 연체 중인 도서만 조회 (연체일수, 연체도서권수 계산용) - 시스템
 	public List<BookHistory> getOverdueBookHistory(int membersId);

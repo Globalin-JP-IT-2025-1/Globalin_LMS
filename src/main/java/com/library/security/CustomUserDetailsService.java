@@ -10,9 +10,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.library.model.Member;
+import com.library.model.member.Member;
 import com.library.service.MemberService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -20,12 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @Primary
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 	private final MemberService memberService;
-
-	public CustomUserDetailsService(MemberService memberService) {
-        this.memberService = memberService;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

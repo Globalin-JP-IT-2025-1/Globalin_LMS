@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.library.model.Member;
-import com.library.model.MemberListRequest;
+import com.library.model.member.Member;
+import com.library.model.member.MemberListRequest;
 
 @Mapper
 public interface MemberMapper {
@@ -21,8 +21,8 @@ public interface MemberMapper {
 	int updateMemberLeave(Member member); // 2) 회원 - 탈퇴
 	int updateMemberCardnum(Member member); // 3) 관리자 - 회원카드 등록
 	int updateMemberOverdue(Member member); // 4) 도서 시스템 - 도서 연체
-	int updateMemberLoanCount(Member member); // 5) 도서 시스템 - 도서 대출
-	int updateMemberPassword(Member member); // 6) 회원 정보 - 비밀번호 초기화 
+	int updateMemberLoanCountUp(int membersId); // 5) 도서 시스템 - 도서 대출
+	int updateMemberLoanCountDown(int membersId); // 6) 도서 시스템 - 도서 반납
 	
 	// 등록&삭제
 	int insertMember(Member member); // 회원 등록

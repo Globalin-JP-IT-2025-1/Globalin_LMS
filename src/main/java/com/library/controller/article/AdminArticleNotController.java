@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.library.model.Article;
 import com.library.model.PageInfo;
+import com.library.model.article.Article;
 import com.library.service.ArticleService;
 
 import lombok.AllArgsConstructor;

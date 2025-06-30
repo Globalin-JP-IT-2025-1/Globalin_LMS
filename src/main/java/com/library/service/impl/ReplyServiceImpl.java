@@ -7,10 +7,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.library.mapper.ReplyMapper;
-import com.library.model.Reply;
-import com.library.model.ReplyListRequest;
-import com.library.model.ReplyListResponse;
-import com.library.model.ReplyWithAuthor;
+import com.library.model.article.Reply;
+import com.library.model.article.ReplyListRequest;
+import com.library.model.article.ReplyListResponse;
+import com.library.model.article.ReplyWithAuthor;
 import com.library.service.ReplyService;
 
 import lombok.RequiredArgsConstructor;

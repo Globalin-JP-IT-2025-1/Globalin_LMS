@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.model.PageInfo;
-import com.library.model.Reply;
+import com.library.model.article.Reply;
 import com.library.service.ReplyService;
 
 import lombok.AllArgsConstructor;

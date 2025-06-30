@@ -3,11 +3,11 @@
 
 <mapper namespace="com.library.mapper.ArticleMapper">
 	
-	<!-- 게시글 조회  -->
-	<!-- 1) 게시글 전체 목록 조회 : status=1인 게시글 포함 -->
+	<!-- 목록 조회  -->
+	<!-- 1) 전체 목록 조회 : status=1인 게시글 포함 -->
 	<select id="getArticleList" 
-			resultType="com.library.model.ArticleWithAuthor"
-			parameterType="com.library.model.ArticleListRequest">
+			resultType="com.library.model.article.ArticleWithAuthor"
+			parameterType="com.library.model.article.ArticleListRequest">
 		<![CDATA[
 			SELECT a.ARTICLES_ID, a.AUTHOR_ID, a.CATEGORY, 
 				   a.TITLE, a.CONTENT, a.CREATE_DATE, a.UPDATE_DATE, 
@@ -28,10 +28,10 @@
 		]]>
 	</select>
 	
-	<!-- 2) 게시글 목록 조회 (카테고리 기준) : status=1인 게시글 제외 -->
+	<!-- 2) 목록 조회 (카테고리 기준) : status=1인 게시글 제외 -->
 	<select id="getArticleListByCategory" 
-			resultType="com.library.model.ArticleWithAuthor" 
-			parameterType="com.library.model.ArticleListRequest">
+			resultType="com.library.model.article.ArticleWithAuthor" 
+			parameterType="com.library.model.article.ArticleListRequest">
 		<![CDATA[
 			SELECT a.ARTICLES_ID, a.AUTHOR_ID, a.CATEGORY, 
 				   a.TITLE, a.CONTENT, a.CREATE_DATE, a.UPDATE_DATE, 
@@ -55,8 +55,8 @@
 	
 	<!-- 3) 희망 도서 신청 게시글 목록 조회 (회원ID 기준) : status=1인 게시글 제외 -->
 	<select id="getArticleListByReqByMembersId" 
-			resultType="com.library.model.ArticleWithAuthor" 
-			parameterType="com.library.model.ArticleListRequest">
+			resultType="com.library.model.article.ArticleWithAuthor" 
+			parameterType="com.library.model.article.ArticleListRequest">
 		<![CDATA[
 			SELECT a.ARTICLES_ID, a.AUTHOR_ID, a.CATEGORY, 
 				   a.TITLE, a.CONTENT, a.CREATE_DATE, a.UPDATE_DATE, 
@@ -78,13 +78,186 @@
 		]]>
 	</select>
 	
-	<!-- 4) 전체 게시글 수 -->
+	<!-- 4-1) 키워드 검색 (전체) -->
+	<select id="getArticleListByKeyword" 
+			resultType="com.library.model.article.ArticleWithAuthor" 
+			parameterType="com.library.model.article.ArticleListRequest">
+		<![CDATA[
+			SELECT a.ARTICLES_ID, a.AUTHOR_ID, a.CATEGORY, 
+				   a.TITLE, a.CONTENT, a.CREATE_DATE, a.UPDATE_DATE, 
+				   a.REPLY_COUNT, a.VIEW_COUNT, a.STATUS,
+			       a.authorUsername, a.authorFullname,
+			       a.rnum
+			FROM (
+				SELECT ar.ARTICLES_ID, ar.AUTHOR_ID, ar.CATEGORY, 
+					   ar.TITLE, ar.CONTENT, ar.CREATE_DATE, ar.UPDATE_DATE, 
+					   ar.REPLY_COUNT, ar.VIEW_COUNT, ar.STATUS,
+					   m.USERNAME AS authorUsername, m.NAME AS authorFullname,
+					   ROWNUM AS rnum
+				FROM ARTICLES ar
+			    JOIN MEMBERS m ON m.MEMBERS_ID = ar.AUTHOR_ID 
+			    WHERE 1 = 1
+				    <choose>
+				        <when test="searchRequest.type == 'title'">
+				            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				        </when>
+				        <when test="searchRequest.type == 'content'">
+				            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				        </when>
+				        <when test="searchRequest.type == 'author'">
+				            AND AUTHOR_ID IN (
+						        SELECT MEMBERS_ID 
+						        FROM MEMBERS 
+						        WHERE LOWER(USERNAME) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						           OR LOWER(NAME) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						    )
+				        </when>
+				        <otherwise>
+				            AND 1 = 0
+				        </otherwise>
+				    </choose>
+				    AND ar.STATUS <> 1
+			    ORDER BY ar.UPDATE_DATE DESC
+		    ) a
+			WHERE a.rnum > #{startRow} AND a.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 4-2) 키워드 검색 (공지사항) -->
+	<select id="getArticleListByNotByKeyword" 
+			resultType="com.library.model.article.ArticleWithAuthor" 
+			parameterType="com.library.model.article.ArticleListRequest">
+		<![CDATA[
+			SELECT a.ARTICLES_ID, a.AUTHOR_ID, a.CATEGORY, 
+				   a.TITLE, a.CONTENT, a.CREATE_DATE, a.UPDATE_DATE, 
+				   a.REPLY_COUNT, a.VIEW_COUNT, a.STATUS,
+			       a.authorUsername, a.authorFullname,
+			       a.rnum
+			FROM (
+				SELECT ar.ARTICLES_ID, ar.AUTHOR_ID, ar.CATEGORY, 
+					   ar.TITLE, ar.CONTENT, ar.CREATE_DATE, ar.UPDATE_DATE, 
+					   ar.REPLY_COUNT, ar.VIEW_COUNT, ar.STATUS,
+					   m.USERNAME AS authorUsername, m.NAME AS authorFullname,
+					   ROWNUM AS rnum
+				FROM ARTICLES ar
+			    JOIN MEMBERS m ON m.MEMBERS_ID = ar.AUTHOR_ID 
+			    WHERE CATEGORY = 'not'
+				    <choose>
+				        <when test="searchRequest.type == 'title'">
+				            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				        </when>
+				        <when test="searchRequest.type == 'content'">
+				            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				        </when>
+				        <otherwise>
+				            AND 1 = 0
+				        </otherwise>
+				    </choose>
+				    AND ar.STATUS <> 1
+			    ORDER BY ar.UPDATE_DATE DESC
+		    ) a
+			WHERE a.rnum > #{startRow} AND a.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 4-3) 키워드 검색 (qna) -->
+	<select id="getArticleListByQnaByKeyword" 
+			resultType="com.library.model.article.ArticleWithAuthor" 
+			parameterType="com.library.model.article.ArticleListRequest">
+		<![CDATA[
+			SELECT a.ARTICLES_ID, a.AUTHOR_ID, a.CATEGORY, 
+				   a.TITLE, a.CONTENT, a.CREATE_DATE, a.UPDATE_DATE, 
+				   a.REPLY_COUNT, a.VIEW_COUNT, a.STATUS,
+			       a.authorUsername, a.authorFullname,
+			       a.rnum
+			FROM (
+				SELECT ar.ARTICLES_ID, ar.AUTHOR_ID, ar.CATEGORY, 
+					   ar.TITLE, ar.CONTENT, ar.CREATE_DATE, ar.UPDATE_DATE, 
+					   ar.REPLY_COUNT, ar.VIEW_COUNT, ar.STATUS,
+					   m.USERNAME AS authorUsername, m.NAME AS authorFullname,
+					   ROWNUM AS rnum
+				FROM ARTICLES ar
+			    JOIN MEMBERS m ON m.MEMBERS_ID = ar.AUTHOR_ID 
+			    WHERE CATEGORY = 'qna'
+				    <choose>
+				        <when test="searchRequest.type == 'title'">
+				            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				        </when>
+				        <when test="searchRequest.type == 'content'">
+				            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				        </when>
+				        <when test="searchRequest.type == 'author'">
+				            AND AUTHOR_ID IN (
+						        SELECT MEMBERS_ID 
+						        FROM MEMBERS 
+						        WHERE LOWER(USERNAME) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						           OR LOWER(NAME) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						    )
+				        </when>
+				        <otherwise>
+				            AND 1 = 0
+				        </otherwise>
+				    </choose>
+				    AND ar.STATUS <> 1
+			    ORDER BY ar.UPDATE_DATE DESC
+		    ) a
+			WHERE a.rnum > #{startRow} AND a.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 4-4) 키워드 검색 (req) -->
+	<select id="getArticleListByReqByKeyword" 
+			resultType="com.library.model.article.ArticleWithAuthor" 
+			parameterType="com.library.model.article.ArticleListRequest">
+		<![CDATA[
+			SELECT a.ARTICLES_ID, a.AUTHOR_ID, a.CATEGORY, 
+				   a.TITLE, a.CONTENT, a.CREATE_DATE, a.UPDATE_DATE, 
+				   a.REPLY_COUNT, a.VIEW_COUNT, a.STATUS,
+			       a.authorUsername, a.authorFullname,
+			       a.rnum
+			FROM (
+				SELECT ar.ARTICLES_ID, ar.AUTHOR_ID, ar.CATEGORY, 
+					   ar.TITLE, ar.CONTENT, ar.CREATE_DATE, ar.UPDATE_DATE, 
+					   ar.REPLY_COUNT, ar.VIEW_COUNT, ar.STATUS,
+					   m.USERNAME AS authorUsername, m.NAME AS authorFullname,
+					   ROWNUM AS rnum
+				FROM ARTICLES ar
+			    JOIN MEMBERS m ON m.MEMBERS_ID = ar.AUTHOR_ID 
+			    WHERE CATEGORY = 'req'
+				    <choose>
+				        <when test="searchRequest.type == 'title'">
+				            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				        </when>
+				        <when test="searchRequest.type == 'content'">
+				            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				        </when>
+				        <when test="searchRequest.type == 'author'">
+				            AND AUTHOR_ID IN (
+						        SELECT MEMBERS_ID 
+						        FROM MEMBERS 
+						        WHERE LOWER(USERNAME) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						           OR LOWER(NAME) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						    )
+				        </when>
+				        <otherwise>
+				            AND 1 = 0
+				        </otherwise>
+				    </choose>
+				    AND ar.STATUS <> 1
+			    ORDER BY ar.UPDATE_DATE DESC
+		    ) a
+			WHERE a.rnum > #{startRow} AND a.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 목록 개수 -->
+	<!-- 1) 전체 게시글 수 -->
 	<select id="getArticleListCount" 
 			resultType="int">
 		SELECT COUNT(*) FROM ARTICLES 
 	</select>
 	
-	<!-- 5) 게시글 수 (카테고리 기준) -->
+	<!-- 2) 게시글 수 (카테고리 기준) -->
 	<select id="getArticleListCountByCategory" 
 			resultType="int" 
 			parameterType="String">
@@ -94,7 +267,7 @@
 		]]>
 	</select>
 	
-	<!-- 6) 희망 도서 신청 게시글 수 (회원 ID 기준) -->
+	<!-- 3) 희망 도서 신청 게시글 수 (회원 ID 기준) -->
 	<select id="getArticleListCountByReqByMembersId" 
 			resultType="int" 
 			parameterType="int">
@@ -106,9 +279,102 @@
 		]]>
 	</select>
 	
-	<!-- 7) 게시글 상세 조회 (게시글 ID 기준) -->
+	<!-- 4-1) 검색에 따른 목록 개수 (전체) -->
+	<select id="getArticleListCountByKeyword" 
+			resultType="int" 
+			parameterType="com.library.model.SearchRequest">
+		SELECT COUNT(*) FROM ARTICLES
+	    WHERE 1 = 1
+	    <choose>
+	        <when test="type == 'title'">
+	            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	        </when>
+	        <when test="type == 'content'">
+	            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	        </when>
+	        <otherwise>
+	            AND 1 = 0
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 4-2) 검색에 따른 목록 개수 (공지사항) -->
+	<select id="getArticleListCountByNotByKeyword" 
+			resultType="int" 
+			parameterType="com.library.model.SearchRequest">
+		SELECT COUNT(*) FROM ARTICLES
+	    WHERE CATEGORY = 'not'
+	    <choose>
+	        <when test="type == 'title'">
+	            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	        </when>
+	        <when test="type == 'content'">
+	            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	        </when>
+	        <otherwise>
+	            AND 1 = 0
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 4-3) 검색에 따른 목록 개수 (Q&A) -->
+	<select id="getArticleListCountByQnaByKeyword" 
+			resultType="int" 
+			parameterType="com.library.model.SearchRequest">
+		SELECT COUNT(*) FROM ARTICLES
+	    WHERE CATEGORY = 'qna'
+	    <choose>
+	        <when test="type == 'title'">
+	            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	        </when>
+	        <when test="type == 'content'">
+	            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	        </when>
+	        <when test="type == 'author'">
+	            AND AUTHOR_ID IN (
+			        SELECT MEMBERS_ID 
+			        FROM MEMBERS 
+			        WHERE LOWER(USERNAME) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+			           OR LOWER(NAME) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+			    )
+	        </when>
+	        <otherwise>
+	            AND 1 = 0
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 4-4) 검색에 따른 목록 개수 (req) -->
+	<select id="getArticleListCountByReqByKeyword" 
+			resultType="int" 
+			parameterType="com.library.model.SearchRequest">
+		SELECT COUNT(*) FROM ARTICLES
+	    WHERE CATEGORY = 'req'
+	    <choose>
+	        <when test="type == 'title'">
+	            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	        </when>
+	        <when test="type == 'content'">
+	            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	        </when>
+	        <when test="type == 'author'">
+	            AND AUTHOR_ID IN (
+			        SELECT MEMBERS_ID 
+			        FROM MEMBERS 
+			        WHERE LOWER(USERNAME) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+			           OR LOWER(NAME) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+			    )
+	        </when>
+	        <otherwise>
+	            AND 1 = 0
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 상세 조회 -->
+	<!-- 1) 게시글 상세 조회 (게시글 ID 기준) -->
 	<select id="getArticleByArticlesId" 
-			resultType="com.library.model.ArticleWithAuthor" 
+			resultType="com.library.model.article.ArticleWithAuthor" 
 			parameterType="int">
 		SELECT a.*, m.USERNAME AS authorUsername, m.NAME AS authorFullname 
 		FROM ARTICLES a 
@@ -120,7 +386,7 @@
 	<!-- 게시글 정보 수정 -->
     <!-- 1) 정보 수정 : title, content -->
     <update id="updateArticleInfo" 
-    		parameterType="com.library.model.Article">
+    		parameterType="com.library.model.article.Article">
         UPDATE ARTICLES 
         SET	TITLE = #{title}, 
         	CONTENT = #{content}
@@ -177,7 +443,7 @@
     
     <!-- 게시글 등록 -->
     <insert id="insertArticle" 
-    		parameterType="com.library.model.Article">
+    		parameterType="com.library.model.article.Article">
 	    <selectKey keyProperty="articlesId" resultType="java.lang.Integer" order="BEFORE">
 	        SELECT SQ_ARTICLES.NEXTVAL FROM DUAL
 	    </selectKey>

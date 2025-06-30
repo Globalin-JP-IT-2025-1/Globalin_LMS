@@ -2,7 +2,7 @@
 CREATE TABLE RECO_BOOKS (
   RECO_BOOKS_ID  NUMBER,    -- 추천도서 ID
   BOOKS_ID       NUMBER,    -- 도서 ID: BOOKS.BOOKS_ID
-  RECO_DATE      DATE       -- 추천한 날짜
+  RECO_DATE      DATE,       -- 추천한 날짜
 
   -- 제약조건
   CONSTRAINT PK_RECO_BOOKS PRIMARY KEY (RECO_BOOKS_ID),

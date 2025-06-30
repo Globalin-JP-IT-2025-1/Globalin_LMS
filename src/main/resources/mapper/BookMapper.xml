@@ -3,63 +3,249 @@
 
 <mapper namespace="com.library.mapper.BookMapper">
 
-	<!-- 도서 전체 조회 -->
-	<select id="getAllBooks" resultType="com.library.model.Book">
-		SELECT BOOKS_ID, TITLE, AUTHOR, PUBLISHER, PUBLISH_DATE, ISBN, CATEGORY,
-		IMAGE_LINK, DESCRIPTION, CREATE_DATE, LOAN_COUNT, LIKE_COUNT, STATUS
-		FROM BOOKS
+	<!-- 목록 조회 -->
+	<!-- 1) 전체 목록 조회 : status=1인 도서 포함 -->
+	<select id="getBookList"
+		resultType="com.library.model.book.Book"
+		parameterType="com.library.model.book.BookListRequest">
+		<![CDATA[
+			SELECT b.BOOKS_ID, b.TITLE, b.AUTHOR, b.PUBLISHER, 
+				   b.PUBLISHER, b.ISBN, b.CATEGORY, b.IMAGE_LINK, b.DESCRIPTION, 
+				   b.CREATE_DATE, b.VIEW_COUNT, b.REVIEW_COUNT, b.LOAN_COUNT, b.LIKE_COUNT, b.STATUS, 
+			       b.rnum
+			FROM (
+				SELECT bk.BOOKS_ID, bk.TITLE, bk.AUTHOR, bk.PUBLISHER, 
+					   bk.PUBLISHER, bk.ISBN, bk.CATEGORY, bk.IMAGE_LINK, bk.DESCRIPTION, 
+					   bk.CREATE_DATE, bk.VIEW_COUNT, bk.REVIEW_COUNT, bk.LOAN_COUNT, bk.LIKE_COUNT, bk.STATUS, 
+					   ROWNUM AS rnum
+				FROM BOOKS bk
+			    ORDER BY bk.CREATE_DATE DESC
+		    ) b
+			WHERE b.rnum > #{startRow} AND b.rnum <= #{endRow}
+		]]>
 	</select>
 
-	<!-- 도서 상세 조회 -->
-	<select id="getBookById" parameterType="int" resultType="com.library.model.Book">
-		SELECT BOOKS_ID, TITLE, AUTHOR, PUBLISHER, PUBLISH_DATE, ISBN, CATEGORY,
-		IMAGE_LINK, DESCRIPTION, CREATE_DATE, LOAN_COUNT, LIKE_COUNT, STATUS
-		FROM BOOKS
-		WHERE BOOKS_ID = #{booksId}
+	<!-- 2) 도서 목록 조회 (카테고리 기준) : status=1인 도서 제외 -->
+	<select id="getBookListByClassNo"
+		resultType="com.library.model.book.Book"
+		parameterType="com.library.model.book.BookListRequest">
+		<![CDATA[
+			SELECT b.BOOKS_ID, b.TITLE, b.AUTHOR, b.PUBLISHER, 
+				   b.PUBLISHER, b.ISBN, b.CATEGORY, b.IMAGE_LINK, b.DESCRIPTION, 
+				   b.CREATE_DATE, b.VIEW_COUNT, b.REVIEW_COUNT, b.LOAN_COUNT, b.LIKE_COUNT, b.STATUS, 
+			       b.rnum
+			FROM (
+				SELECT bk.BOOKS_ID, bk.TITLE, bk.AUTHOR, bk.PUBLISHER, 
+					   bk.PUBLISHER, bk.ISBN, bk.CATEGORY, bk.IMAGE_LINK, bk.DESCRIPTION, 
+					   bk.CREATE_DATE, bk.VIEW_COUNT, bk.REVIEW_COUNT, bk.LOAN_COUNT, bk.LIKE_COUNT, bk.STATUS, 
+					   ROWNUM AS rnum
+				FROM BOOKS bk
+			    WHERE bk.CATEGORY LIKE CONCAT(#{category}, '%')
+			    	AND bk.STATUS <> 1
+			    ORDER BY ar.UPDATE_DATE DESC
+		    ) b
+			WHERE b.rnum > #{startRow} AND b.rnum <= #{endRow}
+		]]>
 	</select>
-
-	<!-- 도서 등록 -->
-	<insert id="insertBook" parameterType="com.library.model.Book">
-		INSERT INTO BOOKS (
-		BOOKS_ID, TITLE, AUTHOR, PUBLISHER, PUBLISH_DATE, ISBN, CATEGORY,
-		IMAGE_LINK, DESCRIPTION, CREATE_DATE, LOAN_COUNT, LIKE_COUNT, STATUS
-		)
-		VALUES (
-		SQ_BOOKS.NEXTVAL, #{title}, #{author}, #{publisher}, #{publishDate},
-		#{isbn}, #{category}, #{imageLink}, #{description}, #{createDate},
-		#{loanCount}, #{likeCount}, #{status}
-		)
-	</insert>
 	
-	<!-- 도서 비활성화 -->
-	<update id="invalidateBook" parameterType="com.library.model.Book">
-		UPDATE BOOKS
-		SET STATUS = #{status}
-		WHERE BOOKS_ID = #{booksId}
-	</update>
+	<!-- 키워드 검색 -->
+	<select id="getArticleListByKeyword" 
+			resultType="com.library.model.book.Book" 
+			parameterType="com.library.model.book.BookListRequest">
+		<![CDATA[
+			SELECT b.BOOKS_ID, b.TITLE, b.AUTHOR, b.PUBLISHER, 
+				   b.PUBLISHER, b.ISBN, b.CATEGORY, b.IMAGE_LINK, b.DESCRIPTION, 
+				   b.CREATE_DATE, b.VIEW_COUNT, b.REVIEW_COUNT, b.LOAN_COUNT, b.LIKE_COUNT, b.STATUS, 
+			       b.rnum
+			FROM (
+				SELECT bk.BOOKS_ID, bk.TITLE, bk.AUTHOR, bk.PUBLISHER, 
+					   bk.PUBLISHER, bk.ISBN, bk.CATEGORY, bk.IMAGE_LINK, bk.DESCRIPTION, 
+					   bk.CREATE_DATE, bk.VIEW_COUNT, bk.REVIEW_COUNT, bk.LOAN_COUNT, bk.LIKE_COUNT, bk.STATUS, 
+					   ROWNUM AS rnum
+				FROM BOOKS bk
+			    WHERE 1 = 1
+				    <if test="category != null and category != ''">
+				        AND CATEGORY = #{category}
+				    </if>
+				    <choose>
+				        <when test="searchRequest.type == 'title'">
+							AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						</when>
+						<when test="searchRequest.type == 'author'">
+							AND LOWER(AUTHOR) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						</when>
+						<when test="searchRequest.type == 'publisher'">
+							AND LOWER(PUBLISHER) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						</when>
+						<when test="searchRequest.type == 'isbn'">
+							AND LOWER(ISBN) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						</when>
+				        <otherwise>
+				            AND 1 = 0
+				        </otherwise>
+				    </choose>
+				    AND bk.STATUS <> 1
+			    ORDER BY bk.UPDATE_DATE DESC
+		    ) b
+			WHERE b.rnum > #{startRow} AND b.rnum <= #{endRow}
+		]]>
+	</select>
 
-	<!-- 도서 수정 -->
-	<update id="updateBook" parameterType="com.library.model.Book">
+
+	<!-- 목록 개수 -->
+	<!-- 1) 전체 게시글 수 -->
+	<select id="getBookListCount" resultType="int">
+		SELECT COUNT(*) FROM BOOKS
+	</select>
+
+	<!-- 2) 게시글 수 (카테고리 기준) -->
+	<select id="getBookListCountByClassNo" resultType="int"
+		parameterType="String">
+		<![CDATA[
+			SELECT COUNT(*) FROM BOOKS 
+			WHERE CATEGORY LIKE CONCAT(#{category}, '%')
+			    	AND STATUS <> 1
+		]]>
+	</select>
+
+
+	<!-- 3) 검색에 따른 목록 개수 -->
+	<select id="getBookListCountByKeyword" resultType="int"
+		parameterType="com.library.model.SearchRequest">
+		SELECT COUNT(*) FROM BOOKS
+		WHERE 1 = 1
+		<choose>
+			<when test="type == 'title'">
+				AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+			</when>
+			<when test="type == 'author'">
+				AND LOWER(AUTHOR) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+			</when>
+			<when test="type == 'publisher'">
+				AND LOWER(PUBLISHER) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+			</when>
+			<when test="type == 'isbn'">
+				AND LOWER(ISBN) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+			</when>
+			<otherwise>
+				AND 1 = 0
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 상세 조회 -->
+	<!-- 1) 도서 상세 조회 -->
+	<select id="getBookById"
+		resultType="com.library.model.book.Book"
+		parameterType="int">
+		SELECT * FROM BOOKS 
+		WHERE BOOKS_ID = #{value}
+	</select>
+
+
+	<!-- 도서 정보 수정 -->
+	<!-- 1) 정보 수정 : title, content -->
+	<update id="updateBookInfo"
+		parameterType="com.library.model.book.Book">
 		UPDATE BOOKS
 		SET TITLE = #{title},
-		AUTHOR = #{author},
-		PUBLISHER = #{publisher},
-		PUBLISH_DATE = #{publishDate},
-		ISBN = #{isbn},
-		CATEGORY = #{category},
-		IMAGE_LINK = #{imageLink},
-		DESCRIPTION = #{description},
-		CREATE_DATE = #{createDate},
-		LOAN_COUNT = #{loanCount},
-		LIKE_COUNT = #{likeCount},
-		STATUS = #{status}
+			AUTHOR = #{author},
+			PUBLISHER = #{publisher},
+			PUBLISH_DATE = #{publishDate},
+			ISBN = #{isbn},
+			CATEGORY = #{category},
+			IMAGE_LINK = #{imageLink},
+			DESCRIPTION = #{description}
 		WHERE BOOKS_ID = #{booksId}
 	</update>
+
+	<!-- 2) 비공개글 전환 : status -->
+	<update id="updateBookDisable" parameterType="int">
+		UPDATE BOOKS
+		SET STATUS = 1
+		WHERE BOOKS_ID = #{value}
+	</update>
+
+	<!-- 3) 대출 중 전환 : status -->
+	<update id="updateBookLoaned" parameterType="int">
+		UPDATE BOOKS
+		SET STATUS = 2
+		WHERE BOOKS_ID = #{value}
+	</update>
+	
+	<!-- 4) 공개글, 대출 가능 전환 : status -->
+	<update id="updateBookLoanable" parameterType="int">
+		UPDATE BOOKS
+		SET STATUS = 0
+		WHERE BOOKS_ID = #{value}
+	</update>
+	
+	<!-- 5) 대출 예약 중 전환 : status -->
+	<update id="updateBookLoanReserved" parameterType="int">
+		UPDATE BOOKS
+		SET STATUS = 3
+		WHERE BOOKS_ID = #{value}
+	</update>
+	
+
+	<!-- 6) view count 증가 -->
+	<update id="updateBookViewCountUp" parameterType="int">
+		UPDATE BOOKS
+		SET VIEW_COUNT = VIEW_COUNT + 1
+		WHERE BOOKS_ID = #{value}
+	</update>
+
+	<!-- 7) review count 증가 -->
+	<update id="updateBookReviewCountUp" parameterType="int">
+		UPDATE BOOKS
+		SET REVIEW_COUNT = REVIEW_COUNT + 1
+		WHERE BOOKS_ID = #{value}
+	</update>
+
+	<!-- 8) review count 감소 -->
+	<update id="updateBookReviewCountDown" parameterType="int">
+		UPDATE BOOKS
+		SET REVIEW_COUNT = REVIEW_COUNT - 1
+		WHERE BOOKS_ID = #{value} AND REVIEW_COUNT > 0
+	</update>
+	
+	<!-- 8) loan count 증가 -->
+	<update id="updateBookLoanCountUp" parameterType="int">
+		UPDATE BOOKS
+		SET LOAN_COUNT = LOAN_COUNT + 1
+		WHERE BOOKS_ID = #{value}
+	</update>
+	
+	<!-- 8) like count 증가 -->
+	<update id="updateBookLikeCountUp" parameterType="int">
+		UPDATE BOOKS
+		SET LIKE_COUNT = LIKE_COUNT + 1
+		WHERE BOOKS_ID = #{value}
+	</update>
+
+
+	<!-- 도서 등록 -->
+	<insert id="insertBook"
+		parameterType="com.library.model.book.Book">
+		<selectKey keyProperty="booksId"
+			resultType="java.lang.Integer" order="BEFORE">
+			SELECT SQ_BOOKS.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO BOOKS (
+			BOOKS_ID, TITLE, AUTHOR, PUBLISHER, 
+			PUBLISH_DATE, ISBN, CATEGORY, IMAGE_LINK, DESCRIPTION,
+			CREATE_DATE, VIEW_COUNT, REVIEW_COUNT, LOAN_COUNT, LIKE_COUNT, STATUS
+		) VALUES (
+			#{booksId}, #{title}, #{author}, #{publisher},
+			#{publishDate}, #{isbn}, #{category}, #{imageLink}, #{description},
+			#{createDate}, #{viewCount}, #{reviewCount}, #{loanCount}, #{likeCount}, #{status}
+		)
+	</insert>
 
 	<!-- 도서 삭제 -->
 	<delete id="deleteBook" parameterType="int">
 		DELETE FROM BOOKS
-		WHERE BOOKS_ID = #{booksId}
+		WHERE BOOKS_ID = #{value}
 	</delete>
 
 </mapper>

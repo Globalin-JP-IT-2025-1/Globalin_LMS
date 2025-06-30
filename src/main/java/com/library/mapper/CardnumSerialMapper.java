@@ -2,7 +2,7 @@ package com.library.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.library.model.CardnumSerial;
+import com.library.model.member.CardnumSerial;
 
 @Mapper
 public interface CardnumSerialMapper {
