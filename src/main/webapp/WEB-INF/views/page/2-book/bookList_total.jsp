@@ -63,14 +63,13 @@
     <!-- 도서 목록 -->
     <div class="overflow-x-auto" >
 	    <table class="table mt-3 table-hover bookList">
-	    	<thead>
+	    	<thead class="table-primary">
 	        	<tr>
 	        		<th>NO</th>
 	        		<th>도서 표지</th>
 	        		<th>도서 정보</th>
 	        		<th>도서 상태</th>
 	        		<th>조회수</th>
-	        		<th>리뷰수</th>
 	        	</tr>
 	        </thead>
 	        <tbody>
@@ -80,7 +79,7 @@
 	        		</c:when>
 		        	<c:when test="${not empty bookList}">
 			            <c:forEach var="i" begin="0" end="${fn:length(bookList) - 1}" step="1">
-			                <tr onclick="location.href='/public/articles/not/${bookList[i].booksId}'">
+			                <tr onclick="location.href='/public/books/${bookList[i].booksId}'">
 			                    <td>${i + (currentPage * 7) - 6}</td>
 			                    <td>
 				                    <img src="${bookList[i].imageLink}"
@@ -88,7 +87,19 @@
 				                </td>
 				                <td>
 				                    <div class="text-secondary mb-1">
-				                    	총류 > 총류
+				                    	<c:choose>
+											<c:when test="${bookList[i].category eq '000'}">총류</c:when>
+											<c:when test="${bookList[i].category eq '100'}">철학</c:when>
+											<c:when test="${bookList[i].category eq '200'}">종교</c:when>
+											<c:when test="${bookList[i].category eq '300'}">사회과학</c:when>
+											<c:when test="${bookList[i].category eq '400'}">자연과학</c:when>
+											<c:when test="${bookList[i].category eq '500'}">기술과학</c:when>
+											<c:when test="${bookList[i].category eq '600'}">예술</c:when>
+											<c:when test="${bookList[i].category eq '700'}">언어</c:when>
+											<c:when test="${bookList[i].category eq '800'}">문학</c:when>
+											<c:when test="${bookList[i].category eq '900'}">역사</c:when>
+											<c:otherwise>기타</c:otherwise>
+				                    	</c:choose>
 				                    </div>
 				                    <div class="fw-bold fs-4 mb-2">${bookList[i].title}</div>
 				                    <div class="d-flex flex-wrap mb-2 gap-3">
@@ -104,16 +115,28 @@
 				                    </div>
 				                </td>
 				                <td>
-				                    <div class="d-flex flex-column gap-2">
-				                        <div class="mb-2 text-danger fw-semibold">
-				                        	${bookList[i].status}
-				                        </div>
-				                        <button class="btn btn-secondary btn-sm" disabled>도서예약불가</button>
-				                        <button class="btn btn-outline-success btn-sm">관심도서담기</button>
+				                    <div class="d-flex flex-column justify-center">
+			                        	<c:set var="status">${bookList[i].status}</c:set>
+		                        		<c:choose>
+			                        		<c:when test="${status eq 0}">
+			                        			<div class="text-success">대출가능</div>
+			                        		</c:when>
+			                        		<c:when test="${status eq 1}">
+			                        			<div class="text-secondary">비공개</div>
+			                        		</c:when>
+			                        		<c:when test="${status eq 2}">
+			                        			<div class="text-info">대출 중(예약 가능)</div>
+			                        		</c:when>
+			                        		<c:when test="${status eq 3}">
+			                        			<div class="text-danger">대출 예약 중</div>
+			                        		</c:when>
+			                        		<c:otherwise>
+			                        			알 수 없음
+			                        		</c:otherwise>
+			                        	</c:choose>
 				                    </div>
 				                </td>
 			                    <td>${bookList[i].viewCount}</td>
-			                    <td>${bookList[i].reviewCount}</td>
 			                </tr>
 			            </c:forEach>
 			        </c:when>
@@ -124,30 +147,66 @@
 	  	<c:choose>
         	<c:when test="${not empty bookList}">
 			    <!-- 페이징 -->
-			    <div class="d-flex justify-content-center mt-4">
+				<c:set var="hasSearch" value="${not empty searchType and not empty searchKeyword}" />
+
+				<div class="d-flex justify-content-center mt-4">
 				    <nav aria-label="Page navigation">
 				        <ul class="pagination">
 				
+				            <!-- 이전 페이지 -->
 				            <c:if test="${currentPage > 1}">
 				                <li class="page-item">
-				                    <a class="page-link" href="?page=${currentPage - 1}">이전</a>
+				                    <c:choose>
+				                        <c:when test="${hasSearch}">
+				                            <a class="page-link"
+				                               href="?searchType=${searchType}&searchKeyword=${searchKeyword}&page=${currentPage - 1}">
+				                                이전
+				                            </a>
+				                        </c:when>
+				                        <c:otherwise>
+				                            <a class="page-link" href="?page=${currentPage - 1}">이전</a>
+				                        </c:otherwise>
+				                    </c:choose>
 				                </li>
 				            </c:if>
 				
+				            <!-- 페이지 번호 -->
 				            <c:forEach var="i" begin="${startPage}" end="${endPage}">
-							    <li class="page-item ${i == currentPage ? 'active' : ''}">
-							        <a class="page-link" href="?page=${i}">${i}</a>
-							    </li>
-							</c:forEach>
+				                <li class="page-item ${i == currentPage ? 'active' : ''}">
+				                    <c:choose>
+				                        <c:when test="${hasSearch}">
+				                            <a class="page-link"
+				                               href="?searchType=${searchType}&searchKeyword=${searchKeyword}&page=${i}">
+				                                ${i}
+				                            </a>
+				                        </c:when>
+				                        <c:otherwise>
+				                            <a class="page-link" href="?page=${i}">${i}</a>
+				                        </c:otherwise>
+				                    </c:choose>
+				                </li>
+				            </c:forEach>
 				
+				            <!-- 다음 페이지 -->
 				            <c:if test="${currentPage < totalPages}">
 				                <li class="page-item">
-				                    <a class="page-link" href="?page=${currentPage + 1}">다음</a>
+				                    <c:choose>
+				                        <c:when test="${hasSearch}">
+				                            <a class="page-link"
+				                               href="?searchType=${searchType}&searchKeyword=${searchKeyword}&page=${currentPage + 1}">
+				                                다음
+				                            </a>
+				                        </c:when>
+				                        <c:otherwise>
+				                            <a class="page-link" href="?page=${currentPage + 1}">다음</a>
+				                        </c:otherwise>
+				                    </c:choose>
 				                </li>
 				            </c:if>
 				        </ul>
 				    </nav>
 				</div>
+				
 			</c:when>
 		</c:choose>
     </div>

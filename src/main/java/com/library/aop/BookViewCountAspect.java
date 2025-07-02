@@ -21,7 +21,7 @@ public class BookViewCountAspect {
 	private BookService bookService;
 
     // 책 상세 조회 시
-    @After("execution(* com.library.service.impl.BookServiceImpl.getBookWithReviewList(..))")
+    @After("execution(* com.library.service.impl.BookServiceImpl.getBookById(..))")
     public void increaseViewCountAfterGetArticleDetail(JoinPoint joinPoint) {
     	Object[] args = joinPoint.getArgs();
     	int booksId = (int) args[0];

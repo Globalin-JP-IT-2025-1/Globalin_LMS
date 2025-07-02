@@ -2,43 +2,86 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.library.mapper.MemberBookHistoryMapper">
-    <!-- 전체 조회 -->
-    <select id="getBookHistoryList" resultType="com.library.model.book.BookHistory" parameterType="int">
-        SELECT * FROM BOOK_HISTORY WHERE MEMBERS_ID = #{membersId}
+    <!-- 전체 조회 --> 
+	<select id="getBookHistoryList" 
+	        resultType="com.library.model.book.BookHistoryWithBookInfo" 
+	        parameterType="com.library.model.book.BookHistoryRequest">
+	    <![CDATA[
+	        SELECT * FROM (
+	            SELECT b.BOOK_HISTORY_ID, b.MEMBERS_ID, b.BOOKS_ID, 
+	                   b.LOAN_DATE, b.DUE_DATE, b.RETURNED_DATE, b.STATUS, 
+	                   bk.TITLE, bk.IMAGE_LINK,
+	                   ROWNUM AS rnum
+	            FROM (
+	                SELECT bh.BOOK_HISTORY_ID, bh.MEMBERS_ID, bh.BOOKS_ID, 
+	                       bh.LOAN_DATE, bh.DUE_DATE, bh.RETURNED_DATE, bh.STATUS
+	                FROM BOOK_HISTORY bh
+	                WHERE bh.MEMBERS_ID = #{membersId}
+	                ORDER BY bh.LOAN_DATE DESC
+	            ) b
+	            JOIN (
+	                SELECT BOOKS_ID, TITLE, IMAGE_LINK
+	                FROM BOOKS
+	            ) bk ON b.BOOKS_ID = bk.BOOKS_ID
+	            WHERE ROWNUM <= #{endRow}
+	        )
+	        WHERE rnum > #{startRow}
+	    ]]>
+	</select>
+    
+    <!-- 개수 -->
+	<select id="getBookHistoryListCount" resultType="int">
+		SELECT COUNT(*) FROM BOOK_HISTORY WHERE MEMBERS_ID = #{membersId}
+	</select>
+    
+    <!-- 미납 1건 조회 (회원별 도서별) -->
+    <select id="getBookHistoryNonReturn" 
+		    resultType="com.library.model.book.BookHistory" 
+		    parameterType="com.library.model.book.BookHistoryRequest">
+        SELECT * FROM BOOK_HISTORY 
+        WHERE MEMBERS_ID = #{membersId} 
+	        AND BOOKS_ID = #{booksId} 
+	        AND RETURND_DATE IS NULL
     </select>
-    <!-- 연체 도서만 조회 (IS_OVERDUE = 1) -->
+    
+    <!-- 연체 도서만 조회 (STATUS = 1) -->
     <select id="getOverdueBookHistory" resultType="com.library.model.book.BookHistory" parameterType="int">
-        SELECT * FROM BOOK_HISTORY WHERE MEMBERS_ID = #{membersId} AND IS_OVERDUE = 1
+        SELECT * FROM BOOK_HISTORY WHERE MEMBERS_ID = #{membersId} AND STATUS = 1
     </select>
+    
     <!-- 반납 처리 -->
     <update id="updateBookHistoryReturned" parameterType="com.library.model.book.BookHistory">
         UPDATE BOOK_HISTORY 
-        SET RETURNED_DATE = #{returnedDate}, IS_OVERDUE = #{isOverdue}
+        SET RETURNED_DATE = #{returnedDate}, STATUS = #{status}
         WHERE MEMBERS_ID = #{membersId} AND BOOKS_ID = #{booksId}
     </update>
+    
     <!-- 연체 처리 -->
     <update id="updateBookHistoryOverdue" parameterType="com.library.model.book.BookHistory">
         UPDATE BOOK_HISTORY 
         SET IS_OVERDUE = #{isOverdue}
         WHERE MEMBERS_ID = #{membersId} AND BOOKS_ID = #{booksId}
     </update>
+    
     <!-- 반납예정일 연장 -->
     <update id="updateBookHistoryDueDate" parameterType="com.library.model.book.BookHistory">
         UPDATE BOOK_HISTORY 
         SET DUE_DATE = #{dueDate}
         WHERE MEMBERS_ID = #{membersId} AND BOOKS_ID = #{booksId}
     </update>
-    <!-- 도서 대출 이력 등록: 날짜 자동 -->
+    
+    <!-- 도서 대출 이력 등록 -->
     <insert id="insertBookHistory" parameterType="com.library.model.book.BookHistory">
         <selectKey keyProperty="bookHistoryId" resultType="java.lang.Integer" order="BEFORE">
             SELECT SQ_BOOK_HISTORY.NEXTVAL FROM DUAL
         </selectKey>
         INSERT INTO BOOK_HISTORY (
-            BOOK_HISTORY_ID, MEMBERS_ID, BOOKS_ID, LOAN_DATE, DUE_DATE, RETURNED_DATE, IS_OVERDUE
+            BOOK_HISTORY_ID, MEMBERS_ID, BOOKS_ID, LOAN_DATE, DUE_DATE, RETURNED_DATE, STATUS
         ) VALUES (
-            #{bookHistoryId}, #{membersId}, #{booksId}, SYSDATE, SYSDATE+14, NULL, 0
+            #{bookHistoryId}, #{membersId}, #{booksId}, SYSDATE, SYSDATE + 14, NULL, 0
         )
     </insert>
+    
     <!-- 삭제 (주석 해제 필요시) -->
     <!--
     <delete id="deleteBookHistory" parameterType="int">

@@ -25,7 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.model.PageInfo;
 import com.library.model.article.ArticleListResponse;
-import com.library.model.book.BookHistory;
+import com.library.model.book.BookHistoryResponse;
 import com.library.model.book.BookLike;
 import com.library.model.member.Member;
 import com.library.security.CustomUserDetails;
@@ -82,7 +82,7 @@ public class PrivateMemberController {
     		String username2 = authentication.getName();
     		Member member2 = memberService.getMemberByUsername(username2);
     		
-    		return "redirect:/private/members/" + member2.getMembersId() + "/book-history";
+    		return "redirect:/private/members/" + member2.getMembersId();
     	}
     	
     	// 회원ID에 해당하는 회원별 도서 이용 정보 목록 가져오기
@@ -233,6 +233,7 @@ public class PrivateMemberController {
     // 회원별 도서 이용 정보 목록 조회
     @GetMapping("/{membersId}/book-history")
     public String showMemberBookHistory(@PathVariable("membersId") int membersId, 
+    									@RequestParam(defaultValue = "1") int page, 
     									Authentication authentication,
     									Model model) {
     	
@@ -258,8 +259,12 @@ public class PrivateMemberController {
     	}
     	
     	// 회원ID에 해당하는 회원별 도서 이용 정보 목록 가져오기
-    	List<BookHistory> bookHistoryList = memberBookHistoryService.getBookHistoryList(membersId);
-    	model.addAttribute("bookHistoryList", bookHistoryList);
+    	BookHistoryResponse bookHistoryListResponse = memberBookHistoryService.getBookHistoryList(membersId, page);
+		
+		model.addAttribute("bookHistoryList", bookHistoryListResponse.getBookHistoryList()); // 목록
+		model.addAttribute("totalCount", bookHistoryListResponse.getTotalCount()); // 페이징
+    	model.addAttribute("totalPages", bookHistoryListResponse.getTotalPages()); // 페이징
+    	model.addAttribute("currentPage", page); // 페이징
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("32")
@@ -304,7 +309,7 @@ public class PrivateMemberController {
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("33")
-    			.pagePath("page/1-member/memberBookLikeList.jsp")
+    			.pagePath("page/1-member/memberBookHistoryList.jsp")
     			.build();
     	
     	setPageInfo(model);
@@ -341,11 +346,11 @@ public class PrivateMemberController {
     	}
     	
     	// 회원ID에 해당하는 희망 도서 신청 목록 가져오기
-    	ArticleListResponse bookReqList = articleService.getArticleListByReqByMembersId(membersId, page);
+    	ArticleListResponse bookReqListResponse = articleService.getArticleListByReqByMembersId(membersId, page);
     	
-    	model.addAttribute("articleListWithAuthor", bookReqList.getArticleWithAuthorList());
-		model.addAttribute("totalCount", bookReqList.getTotalCount());
-    	model.addAttribute("totalPages", bookReqList.getTotalPages());
+    	model.addAttribute("articleList", bookReqListResponse.getArticleList());
+		model.addAttribute("totalCount", bookReqListResponse.getTotalCount());
+    	model.addAttribute("totalPages", bookReqListResponse.getTotalPages());
     	model.addAttribute("currentPage", page);
     	
     	pageInfo = PageInfo.builder()

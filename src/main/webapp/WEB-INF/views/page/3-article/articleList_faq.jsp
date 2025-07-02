@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<c:set var="articleList" value="${articleListWithAuthor}" />
+<c:set var="articleList" value="${articleList}" />
 
 <c:set var="totalCount" value="${totalCount}" />
 <c:set var="totalPages" value="${totalPages}" />
@@ -21,14 +21,6 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center">
         <div>전체 <strong>${totalCount}</strong> 건</div>
-        <div>
-	        <select class="form-select form-select-sm d-inline-block w-auto" id="searchType">
-	            <option id="st_title">제목</option>
-	            <option id="st_content">내용</option>
-	        </select>
-	        <input type="text" class="form-control form-control-sm d-inline-block w-auto" id="searchKeyword">
-	        <button class="btn btn-primary btn-sm" id="search">검색</button>
-	    </div>
     </div>
     
     <div class="accordion mt-3" id="faqAccordion">

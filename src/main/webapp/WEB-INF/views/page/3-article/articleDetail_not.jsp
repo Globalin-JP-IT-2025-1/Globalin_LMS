@@ -76,6 +76,7 @@
 		<div class="btndiv">
 			<!-- 현재 로그인한 사용자가 관리자인 경우에만 보이기 -->
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
+			
 				<form action="/admin/articles/not/${article.articlesId}/1" method="post" id="articleForm" >
 					<input type="hidden" name="_method" value="PUT">
 	            	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>

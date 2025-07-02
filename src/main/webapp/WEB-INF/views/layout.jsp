@@ -1,8 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.membersId" var="l_membersId" />
+</sec:authorize>
 
 <!-- 페이지 타이틀 & URI 설정 -->
 <c:choose>
@@ -24,21 +28,42 @@
 			<spring:message code="menu.${groupCode}.con1" />
 		</c:set>
 		<c:set var="pageSubTitle1Uri">
-			<spring:message code="menu.${groupCode}.con1.uri" />
+			<c:choose>
+				<c:when test="${groupCode eq '3'}">
+					<spring:message code="menu.${groupCode}.con1.uri" arguments="${l_membersId}" />
+				</c:when>
+				<c:otherwise>
+					<spring:message code="menu.${groupCode}.con1.uri" />
+				</c:otherwise>
+			</c:choose>
 		</c:set>
 
 		<c:set var="pageSubTitle2">
 			<spring:message code="menu.${groupCode}.con2" />
 		</c:set>
 		<c:set var="pageSubTitle2Uri">
-			<spring:message code="menu.${groupCode}.con2.uri" />
+			<c:choose>
+				<c:when test="${groupCode eq '3'}">
+					<spring:message code="menu.${groupCode}.con2.uri" arguments="${l_membersId}" />
+				</c:when>
+				<c:otherwise>
+					<spring:message code="menu.${groupCode}.con2.uri" />
+				</c:otherwise>
+			</c:choose>
 		</c:set>
 
 		<c:set var="pageSubTitle3">
 			<spring:message code="menu.${groupCode}.con3" />
 		</c:set>
 		<c:set var="pageSubTitle3Uri">
-			<spring:message code="menu.${groupCode}.con3.uri" />
+			<c:choose>
+				<c:when test="${groupCode eq '3'}">
+					<spring:message code="menu.${groupCode}.con3.uri" arguments="${l_membersId}" />
+				</c:when>
+				<c:otherwise>
+					<spring:message code="menu.${groupCode}.con3.uri" />
+				</c:otherwise>
+			</c:choose>
 		</c:set>
 
 		<c:set var="pageSubTitle4" value="" />
@@ -54,7 +79,14 @@
 				<spring:message code="menu.${groupCode}.con4" />
 			</c:set>
 			<c:set var="pageSubTitle4Uri">
-				<spring:message code="menu.${groupCode}.con4.uri" />
+				<c:choose>
+					<c:when test="${groupCode eq '3'}">
+						<spring:message code="menu.${groupCode}.con4.uri" arguments="${l_membersId}" />
+					</c:when>
+					<c:otherwise>
+						<spring:message code="menu.${groupCode}.con4.uri" />
+					</c:otherwise>
+				</c:choose>
 			</c:set>
 		</c:if>
 
@@ -136,7 +168,7 @@
 	<script
 		src="${pageContext.request.contextPath}/resources/static/js/layout.js"></script>
 	
-	<!-- alert -->
+	<!-- alert 처리 -->
 	<c:if test="${not empty alertType}">
 		<script type="text/javascript">
 			window.onload = function() {

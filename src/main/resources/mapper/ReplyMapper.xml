@@ -3,6 +3,35 @@
 
 <mapper namespace="com.library.mapper.ReplyMapper">
 	<!-- 조회 -->
+	<!-- 관리용 댓글 목록 조회 (전체) -->
+	<select id="getReplyList" 
+			resultType="com.library.model.article.ReplyWithAuthor" 
+			parameterType="com.library.model.article.ReplyListRequest">
+		<![CDATA[
+			SELECT r.*,
+				   r.authorUsername, r.authorFullname, 
+				   r.rnum 
+			FROM (
+				SELECT rp.*,
+					   m.USERNAME AS authorUsername, m.NAME AS authorFullname, 
+					   ROWNUM AS rnum
+				FROM REPLIES rp
+				JOIN MEMBERS m ON m.MEMBERS_ID = rp.AUTHOR_ID 
+				ORDER BY rp.UPDATE_DATE DESC
+			) r
+			WHERE r.rnum > #{startRow} AND r.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 관리용 댓글 수 (전체) -->
+	<select id="getReplyListCount" 
+			resultType="int" 
+			parameterType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM REPLIES 
+		]]>
+	</select>
+	
 	<!-- 1) 댓글 목록 조회 (게시글 ID 기반) -->
 	<select id="getReplyListByArticlesId" 
 			resultType="com.library.model.article.ReplyWithAuthor" 
@@ -27,7 +56,7 @@
 	</select>
 	
 	<!-- 2) 댓글 수 (게시글 ID 기반) -->
-	<select id="getReplyListCount" 
+	<select id="getReplyListCountByArticlesId" 
 			resultType="int" 
 			parameterType="int">
 		<![CDATA[

@@ -1,72 +1,50 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!-- 도서 추가 폼 -->
-<form action="/admin/books" method="post">
-	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" />
-	<ul class="addBookForm">
-	    <li>분류(종류) : <input type="text" name id="category" maxlength="50"></li>
-	    <li>제목 : <input type="text" id="title" maxlength="200"></li>
-	    <li>저자 : <input type="text" id="author" maxlength="100"></li>
-	    <li>출판사 : <input type="text" id="publisher" maxlength="100"></li>
-	    <li>
-	        ISBN : <input type="text" id="isbn" maxlength="50">
-	        <a href="#" onclick="openIsbnPopup()">ISBN으로 도서 가져오기</a>
-	    </li>
-	    <li>책 이미지 : <input type="text" id="imageLink" maxlength="300"><a href="#"></a></li>
-	</ul>
-	<input type="submit" value="등록">
-</form>
-<button onclick="cancelAdd()">취소</button>
+<form action="/admin/books" method="post" class="container mt-4 p-4 border rounded bg-light shadow-sm">
 
-<script type="text/javascript">
-function openIsbnPopup() {
-    // /page/searchBook.jsp 팝업 띄우기 (ISBN 자동입력 구현은 여기서 fetch/연동 필요)
-    window.open('/page/searchBook.jsp', 'isbnSearch', 'width=500,height=250');
-}
-function cancelAdd() {
-    const confirmCancel = confirm("정말 취소하시겠습니까?");
-    if (confirmCancel) history.back();
-}
-function insertBook() {
-    const book = {
-        category: document.getElementById("category").value,
-        title: document.getElementById("title").value,
-        author: document.getElementById("author").value,
-        publisher: document.getElementById("publisher").value,
-        isbn: document.getElementById("isbn").value,
-        imageLink: document.getElementById("imageLink").value
-    };
-    Swal.fire({
-        title: "도서 등록",
-        text: "도서를 등록하시겠습니까?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "등록",
-        cancelButtonText: "취소"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch(``, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(book)
-            })
-            .then(response => {
-                if (response.ok) {
-                    Swal.fire("등록 완료", "도서가 등록되었습니다.", "success")
-                        .then(() => location.href = "/books");
-                } else {
-                    Swal.fire("오류 발생", "도서 등록에 실패했습니다.", "error");
-                }
-            })
-            .catch(error => {
-                Swal.fire("오류 발생", "서버 오류가 발생했습니다.", "error");
-            });
-        }
-    });
-}
-</script>
+    <!-- CSRF 토큰 -->
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+
+    <h4 class="mb-4">도서 등록</h4>
+
+    <div class="mb-3">
+        <label for="category" class="form-label">KDC분류</label>
+        <input type="text" class="form-control" id="category" name="category" maxlength="50" placeholder="예: 컴퓨터, 문학 등">
+    </div>
+
+    <div class="mb-3">
+        <label for="title" class="form-label">제목</label>
+        <input type="text" class="form-control" id="title" name="title" maxlength="200" placeholder="도서 제목을 입력하세요">
+    </div>
+
+    <div class="mb-3">
+        <label for="author" class="form-label">저자</label>
+        <input type="text" class="form-control" id="author" name="author" maxlength="100" placeholder="저자 이름">
+    </div>
+
+    <div class="mb-3">
+        <label for="publisher" class="form-label">출판사</label>
+        <input type="text" class="form-control" id="publisher" name="publisher" maxlength="100" placeholder="출판사 이름">
+    </div>
+
+    <div class="mb-3">
+        <label for="isbn" class="form-label">ISBN</label>
+        <div class="input-group">
+            <input type="text" class="form-control" id="isbn" name="isbn" maxlength="50" placeholder="ISBN 번호">
+            <button type="button" class="btn btn-outline-secondary" onclick="openIsbnPopup()">ISBN으로 도서 가져오기</button>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="imageLink" class="form-label">책 이미지 링크</label>
+        <input type="text" class="form-control" id="imageLink" name="imageLink" maxlength="300" placeholder="이미지 URL">
+    </div>
+
+    <div class="d-grid col-3">
+        <button type="submit" class="btn btn-primary">등록</button>
+    </div>
+</form>
+
    

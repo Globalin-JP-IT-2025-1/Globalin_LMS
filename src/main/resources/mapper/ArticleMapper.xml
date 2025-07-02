@@ -97,19 +97,32 @@
 				FROM ARTICLES ar
 			    JOIN MEMBERS m ON m.MEMBERS_ID = ar.AUTHOR_ID 
 			    WHERE 1 = 1
+			    	<bind name="kw" value="searchRequest.keyword.toLowerCase()" />
 				    <choose>
+				    	<when test="searchRequest.type == 'all'">
+				            AND (
+				            	LOWER(TITLE) LIKE '%' || ${kw} || '%'
+				            	OR LOWER(CONTENT) LIKE '%' || ${kw} || '%'
+				            	OR AUTHOR_ID IN (
+							        SELECT MEMBERS_ID 
+							        FROM MEMBERS 
+							        WHERE LOWER(USERNAME) LIKE '%' || ${kw} || '%'
+							           OR LOWER(NAME) LIKE '%' || ${kw} || '%'
+							    )
+						    )
+				        </when>
 				        <when test="searchRequest.type == 'title'">
-				            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				            AND LOWER(TITLE) LIKE '%' || ${kw} || '%'
 				        </when>
 				        <when test="searchRequest.type == 'content'">
-				            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				            AND LOWER(CONTENT) LIKE '%' || ${kw} || '%'
 				        </when>
 				        <when test="searchRequest.type == 'author'">
 				            AND AUTHOR_ID IN (
 						        SELECT MEMBERS_ID 
 						        FROM MEMBERS 
-						        WHERE LOWER(USERNAME) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
-						           OR LOWER(NAME) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						        WHERE LOWER(USERNAME) LIKE '%' || ${kw} || '%'
+						           OR LOWER(NAME) LIKE '%' || ${kw} || '%'
 						    )
 				        </when>
 				        <otherwise>
@@ -142,12 +155,33 @@
 				FROM ARTICLES ar
 			    JOIN MEMBERS m ON m.MEMBERS_ID = ar.AUTHOR_ID 
 			    WHERE CATEGORY = 'not'
+				    <bind name="kw" value="searchRequest.keyword.toLowerCase()" />
 				    <choose>
+				    	<when test="searchRequest.type == 'all'">
+				            AND (
+				            	LOWER(TITLE) LIKE '%' || ${kw} || '%'
+				            	OR LOWER(CONTENT) LIKE '%' || ${kw} || '%'
+				            	OR AUTHOR_ID IN (
+							        SELECT MEMBERS_ID 
+							        FROM MEMBERS 
+							        WHERE LOWER(USERNAME) LIKE '%' || ${kw} || '%'
+							           OR LOWER(NAME) LIKE '%' || ${kw} || '%'
+							    )
+						    )
+				        </when>
 				        <when test="searchRequest.type == 'title'">
-				            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				            AND LOWER(TITLE) LIKE '%' || ${kw} || '%'
 				        </when>
 				        <when test="searchRequest.type == 'content'">
-				            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				            AND LOWER(CONTENT) LIKE '%' || ${kw} || '%'
+				        </when>
+				        <when test="searchRequest.type == 'author'">
+				            AND AUTHOR_ID IN (
+						        SELECT MEMBERS_ID 
+						        FROM MEMBERS 
+						        WHERE LOWER(USERNAME) LIKE '%' || ${kw} || '%'
+						           OR LOWER(NAME) LIKE '%' || ${kw} || '%'
+						    )
 				        </when>
 				        <otherwise>
 				            AND 1 = 0
@@ -179,19 +213,32 @@
 				FROM ARTICLES ar
 			    JOIN MEMBERS m ON m.MEMBERS_ID = ar.AUTHOR_ID 
 			    WHERE CATEGORY = 'qna'
+				    <bind name="kw" value="searchRequest.keyword.toLowerCase()" />
 				    <choose>
+				    	<when test="searchRequest.type == 'all'">
+				            AND (
+				            	LOWER(TITLE) LIKE '%' || ${kw} || '%'
+				            	OR LOWER(CONTENT) LIKE '%' || ${kw} || '%'
+				            	OR AUTHOR_ID IN (
+							        SELECT MEMBERS_ID 
+							        FROM MEMBERS 
+							        WHERE LOWER(USERNAME) LIKE '%' || ${kw} || '%'
+							           OR LOWER(NAME) LIKE '%' || ${kw} || '%'
+							    )
+						    )
+				        </when>
 				        <when test="searchRequest.type == 'title'">
-				            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				            AND LOWER(TITLE) LIKE '%' || ${kw} || '%'
 				        </when>
 				        <when test="searchRequest.type == 'content'">
-				            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				            AND LOWER(CONTENT) LIKE '%' || ${kw} || '%'
 				        </when>
 				        <when test="searchRequest.type == 'author'">
 				            AND AUTHOR_ID IN (
 						        SELECT MEMBERS_ID 
 						        FROM MEMBERS 
-						        WHERE LOWER(USERNAME) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
-						           OR LOWER(NAME) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						        WHERE LOWER(USERNAME) LIKE '%' || ${kw} || '%'
+						           OR LOWER(NAME) LIKE '%' || ${kw} || '%'
 						    )
 				        </when>
 				        <otherwise>
@@ -224,19 +271,32 @@
 				FROM ARTICLES ar
 			    JOIN MEMBERS m ON m.MEMBERS_ID = ar.AUTHOR_ID 
 			    WHERE CATEGORY = 'req'
+				    <bind name="kw" value="searchRequest.keyword.toLowerCase()" />
 				    <choose>
+				    	<when test="searchRequest.type == 'all'">
+				            AND (
+				            	LOWER(TITLE) LIKE '%' || ${kw} || '%'
+				            	OR LOWER(CONTENT) LIKE '%' || ${kw} || '%'
+				            	OR AUTHOR_ID IN (
+							        SELECT MEMBERS_ID 
+							        FROM MEMBERS 
+							        WHERE LOWER(USERNAME) LIKE '%' || ${kw} || '%'
+							           OR LOWER(NAME) LIKE '%' || ${kw} || '%'
+							    )
+						    )
+				        </when>
 				        <when test="searchRequest.type == 'title'">
-				            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				            AND LOWER(TITLE) LIKE '%' || ${kw} || '%'
 				        </when>
 				        <when test="searchRequest.type == 'content'">
-				            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+				            AND LOWER(CONTENT) LIKE '%' || ${kw} || '%'
 				        </when>
 				        <when test="searchRequest.type == 'author'">
 				            AND AUTHOR_ID IN (
 						        SELECT MEMBERS_ID 
 						        FROM MEMBERS 
-						        WHERE LOWER(USERNAME) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
-						           OR LOWER(NAME) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
+						        WHERE LOWER(USERNAME) LIKE '%' || ${kw} || '%'
+						           OR LOWER(NAME) LIKE '%' || ${kw} || '%'
 						    )
 				        </when>
 				        <otherwise>
@@ -247,6 +307,21 @@
 			    ORDER BY ar.UPDATE_DATE DESC
 		    ) a
 			WHERE a.rnum > #{startRow} AND a.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 5) 메인 전용 공지사항 최신 5건 -->
+	<select id="getNoticeListForHome" 
+			resultType="com.library.model.article.Article">
+		<![CDATA[
+		    SELECT * 
+		    FROM (
+		      SELECT ar.* 
+		      FROM ARTICLES ar 
+		      WHERE CATEGORY = 'not' AND STATUS <> 1 
+		      ORDER BY ar.UPDATE_DATE DESC
+		    ) 
+		    WHERE ROWNUM <= 5
 		]]>
 	</select>
 	
@@ -285,12 +360,25 @@
 			parameterType="com.library.model.SearchRequest">
 		SELECT COUNT(*) FROM ARTICLES
 	    WHERE 1 = 1
+	    <bind name="kw" value="keyword.toLowerCase()" />
 	    <choose>
+	    	<when test="searchRequest.type == 'all'">
+	            AND (
+	            	LOWER(TITLE) LIKE '%' || ${kw} || '%'
+	            	OR LOWER(CONTENT) LIKE '%' || ${kw} || '%'
+	            	OR AUTHOR_ID IN (
+				        SELECT MEMBERS_ID 
+				        FROM MEMBERS 
+				        WHERE LOWER(USERNAME) LIKE '%' || ${kw} || '%'
+				           OR LOWER(NAME) LIKE '%' || ${kw} || '%'
+				    )
+			    )
+	        </when>
 	        <when test="type == 'title'">
-	            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	            AND LOWER(TITLE) LIKE '%' || ${kw} || '%'
 	        </when>
 	        <when test="type == 'content'">
-	            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	            AND LOWER(CONTENT) LIKE '%' || ${kw} || '%'
 	        </when>
 	        <otherwise>
 	            AND 1 = 0
@@ -304,12 +392,25 @@
 			parameterType="com.library.model.SearchRequest">
 		SELECT COUNT(*) FROM ARTICLES
 	    WHERE CATEGORY = 'not'
+	    <bind name="kw" value="keyword.toLowerCase()" />
 	    <choose>
+	    	<when test="searchRequest.type == 'all'">
+	            AND (
+	            	LOWER(TITLE) LIKE '%' || ${kw} || '%'
+	            	OR LOWER(CONTENT) LIKE '%' || ${kw} || '%'
+	            	OR AUTHOR_ID IN (
+				        SELECT MEMBERS_ID 
+				        FROM MEMBERS 
+				        WHERE LOWER(USERNAME) LIKE '%' || ${kw} || '%'
+				           OR LOWER(NAME) LIKE '%' || ${kw} || '%'
+				    )
+			    )
+	        </when>
 	        <when test="type == 'title'">
-	            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	            AND LOWER(TITLE) LIKE '%' || ${kw} || '%'
 	        </when>
 	        <when test="type == 'content'">
-	            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	            AND LOWER(CONTENT) LIKE '%' || ${kw} || '%'
 	        </when>
 	        <otherwise>
 	            AND 1 = 0
@@ -323,20 +424,25 @@
 			parameterType="com.library.model.SearchRequest">
 		SELECT COUNT(*) FROM ARTICLES
 	    WHERE CATEGORY = 'qna'
+	    <bind name="kw" value="keyword.toLowerCase()" />
 	    <choose>
+	    	<when test="searchRequest.type == 'all'">
+	            AND (
+	            	LOWER(TITLE) LIKE '%' || ${kw} || '%'
+	            	OR LOWER(CONTENT) LIKE '%' || ${kw} || '%'
+	            	OR AUTHOR_ID IN (
+				        SELECT MEMBERS_ID 
+				        FROM MEMBERS 
+				        WHERE LOWER(USERNAME) LIKE '%' || ${kw} || '%'
+				           OR LOWER(NAME) LIKE '%' || ${kw} || '%'
+				    )
+			    )
+	        </when>
 	        <when test="type == 'title'">
-	            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	            AND LOWER(TITLE) LIKE '%' || ${kw} || '%'
 	        </when>
 	        <when test="type == 'content'">
-	            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{keyword}), '%')
-	        </when>
-	        <when test="type == 'author'">
-	            AND AUTHOR_ID IN (
-			        SELECT MEMBERS_ID 
-			        FROM MEMBERS 
-			        WHERE LOWER(USERNAME) LIKE CONCAT('%', LOWER(#{keyword}), '%')
-			           OR LOWER(NAME) LIKE CONCAT('%', LOWER(#{keyword}), '%')
-			    )
+	            AND LOWER(CONTENT) LIKE '%' || ${kw} || '%'
 	        </when>
 	        <otherwise>
 	            AND 1 = 0
@@ -350,20 +456,25 @@
 			parameterType="com.library.model.SearchRequest">
 		SELECT COUNT(*) FROM ARTICLES
 	    WHERE CATEGORY = 'req'
+	    <bind name="kw" value="keyword.toLowerCase()" />
 	    <choose>
+	    	<when test="searchRequest.type == 'all'">
+	            AND (
+	            	LOWER(TITLE) LIKE '%' || ${kw} || '%'
+	            	OR LOWER(CONTENT) LIKE '%' || ${kw} || '%'
+	            	OR AUTHOR_ID IN (
+				        SELECT MEMBERS_ID 
+				        FROM MEMBERS 
+				        WHERE LOWER(USERNAME) LIKE '%' || ${kw} || '%'
+				           OR LOWER(NAME) LIKE '%' || ${kw} || '%'
+				    )
+			    )
+	        </when>
 	        <when test="type == 'title'">
-	            AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+	            AND LOWER(TITLE) LIKE '%' || ${kw} || '%'
 	        </when>
 	        <when test="type == 'content'">
-	            AND LOWER(CONTENT) LIKE CONCAT('%', LOWER(#{keyword}), '%')
-	        </when>
-	        <when test="type == 'author'">
-	            AND AUTHOR_ID IN (
-			        SELECT MEMBERS_ID 
-			        FROM MEMBERS 
-			        WHERE LOWER(USERNAME) LIKE CONCAT('%', LOWER(#{keyword}), '%')
-			           OR LOWER(NAME) LIKE CONCAT('%', LOWER(#{keyword}), '%')
-			    )
+	            AND LOWER(CONTENT) LIKE '%' || ${kw} || '%'
 	        </when>
 	        <otherwise>
 	            AND 1 = 0
@@ -397,7 +508,7 @@
     <update id="updateArticleDisable" 
     		parameterType="int">
         UPDATE ARTICLES 
-        SET	STATUS = 2
+        SET	STATUS = 1
 	    WHERE ARTICLES_ID = #{value}
     </update>
     
@@ -413,7 +524,7 @@
     <update id="updateArticleSecret" 
     		parameterType="int">
         UPDATE ARTICLES 
-        SET	STATUS = 1
+        SET	STATUS = 2
 	    WHERE ARTICLES_ID = #{value}
     </update>
     

@@ -20,14 +20,40 @@ import lombok.RequiredArgsConstructor;
 public class ReplyServiceImpl implements ReplyService {
 	private final ReplyMapper replyMapper;
 	
-	private static final int REPLIES_PER_PAGE = 10; // 한 페이지당 댓글 수
+	private static final int REPLIES_PER_PAGE = 7; // 한 페이지당 댓글 수
 	
 	// 조회
+	// 관리자용 댓글 전체 목록 조회
+	@Override
+	public ReplyListResponse getReplyList(int replyCurrentPage) {
+		
+		int totalCount = getReplyListCount();
+        int totalPage = (int) Math.ceil((double) totalCount / REPLIES_PER_PAGE);
+        int startRow = (replyCurrentPage - 1) * REPLIES_PER_PAGE;
+        int endRow = replyCurrentPage * REPLIES_PER_PAGE;
+        
+        List<ReplyWithAuthor> replyList = replyMapper.getReplyList(ReplyListRequest.builder()
+				.startRow(startRow)
+				.endRow(endRow)
+				.build());
+        
+		return ReplyListResponse.builder()
+				.replyList(replyList)
+				.totalCount(totalCount)
+				.totalPages(totalPage)
+				.build();
+	}
+	
+	// 관리자용 댓글 수 (전체)
+	public int getReplyListCount() {
+		return replyMapper.getReplyListCount();
+	}
+
 	// 1) 댓글 목록 조회 (게시글 ID 기반)
 	@Override
 	public ReplyListResponse getReplyListByArticlesId(int articlesId, int replyCurrentPage) {
 		
-		int totalCount = getReplyListCount(articlesId);
+		int totalCount = getReplyListCountByArticlesId(articlesId);
         int totalPage = (int) Math.ceil((double) totalCount / REPLIES_PER_PAGE);
         int startRow = (replyCurrentPage - 1) * REPLIES_PER_PAGE;
         int endRow = replyCurrentPage * REPLIES_PER_PAGE;
@@ -46,8 +72,8 @@ public class ReplyServiceImpl implements ReplyService {
 	}
 	
 	// 2) 댓글 수 (게시글 ID 기반)
-	public int getReplyListCount(int articlesId) {
-		return replyMapper.getReplyListCount(articlesId);
+	public int getReplyListCountByArticlesId(int articlesId) {
+		return replyMapper.getReplyListCountByArticlesId(articlesId);
 	}
 	
 	

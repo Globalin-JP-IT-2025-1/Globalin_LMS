@@ -1,8 +1,8 @@
 -- 테이블 생성
 CREATE TABLE BOOK_LIKE (
   BOOK_LIKE_ID  NUMBER,                 -- 도서이용정보ID
-  MEMBERS_ID       NUMBER,              -- 대상 회원: MEMBERS.MEMBERS_ID
-  BOOKS_ID         NUMBER,              -- 대상 도서: BOOKS.BOOKS_ID
+  MEMBERS_ID       NUMBER       NOT NULL, -- 대상 회원: MEMBERS.MEMBERS_ID
+  BOOKS_ID         NUMBER       NOT NULL, -- 대상 도서: BOOKS.BOOKS_ID
   LOAN_DATE        DATE       NOT NULL, -- 관심도서로 저장한 날짜
 
   -- 제약조건

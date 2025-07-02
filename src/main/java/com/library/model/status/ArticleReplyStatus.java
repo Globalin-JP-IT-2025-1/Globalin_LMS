@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ItemStatus {
+public enum ArticleReplyStatus {
 
     ENABLE(0, "공개"),
     DISABLE(1, "비공개"),

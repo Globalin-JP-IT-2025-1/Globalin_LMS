@@ -26,7 +26,9 @@ public class EtcController {
 	}
 
 	@GetMapping("/{number}")
-	public String showEtcPage(@PathVariable("number") String number, HttpServletRequest request, Model model) {
+	public String showEtcPage(@PathVariable("number") String number, 
+							  HttpServletRequest request, 
+							  Model model) {
     	log.info("### {} - {} - {} 요청 매핑 정상 처리!", 
 				this.getClass().getSimpleName(), 
 				request.getRequestURI(),

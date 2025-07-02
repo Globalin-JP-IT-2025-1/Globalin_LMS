@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <!-- 도서관 소개 > 연혁 -->
 
@@ -24,12 +25,11 @@
 	font-size: 18px;
 	color: #1b3a57;
 }
-
 </style>
 
 <div class="etc_42">
 	<div class="card m-3">
-	  <h5><i class="bi bi-clock-history"></i>&nbsp;글로벌인 도서관 연혁</h5>
+	  <h5><i class="bi bi-clock-history"></i>&nbsp;<spring:message code="etc42.historyTitle"/></h5>
 	  <hr class="border border-1 opacity-50">
 	   <img src="${pageContext.request.contextPath}/resources/images/history.png">
 	</div>

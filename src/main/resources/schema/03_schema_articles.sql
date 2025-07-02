@@ -1,15 +1,15 @@
 -- 테이블 생성
 CREATE TABLE ARTICLES (
   ARTICLES_ID    NUMBER,                            					 -- 게시글ID
-  AUTHOR_ID      NUMBER,                            					 -- 작성자 ID (MEMBERS.MEMBER_ID와 FK)
+  AUTHOR_ID      NUMBER				NOT NULL,            		-- 작성자 ID (MEMBERS.MEMBER_ID와 FK)
   CATEGORY       VARCHAR2(3)		NOT NULL,                            -- 카테고리
   TITLE          VARCHAR2(100)      NOT NULL,                            -- 제목
   CONTENT        VARCHAR2(1000)     NOT NULL,                            -- 내용
-  CREATE_DATE    DATE               DEFAULT SYSDATE NOT NULL,            -- 최초등록일자
+  CREATE_DATE    DATE               NOT NULL,           				 -- 최초등록일자
   UPDATE_DATE    DATE				NOT NULL,                            -- 최종수정일자
-  REPLY_COUNT    NUMBER(9)          DEFAULT 0,                  		 -- 댓글수
-  VIEW_COUNT     NUMBER(9)          DEFAULT 0,                  		 -- 조회수
-  STATUS 	NUMBER(1) 			DEFAULT 0 NOT NULL,              	 -- 비밀글 여부 (0: 공개, 1: 비밀)
+  REPLY_COUNT    NUMBER(9)				NOT NULL,                  		 -- 댓글수
+  VIEW_COUNT     NUMBER(9)				NOT NULL,                  		 -- 조회수
+  STATUS 	NUMBER(1) 				NOT NULL,              	 -- 비밀글 여부 (0: 공개, 1: 비밀)
 
   -- 제약조건 명시
   CONSTRAINT PK_ARTICLES PRIMARY KEY (ARTICLES_ID),

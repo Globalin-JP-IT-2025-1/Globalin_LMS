@@ -10,12 +10,12 @@
 		parameterType="com.library.model.book.BookListRequest">
 		<![CDATA[
 			SELECT b.BOOKS_ID, b.TITLE, b.AUTHOR, b.PUBLISHER, 
-				   b.PUBLISHER, b.ISBN, b.CATEGORY, b.IMAGE_LINK, b.DESCRIPTION, 
+				   b.PUBLISH_DATE, b.ISBN, b.CATEGORY, b.IMAGE_LINK, b.DESCRIPTION, 
 				   b.CREATE_DATE, b.VIEW_COUNT, b.REVIEW_COUNT, b.LOAN_COUNT, b.LIKE_COUNT, b.STATUS, 
 			       b.rnum
 			FROM (
 				SELECT bk.BOOKS_ID, bk.TITLE, bk.AUTHOR, bk.PUBLISHER, 
-					   bk.PUBLISHER, bk.ISBN, bk.CATEGORY, bk.IMAGE_LINK, bk.DESCRIPTION, 
+					   bk.PUBLISH_DATE, bk.ISBN, bk.CATEGORY, bk.IMAGE_LINK, bk.DESCRIPTION, 
 					   bk.CREATE_DATE, bk.VIEW_COUNT, bk.REVIEW_COUNT, bk.LOAN_COUNT, bk.LIKE_COUNT, bk.STATUS, 
 					   ROWNUM AS rnum
 				FROM BOOKS bk
@@ -26,70 +26,121 @@
 	</select>
 
 	<!-- 2) 도서 목록 조회 (카테고리 기준) : status=1인 도서 제외 -->
-	<select id="getBookListByClassNo"
+	<select id="getBookListByCategory"
 		resultType="com.library.model.book.Book"
 		parameterType="com.library.model.book.BookListRequest">
 		<![CDATA[
 			SELECT b.BOOKS_ID, b.TITLE, b.AUTHOR, b.PUBLISHER, 
-				   b.PUBLISHER, b.ISBN, b.CATEGORY, b.IMAGE_LINK, b.DESCRIPTION, 
+				   b.PUBLISH_DATE, b.ISBN, b.CATEGORY, b.IMAGE_LINK, b.DESCRIPTION, 
 				   b.CREATE_DATE, b.VIEW_COUNT, b.REVIEW_COUNT, b.LOAN_COUNT, b.LIKE_COUNT, b.STATUS, 
 			       b.rnum
 			FROM (
 				SELECT bk.BOOKS_ID, bk.TITLE, bk.AUTHOR, bk.PUBLISHER, 
-					   bk.PUBLISHER, bk.ISBN, bk.CATEGORY, bk.IMAGE_LINK, bk.DESCRIPTION, 
+					   bk.PUBLISH_DATE, bk.ISBN, bk.CATEGORY, bk.IMAGE_LINK, bk.DESCRIPTION, 
 					   bk.CREATE_DATE, bk.VIEW_COUNT, bk.REVIEW_COUNT, bk.LOAN_COUNT, bk.LIKE_COUNT, bk.STATUS, 
 					   ROWNUM AS rnum
 				FROM BOOKS bk
-			    WHERE bk.CATEGORY LIKE CONCAT(#{category}, '%')
+			    WHERE bk.CATEGORY LIKE #{category} || '%'
 			    	AND bk.STATUS <> 1
-			    ORDER BY ar.UPDATE_DATE DESC
+			    ORDER BY bk.CREATE_DATE DESC
 		    ) b
 			WHERE b.rnum > #{startRow} AND b.rnum <= #{endRow}
 		]]>
 	</select>
 	
-	<!-- 키워드 검색 -->
-	<select id="getArticleListByKeyword" 
+	<!-- 4) 인기도서 (likeCount DESC) -->
+	<select id="getBookListByLikeCount" 
 			resultType="com.library.model.book.Book" 
 			parameterType="com.library.model.book.BookListRequest">
 		<![CDATA[
 			SELECT b.BOOKS_ID, b.TITLE, b.AUTHOR, b.PUBLISHER, 
-				   b.PUBLISHER, b.ISBN, b.CATEGORY, b.IMAGE_LINK, b.DESCRIPTION, 
+				   b.PUBLISH_DATE, b.ISBN, b.CATEGORY, b.IMAGE_LINK, b.DESCRIPTION, 
 				   b.CREATE_DATE, b.VIEW_COUNT, b.REVIEW_COUNT, b.LOAN_COUNT, b.LIKE_COUNT, b.STATUS, 
 			       b.rnum
 			FROM (
 				SELECT bk.BOOKS_ID, bk.TITLE, bk.AUTHOR, bk.PUBLISHER, 
-					   bk.PUBLISHER, bk.ISBN, bk.CATEGORY, bk.IMAGE_LINK, bk.DESCRIPTION, 
+					   bk.PUBLISH_DATE, bk.ISBN, bk.CATEGORY, bk.IMAGE_LINK, bk.DESCRIPTION, 
 					   bk.CREATE_DATE, bk.VIEW_COUNT, bk.REVIEW_COUNT, bk.LOAN_COUNT, bk.LIKE_COUNT, bk.STATUS, 
 					   ROWNUM AS rnum
 				FROM BOOKS bk
-			    WHERE 1 = 1
-				    <if test="category != null and category != ''">
-				        AND CATEGORY = #{category}
-				    </if>
-				    <choose>
-				        <when test="searchRequest.type == 'title'">
-							AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
-						</when>
-						<when test="searchRequest.type == 'author'">
-							AND LOWER(AUTHOR) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
-						</when>
-						<when test="searchRequest.type == 'publisher'">
-							AND LOWER(PUBLISHER) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
-						</when>
-						<when test="searchRequest.type == 'isbn'">
-							AND LOWER(ISBN) LIKE CONCAT('%', LOWER(#{searchRequest.keyword}), '%')
-						</when>
-				        <otherwise>
-				            AND 1 = 0
-				        </otherwise>
-				    </choose>
-				    AND bk.STATUS <> 1
-			    ORDER BY bk.UPDATE_DATE DESC
+			    WHERE bk.STATUS <> 1
+			    ORDER BY bk.LOAN_COUNT DESC
 		    ) b
 			WHERE b.rnum > #{startRow} AND b.rnum <= #{endRow}
 		]]>
 	</select>
+	
+	<!-- 3) 대출 베스트 (loanCount DESC) -->
+	<select id="getBookListByLoanCount" 
+			resultType="com.library.model.book.Book" 
+			parameterType="com.library.model.book.BookListRequest">
+		<![CDATA[
+			SELECT b.BOOKS_ID, b.TITLE, b.AUTHOR, b.PUBLISHER, 
+				   b.PUBLISH_DATE, b.ISBN, b.CATEGORY, b.IMAGE_LINK, b.DESCRIPTION, 
+				   b.CREATE_DATE, b.VIEW_COUNT, b.REVIEW_COUNT, b.LOAN_COUNT, b.LIKE_COUNT, b.STATUS, 
+			       b.rnum
+			FROM (
+				SELECT bk.BOOKS_ID, bk.TITLE, bk.AUTHOR, bk.PUBLISHER, 
+					   bk.PUBLISH_DATE, bk.ISBN, bk.CATEGORY, bk.IMAGE_LINK, bk.DESCRIPTION, 
+					   bk.CREATE_DATE, bk.VIEW_COUNT, bk.REVIEW_COUNT, bk.LOAN_COUNT, bk.LIKE_COUNT, bk.STATUS, 
+					   ROWNUM AS rnum
+				FROM BOOKS bk
+			    WHERE bk.STATUS <> 1
+			    ORDER BY bk.LOAN_COUNT DESC
+		    ) b
+			WHERE b.rnum > #{startRow} AND b.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 추천 도서 3건 (view_count desc) -->
+	<select id="getRecBookListForHome" 
+			resultType="com.library.model.book.Book">
+		<![CDATA[
+			SELECT * FROM (
+				SELECT * FROM BOOKS ORDER BY VIEW_COUNT DESC
+			) WHERE ROWNUM <= 3
+		]]>
+	</select>
+	
+	<!-- 인기 도서 3건 (like_count desc) -->
+	<select id="getPopBookListForHome" 
+			resultType="com.library.model.book.Book">
+		<![CDATA[
+			SELECT * FROM (
+				SELECT * FROM BOOKS ORDER BY LIKE_COUNT DESC
+			) WHERE ROWNUM <= 3
+		]]>
+	</select>
+	
+	<!-- 신착 도서 3건 (create_date desc) -->
+	<select id="getNewBookListForHome" 
+			resultType="com.library.model.book.Book">
+		<![CDATA[
+			SELECT * FROM (
+				SELECT * FROM BOOKS ORDER BY CREATE_DATE DESC
+			) WHERE ROWNUM <= 3
+		]]>
+	</select>
+	
+	<!-- 5) 통합검색 - 키워드 검색 - 책제목 -->
+<select id="getBookListByKeywordByTitle"
+        resultType="com.library.model.book.Book"
+        parameterType="com.library.model.book.BookListRequest">
+<![CDATA[
+    SELECT * FROM (
+        SELECT b.*, ROWNUM AS rnum FROM (
+            SELECT bk.*
+            FROM BOOKS bk
+            WHERE bk.STATUS <> 1
+              AND LOWER(bk.TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+            ORDER BY bk.CREATE_DATE DESC
+        ) b
+        WHERE ROWNUM <= #{endRow}
+    )
+    WHERE rnum > #{startRow}
+]]>
+</select>
+
 
 
 	<!-- 목록 개수 -->
@@ -99,11 +150,11 @@
 	</select>
 
 	<!-- 2) 게시글 수 (카테고리 기준) -->
-	<select id="getBookListCountByClassNo" resultType="int"
+	<select id="getBookListCountByCategory" resultType="int"
 		parameterType="String">
 		<![CDATA[
 			SELECT COUNT(*) FROM BOOKS 
-			WHERE CATEGORY LIKE CONCAT(#{category}, '%')
+			WHERE CATEGORY LIKE #{category} || '%'
 			    	AND STATUS <> 1
 		]]>
 	</select>
@@ -114,18 +165,27 @@
 		parameterType="com.library.model.SearchRequest">
 		SELECT COUNT(*) FROM BOOKS
 		WHERE 1 = 1
+		<bind name="kw" value="keyword.toLowerCase()" />
 		<choose>
+			<when test="type == 'all'">
+				AND (
+					LOWER(TITLE) LIKE '%' || '${kw}' || '%' 
+					OR LOWER(AUTHOR) LIKE '%' || '${kw}' || '%' 
+					OR LOWER(PUBLISHER) LIKE '%' || '${kw}' || '%' 
+					OR LOWER(ISBN) LIKE '%' || '${kw}' || '%' 
+				)
+			</when>
 			<when test="type == 'title'">
-				AND LOWER(TITLE) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+				AND LOWER(TITLE) LIKE '%' || '${kw}' || '%' 
 			</when>
 			<when test="type == 'author'">
-				AND LOWER(AUTHOR) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+				AND LOWER(AUTHOR) LIKE '%' || '${kw}' || '%' 
 			</when>
 			<when test="type == 'publisher'">
-				AND LOWER(PUBLISHER) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+				AND LOWER(PUBLISHER) LIKE '%' || '${kw}' || '%' 
 			</when>
 			<when test="type == 'isbn'">
-				AND LOWER(ISBN) LIKE CONCAT('%', LOWER(#{keyword}), '%')
+				AND LOWER(ISBN) LIKE '%' || '${kw}' || '%' 
 			</when>
 			<otherwise>
 				AND 1 = 0
@@ -193,20 +253,6 @@
 		UPDATE BOOKS
 		SET VIEW_COUNT = VIEW_COUNT + 1
 		WHERE BOOKS_ID = #{value}
-	</update>
-
-	<!-- 7) review count 증가 -->
-	<update id="updateBookReviewCountUp" parameterType="int">
-		UPDATE BOOKS
-		SET REVIEW_COUNT = REVIEW_COUNT + 1
-		WHERE BOOKS_ID = #{value}
-	</update>
-
-	<!-- 8) review count 감소 -->
-	<update id="updateBookReviewCountDown" parameterType="int">
-		UPDATE BOOKS
-		SET REVIEW_COUNT = REVIEW_COUNT - 1
-		WHERE BOOKS_ID = #{value} AND REVIEW_COUNT > 0
 	</update>
 	
 	<!-- 8) loan count 증가 -->

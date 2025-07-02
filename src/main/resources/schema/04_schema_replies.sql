@@ -1,8 +1,8 @@
 -- 테이블 생성
 CREATE TABLE REPLIES (
   REPLIES_ID         NUMBER,						-- 게시글댓글ID
-  ORIGIN_ARTICLE_ID  NUMBER,    					-- 원본 게시글 ID (ARTICLES.ARTICLES_ID)
-  AUTHOR_ID          NUMBER,         				-- 작성자 ID (MEMBERS.MEMBER_ID)
+  ORIGIN_ARTICLE_ID  NUMBER       NOT NULL,			-- 원본 게시글 ID (ARTICLES.ARTICLES_ID)
+  AUTHOR_ID          NUMBER       NOT NULL,			-- 작성자 ID (MEMBERS.MEMBER_ID)
   CONTENT            VARCHAR2(500)       NOT NULL,	-- 내용
   CREATE_DATE        DATE                NOT NULL,	-- 등록일자
   UPDATE_DATE        DATE				 NOT NULL,	-- 수정일자

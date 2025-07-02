@@ -6,12 +6,13 @@ import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.library.mapper.MemberMapper;
+import com.library.model.member.LeaveRequest;
 import com.library.model.member.Member;
 import com.library.model.member.MemberListRequest;
 import com.library.model.member.MemberListResponse;
+import com.library.model.member.UpgradeRequest;
 import com.library.model.status.MemberStatus;
 import com.library.service.MemberService;
 import com.library.util.CommonUtil;
@@ -77,10 +78,16 @@ public class MemberServiceImpl implements MemberService {
 	public Member getMemberByEmail(String email) {
 		return memberMapper.getMemberByEmail(email);
 	}
+	
+	// email 기반
+	@Override
+	public Member getMemberByCardNum(String cardNum) {
+		return memberMapper.getMemberByCardNum(cardNum);
+	}
 
 	// 회원 정보 수정
-	@Override
 	// 1) 회원 - 내 정보 수정 (password, email, mobile, zipcode, address, addressDetail)
+	@Override
 	public int updateMemberInfo(Member member) {
 		if (member.getPassword() != null) {
 			// 비밀번호 암호화
@@ -99,34 +106,29 @@ public class MemberServiceImpl implements MemberService {
 		LocalDateTime leaveDate = LocalDateTime.now();
 		Timestamp tsLeaveDate = Timestamp.valueOf(leaveDate);
 
-		Member member = Member.builder()
+		LeaveRequest leaveRequest = LeaveRequest.builder()
 				.membersId(membersId)
-				.status(MemberStatus.LEAVE.getCode()) // 탈퇴회원
 				.leaveDate(tsLeaveDate) // 탈퇴날짜 추가
 				.build();
 
-		return memberMapper.updateMemberLeave(member);
+		return memberMapper.updateMemberLeave(leaveRequest);
 	}
 
 	// 3) 관리자 - 회원카드 등록 (status, cardnum)
 	@Override
-	@Transactional
 	public int updateMemberCardnum(int membersId, String cardNum) {
-		Member member = memberMapper.getMemberById(membersId);
+		UpgradeRequest upgradeRequest = UpgradeRequest.builder()
+				.membersId(membersId)
+				.cardNum(cardNum) // 회원카드 추가
+				.build();
 
-		member.setStatus(MemberStatus.REGULER.getCode()); // 1-정회원 으로 변경
-		member.setCardNum(cardNum); // 회원카드 추가
-
-		return memberMapper.updateMemberCardnum(member);
+		return memberMapper.updateMemberCardnum(upgradeRequest);
 	}
 
 	// 4) 도서 시스템 - 도서 연체 (status)
 	@Override
-	public int updateMemberOverdue(Member member) {
-
-		member.setStatus(MemberStatus.LOAN_HOLD.getCode()); // 2-대출정지 로 변경
-
-		return memberMapper.updateMemberOverdue(member);
+	public int updateMemberOverdue(int membersId) {
+		return memberMapper.updateMemberOverdue(membersId);
 	}
 
 	// 5) 도서 시스템 - 도서 대출 (loanCount)
@@ -189,6 +191,20 @@ public class MemberServiceImpl implements MemberService {
 		member.setPassword(encodedPassword);
 
 		return randomPassword;
+	}
+	
+	// 아이디 중복 확인
+	@Override
+	public boolean isUsernameDuplicate(String username) {
+		Member member = memberMapper.getMemberByUsername(username);
+		return member != null; // 중복임
+	}
+	
+	// 이메일 중복 확인
+	@Override
+	public boolean isEmailDuplicate(String email) {
+		Member member = memberMapper.getMemberByEmail(email);
+		return member != null; // 중복임
 	}
 
 }

@@ -100,15 +100,15 @@ public class AdminArticleNotController {
     // 활성화, 비활성화, 잠금 처리
     @PutMapping("/{articlesId}/{type}")
     public String updateDisplayProc(@PathVariable("articlesId") int articlesId, 
-    								@PathVariable("type") String type,
+    								@PathVariable("type") int type,
     								RedirectAttributes redirectAttributes) {
     	
     	try {
-    		if (type.equals("disable")) {
+    		if (type == 1) {
     			articleService.updateArticleDisable(articlesId); // 게시글 비활성화
-    		} else if (type.equals("enable")) {
+    		} else if (type == 0) {
     			articleService.updateArticleEnable(articlesId); // 게시글 활성화
-    		} else if (type.equals("secret")) {
+    		} else if (type == 2) {
     			articleService.updateArticleEnable(articlesId); // 게시글 잠금
     		}
     		
@@ -116,11 +116,11 @@ public class AdminArticleNotController {
     		e.printStackTrace();
     		
     		redirectAttributes.addFlashAttribute("alertType", "fail");
-    		if (type.equals("disable")) {
+    		if (type == 1) {
     			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 삭제 실패");
-    		} else if (type.equals("enable")) {
+    		} else if (type == 0) {
     			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 공개 실패");
-    		} else if (type.equals("secret")) {
+    		} else if (type == 2) {
     			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 비공개 실패");
     		}
     		
@@ -128,11 +128,11 @@ public class AdminArticleNotController {
     	}
     	
     	redirectAttributes.addFlashAttribute("alertType", "success");
-    	if (type.equals("disable")) {
+    	if (type == 1) {
 			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 삭제 성공");
-		} else if (type.equals("enable")) {
+		} else if (type == 0) {
 			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 공개 성공");
-		} else if (type.equals("secret")) {
+		} else if (type == 2) {
 			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 비공개 성공");
 		}
     	

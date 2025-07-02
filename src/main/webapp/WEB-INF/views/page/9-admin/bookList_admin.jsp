@@ -8,7 +8,7 @@
 <c:set var="bookList" value="${bookList}" />
 
 <c:set var="totalCount" value="${totalCount}" />
-<c:set var="totalPages" value="${totalPages}" />
+<c:set var="totalPages" value="${totalPage}" />
 <c:set var="currentPage" value="${currentPage}" />
 
 <c:set var="blockSize" value="5" />
@@ -18,6 +18,9 @@
 <sec:authorize access="hasRole('ROLE_USER')">
     <sec:authentication property="principal" var="userDetails" />
 </sec:authorize>
+
+<meta name="_csrf" content="${_csrf.token}" />
+<meta name="_csrf_header" content="${_csrf.headerName}" />
 
 <style>
 .bookList tr {
@@ -32,12 +35,29 @@
 }
 
 /* 각 열 너비 */
-.bookList td:nth-child(1), .bookList th:nth-child(1) { width: 5% !important; }
-.bookList td:nth-child(2), .bookList th:nth-child(2) { width: 10% !important; }
-.bookList td:nth-child(3), .bookList th:nth-child(3) { width: 65% !important; }
-.bookList td:nth-child(4), .bookList th:nth-child(4) { width: 10% !important; }
-.bookList td:nth-child(5), .bookList th:nth-child(5) { width: 5% !important; }
-.bookList td:nth-child(6), .bookList th:nth-child(6) { width: 5% !important; }
+.bookList td:nth-child(1), .bookList th:nth-child(1) { min-width: 30px !important; }
+.bookList td:nth-child(2), .bookList th:nth-child(2) { min-width: 50px !important; }
+.bookList td:nth-child(3), .bookList th:nth-child(3) { min-width: 100px !important; }
+.bookList td:nth-child(4), .bookList th:nth-child(4) { min-width: 100px !important; }
+.bookList td:nth-child(5), .bookList th:nth-child(5) { min-width: 50px !important; }
+.bookList td:nth-child(6), .bookList th:nth-child(6) { min-width: 50px !important; }
+.bookList td:nth-child(7), .bookList th:nth-child(7) { min-width: 80px !important; }
+.bookList td:nth-child(8), .bookList th:nth-child(8) { min-width: 50px !important; }
+.bookList td:nth-child(9), .bookList th:nth-child(9) { min-width: 50px !important; }
+.bookList td:nth-child(10), .bookList th:nth-child(10) { min-width: 50px !important; }
+.bookList td:nth-child(11), .bookList th:nth-child(11) { min-width: 50px !important; }
+
+.bookList td:nth-child(1), .bookList th:nth-child(1) { max-width: 30px !important; }
+.bookList td:nth-child(2), .bookList th:nth-child(2) { max-width: 50px !important; }
+.bookList td:nth-child(3), .bookList th:nth-child(3) { max-width: 100px !important; }
+.bookList td:nth-child(4), .bookList th:nth-child(4) { max-width: 100px !important; }
+.bookList td:nth-child(5), .bookList th:nth-child(5) { max-width: 50px !important; }
+.bookList td:nth-child(6), .bookList th:nth-child(6) { max-width: 50px !important; }
+.bookList td:nth-child(7), .bookList th:nth-child(7) { max-width: 80px !important; }
+.bookList td:nth-child(8), .bookList th:nth-child(8) { max-width: 50px !important; }
+.bookList td:nth-child(9), .bookList th:nth-child(9) { max-width: 50px !important; }
+.bookList td:nth-child(10), .bookList th:nth-child(10) { max-width: 50px !important; }
+.bookList td:nth-child(11), .bookList th:nth-child(11) { max-width: 50px !important; }
 
 </style>
 
@@ -47,7 +67,7 @@
     <div class="d-flex justify-content-between align-items-center">
         <div>전체 <strong>${totalCount}</strong> 건</div>
         <div>
-        	<form action="/public/books/total" method="get" class="d-flex align-items-center gap-2">
+        	<form action="/admin/books" method="get" class="d-flex align-items-center gap-2">
 				<select class="form-select form-select-sm w-auto" name="searchType">
 				    <option value="title">책제목</option>
 				    <option value="author">저자</option>
@@ -63,14 +83,19 @@
     <!-- 도서 목록 -->
     <div class="overflow-x-auto" >
 	    <table class="table mt-3 table-hover bookList">
-	    	<thead>
+	    	<thead class="table-primary">
 	        	<tr>
 	        		<th>NO</th>
 	        		<th>도서 표지</th>
-	        		<th>도서 정보</th>
+	        		<th>책제목</th>
+	        		<th>저자</th>
+	        		<th>발행자</th>
+	        		<th>발행연도</th>
+	        		<th>ISBN</th>
+	        		<th>분류기호</th>
 	        		<th>도서 상태</th>
 	        		<th>조회수</th>
-	        		<th>리뷰수</th>
+	        		<th>대출/반납</th>
 	        	</tr>
 	        </thead>
 	        <tbody>
@@ -80,40 +105,47 @@
 	        		</c:when>
 		        	<c:when test="${not empty bookList}">
 			            <c:forEach var="i" begin="0" end="${fn:length(bookList) - 1}" step="1">
-			                <tr onclick="location.href='/public/articles/not/${bookList[i].booksId}'">
+			                <tr>
 			                    <td>${i + (currentPage * 7) - 6}</td>
 			                    <td>
 				                    <img src="${bookList[i].imageLink}"
 				                        alt="${bookList[i].title} 책 표지" width="50">
 				                </td>
+				                <td><div class="fw-bold col-10 text-truncate" onclick="location.href='/public/books/${bookList[i].booksId}'">${bookList[i].title}</div></td>
+				                <td><div class="col-10 text-truncate">${bookList[i].author}</div></td>
+		                       	<td><div>${bookList[i].publisher}</div></td>
+		                        <td><div><fmt:formatDate value="${bookList[i].publishDate}" pattern="yyyy" /></div></td>
+		                        <td><div>${bookList[i].isbn}</div></td>
+		                        <td><div>${bookList[i].category}</div></td>
+				                
 				                <td>
-				                    <div class="text-secondary mb-1">
-				                    	총류 > 총류
-				                    </div>
-				                    <div class="fw-bold fs-4 mb-2">${bookList[i].title}</div>
-				                    <div class="d-flex flex-wrap mb-2 gap-3">
-				                        <div><span class="fw-semibold">저자:</span> ${bookList[i].author}</div>
-				                        <div><span class="fw-semibold">출판사:</span> ${bookList[i].publisher}</div>
-				                        <div><span class="fw-semibold">출판연도:</span> <fmt:formatDate value="${bookList[i].publishDate}" pattern="yyyy" /></div>
-				                    </div>
-				                    <div class="d-flex flex-wrap mb-2 gap-3">
-				                        <div><span class="fw-semibold">ISBN:</span> ${bookList[i].isbn}</div>
-				                        <div><span class="fw-semibold">분류기호:</span> ${bookList[i].category}</div>
-				                        <div><span class="fw-semibold">도서관:</span> 글로벌인 도서관</div>
-				                        <div><span class="fw-semibold">자료실:</span> 일반자료실</div>
-				                    </div>
-				                </td>
-				                <td>
-				                    <div class="d-flex flex-column gap-2">
-				                        <div class="mb-2 text-danger fw-semibold">
-				                        	${bookList[i].status}
-				                        </div>
-				                        <button class="btn btn-secondary btn-sm" disabled>도서예약불가</button>
-				                        <button class="btn btn-outline-success btn-sm">관심도서담기</button>
-				                    </div>
+			                        <div class="mb-2 fw-semibold">
+			                        	<c:set var="status">${bookList[i].status}</c:set>
+			                        	<c:choose>
+			                        		<c:when test="${status eq 0}">
+			                        			<div class="text-success">대출가능</div>
+			                        		</c:when>
+			                        		<c:when test="${status eq 1}">
+			                        			<div class="text-secondary">비공개</div>
+			                        		</c:when>
+			                        		<c:when test="${status eq 2}">
+			                        			<div class="text-info">대출 중(예약 가능)</div>
+			                        		</c:when>
+			                        		<c:when test="${status eq 3}">
+			                        			<div class="text-danger">대출 예약 중</div>
+			                        		</c:when>
+			                        		<c:otherwise>
+			                        			알 수 없음
+			                        		</c:otherwise>
+			                        	</c:choose>
+			                        	
+			                        </div>
 				                </td>
 			                    <td>${bookList[i].viewCount}</td>
-			                    <td>${bookList[i].reviewCount}</td>
+			                    <td>
+			                    	<button class="btn btn-primary mb-2" onclick="openLoanModal(${bookList[i].booksId})">대출</button><br>
+			                    	<button class="btn btn-success" onclick="openReturnModal(${bookList[i].booksId})">반납</button>
+			                    </td>
 			                </tr>
 			            </c:forEach>
 			        </c:when>
@@ -121,13 +153,11 @@
 	        </tbody>
 	    </table>
 	    
-	    <!-- 도서 추가하기 버튼 : 관리자만 보이기 -->
+	    <!-- 도서 추가하기 버튼 -->
 	    <div class="d-flex justify-content-end">
-			<sec:authorize access="hasRole('ROLE_ADMIN')">
-	   			<button class="btn btn-primary mb-6" onclick="location.href='/admin/books/add'">작성하기</button>
-		  	</sec:authorize>
+   			<button class="btn btn-primary mb-6" onclick="location.href='/admin/books/add'">도서 추가</button>
 	  	</div>
-	  	
+	    
 	  	<c:choose>
         	<c:when test="${not empty bookList}">
 			    <!-- 페이징 -->

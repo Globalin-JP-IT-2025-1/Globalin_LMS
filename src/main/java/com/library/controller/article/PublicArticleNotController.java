@@ -33,11 +33,11 @@ public class PublicArticleNotController {
     public String getListNot(@RequestParam(defaultValue = "1") int page, 
 							 Model model) {
     	
-    	ArticleListResponse articleList = articleService.getArticleListByCategory("not", page);
+    	ArticleListResponse articleListResponse = articleService.getArticleListByCategory("not", page);
 		
-		model.addAttribute("articleListWithAuthor", articleList.getArticleWithAuthorList()); // 게시글 목록
-		model.addAttribute("totalCount", articleList.getTotalCount()); // 게시글 페이징
-    	model.addAttribute("totalPages", articleList.getTotalPages()); // 게시글 페이징
+		model.addAttribute("articleList", articleListResponse.getArticleList()); // 게시글 목록
+		model.addAttribute("totalCount", articleListResponse.getTotalCount()); // 게시글 페이징
+    	model.addAttribute("totalPages", articleListResponse.getTotalPages()); // 게시글 페이징
     	model.addAttribute("currentPage", page); // 게시글 페이징
     	
     	pageInfo = PageInfo.builder()

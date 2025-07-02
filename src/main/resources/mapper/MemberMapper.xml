@@ -27,17 +27,22 @@
 	<!-- 3) 상세 조회 -->
     <!-- 회원 상세 조회 (membersId 기반) -->
     <select id="getMemberById" resultType="com.library.model.member.Member" parameterType="int">
-        SELECT * FROM MEMBERS WHERE MEMBERS_ID = #{membersId}
+        SELECT * FROM MEMBERS WHERE MEMBERS_ID = #{value}
     </select>
     
     <!-- 회원 상세 조회 (username 기반) -->
     <select id="getMemberByUsername" resultType="com.library.model.member.Member" parameterType="String">
-        SELECT * FROM MEMBERS WHERE USERNAME = #{username}
+        SELECT * FROM MEMBERS WHERE USERNAME = #{value}
     </select>
     
     <!-- 회원 상세 조회 (email 기반) -->
     <select id="getMemberByEmail" resultType="com.library.model.member.Member" parameterType="String">
-        SELECT * FROM MEMBERS WHERE EMAIL = #{email}
+        SELECT * FROM MEMBERS WHERE EMAIL = #{value}
+    </select>
+    
+    <!-- 회원 상세 조회 (회원카드 기반) -->
+    <select id="getMemberByCardNum" resultType="com.library.model.member.Member" parameterType="String">
+        SELECT * FROM MEMBERS WHERE CARD_NUM = #{value}
     </select>
     
     <!-- 회원 정보 수정 -->
@@ -54,40 +59,40 @@
     </update>
     
     <!-- 2) 회원 - 탈퇴 : status, leaveDate -->
-    <update id="updateMemberLeave" parameterType="com.library.model.member.Member">
+    <update id="updateMemberLeave" parameterType="com.library.model.member.LeaveRequest">
         UPDATE MEMBERS 
-        SET STATUS = #{status}, 
+        SET STATUS = 3, 
         	LEAVE_DATE = #{leaveDate}
 	    WHERE MEMBERS_ID = #{membersId}
     </update>
     
     <!-- 3) 관리자 - 회원카드 등록 : status, cardNum -->
-    <update id="updateMemberCardnum" parameterType="com.library.model.member.Member">
+    <update id="updateMemberCardnum" parameterType="com.library.model.member.UpgradeRequest">
         UPDATE MEMBERS 
-        SET STATUS = #{status}, 
+        SET STATUS = 1, 
         	CARD_NUM = #{cardNum}
 	    WHERE MEMBERS_ID = #{membersId}
     </update>
     
     <!-- 4) 도서 시스템 - 도서 연체 : status -->
-    <update id="updateMemberOverdue" parameterType="com.library.model.member.Member">
+    <update id="updateMemberOverdue" parameterType="int">
         UPDATE MEMBERS 
-        SET STATUS = #{status}
-	    WHERE MEMBERS_ID = #{membersId}
+        SET STATUS = 2
+	    WHERE MEMBERS_ID = #{value}
     </update>
     
     <!-- 5) 도서 시스템 - 도서 대출 : loanCount -->
-    <update id="updateMemberLoanCountUp" parameterType="com.library.model.member.Member">
+    <update id="updateMemberLoanCountUp" parameterType="int">
         UPDATE MEMBERS 
         SET LOAN_COUNT = LOAN_COUNT + 1
-	    WHERE MEMBERS_ID = #{membersId}
+	    WHERE MEMBERS_ID = #{value}
     </update>
     
     <!-- 6) 도서 시스템 - 도서 반납 : loanCount -->
-    <update id="updateMemberLoanCountDown" parameterType="com.library.model.member.Member">
+    <update id="updateMemberLoanCountDown" parameterType="int">
         UPDATE MEMBERS 
         SET LOAN_COUNT = LOAN_COUNT - 1
-	    WHERE MEMBERS_ID = #{membersId}
+	    WHERE MEMBERS_ID = #{value}
     </update>
     
     <!-- 회원 등록 -->
@@ -110,6 +115,6 @@
 
     <!-- 회원 삭제 -->
     <delete id="deleteMember" parameterType="int">
-        DELETE FROM MEMBERS WHERE MEMBERS_ID = #{membersId}
+        DELETE FROM MEMBERS WHERE MEMBERS_ID = #{value}
     </delete>
 </mapper>

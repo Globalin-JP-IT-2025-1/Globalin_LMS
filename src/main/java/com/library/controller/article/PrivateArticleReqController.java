@@ -36,11 +36,11 @@ public class PrivateArticleReqController {
     @GetMapping
     public String getList(@RequestParam(defaultValue = "1") int page, 
     					  Model model) {
-    	ArticleListResponse articleListWithAuthor = articleService.getArticleListByCategory("req", page);
+    	ArticleListResponse articleListResponse = articleService.getArticleListByCategory("req", page);
 		
-		model.addAttribute("articleListWithAuthor", articleListWithAuthor.getArticleWithAuthorList());
-		model.addAttribute("totalCount", articleListWithAuthor.getTotalCount());
-    	model.addAttribute("totalPages", articleListWithAuthor.getTotalPages());
+		model.addAttribute("articleList", articleListResponse.getArticleList());
+		model.addAttribute("totalCount", articleListResponse.getTotalCount());
+    	model.addAttribute("totalPages", articleListResponse.getTotalPages());
     	model.addAttribute("currentPage", page);
 		
     	pageInfo = PageInfo.builder()

@@ -19,17 +19,13 @@ import com.library.exception.LoanNotAllowedException;
 import com.library.mapper.BookMapper;
 import com.library.model.SearchRequest;
 import com.library.model.book.Book;
-import com.library.model.book.BookDetailResponse;
 import com.library.model.book.BookListRequest;
 import com.library.model.book.BookListResponse;
-import com.library.model.book.ReviewListResponse;
 import com.library.model.member.Member;
-import com.library.model.status.BookHistoryStatus;
 import com.library.model.status.MemberStatus;
 import com.library.service.BookService;
 import com.library.service.MemberBookHistoryService;
 import com.library.service.MemberService;
-import com.library.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +35,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper; // 책
-    private final ReviewService reviewService; // 책 리뷰
     
     private final MemberService memberService; // 대출, 반납 회원
     private final MemberBookHistoryService memberBookHistoryService; // 대출, 반납 기록
@@ -61,8 +56,6 @@ public class BookServiceImpl implements BookService {
     	int endRow = currentPage * BOOKS_PER_PAGE;
     	
     	BookListRequest bookListRequest = BookListRequest.builder()
-    			.category(null)
-    			.searchRequest(null)
     			.startRow(startRow)
 				.endRow(endRow)
     			.build();
@@ -78,16 +71,15 @@ public class BookServiceImpl implements BookService {
     
     // 2) 카테고리별 목록 조회 - 주제별검색
     @Override
-    public BookListResponse getBookListByClassNo(String category, int currentPage) {
+    public BookListResponse getBookListByCategory(String category, int currentPage) {
         
-    	int totalCount = getBookListCount(); // 전체 개수
+    	int totalCount = getBookListCountByCategory(category); // 전체 개수
 		int totalPages = (int)Math.ceil((double)totalCount / BOOKS_PER_PAGE);
     	int startRow = (currentPage - 1) * BOOKS_PER_PAGE;
     	int endRow = currentPage * BOOKS_PER_PAGE;
     	
     	BookListRequest bookListRequest = BookListRequest.builder()
     			.category(category)
-    			.searchRequest(null)
     			.startRow(startRow)
 				.endRow(endRow)
     			.build();
@@ -112,7 +104,6 @@ public class BookServiceImpl implements BookService {
     	
     	BookListRequest bookListRequest = BookListRequest.builder()
     			.category(null)
-    			.searchRequest(null)
     			.startRow(startRow)
 				.endRow(endRow)
     			.build();
@@ -137,7 +128,6 @@ public class BookServiceImpl implements BookService {
     	
     	BookListRequest bookListRequest = BookListRequest.builder()
     			.category(null)
-    			.searchRequest(null)
     			.startRow(startRow)
 				.endRow(endRow)
     			.build();
@@ -151,6 +141,24 @@ public class BookServiceImpl implements BookService {
         		.build();
         
     }
+    
+    // 추천 도서 3건
+	@Override
+	public List<Book> getRecBookListForHome() {
+		return bookMapper.getRecBookListForHome();
+	}
+	
+	// 인기 도서 3건
+	@Override
+	public List<Book> getPopBookListForHome() {
+		return bookMapper.getPopBookListForHome();
+	}
+	
+	// 신착 도서 3건
+	@Override
+	public List<Book> getNewBookListForHome() {
+		return bookMapper.getNewBookListForHome();
+	}
     
     // 키워드 조회
     // DB 통합검색
@@ -167,14 +175,16 @@ public class BookServiceImpl implements BookService {
     	int startRow = (currentPage - 1) * BOOKS_PER_PAGE;
     	int endRow = currentPage * BOOKS_PER_PAGE;
     	
+    	System.out.println("type : " + type + ", keyword : " + keyword);
+    	
     	BookListRequest bookListRequest = BookListRequest.builder()
     			.category(null)
-    			.searchRequest(searchRequest)
+    			.keyword(keyword)
     			.startRow(startRow)
     			.endRow(endRow)
     			.build();
     	
-    	List<Book> bookList = bookMapper.getBookListByKeyword(bookListRequest);
+    	List<Book> bookList = bookMapper.getBookListByKeywordByTitle(bookListRequest);
     	
     	return BookListResponse.builder()
     			.bookList(bookList)
@@ -289,7 +299,7 @@ public class BookServiceImpl implements BookService {
     
     // 2) 카테고리별 목록 개수
     @Override
-    public int getBookListCountByClassNo(String category) {
+    public int getBookListCountByCategory(String category) {
         return bookMapper.getBookListCountByCategory(category);
     }
     
@@ -301,29 +311,7 @@ public class BookServiceImpl implements BookService {
     
     
     // 상세 조회
-    // 1) 상세 조회 (북 리뷰 포함)
-    @Override
-    public BookDetailResponse getBookWithReviewListById(int booksId, int reviewCurrentPage) {
-    	
-    	// 도서 정보 가져오기
-	    Book book = bookMapper.getBookById(booksId);
-
-	    // 기본 값 설정
-	    ReviewListResponse reviewListResponse = null;
-	    
-	    if (book != null) {
-	    	if (book.getReviewCount() > 0) {
-	    		reviewListResponse = reviewService.getReviewListByBooksId(book.getBooksId(), reviewCurrentPage);
-	    	}
-	    }
-    	
-    	return BookDetailResponse.builder()
-	            .book(book)
-	            .reviewListResponse(reviewListResponse)
-	            .build();
-    }
-    
-    // 2) 수정용 상세 조회 (북 리뷰 제외)
+    // 1) 수정용 상세 조회 (북 리뷰 제외)
 	@Override
 	public Book getBookById(int booksId) {
 		return bookMapper.getBookById(booksId);
@@ -365,18 +353,6 @@ public class BookServiceImpl implements BookService {
 	public int updateBookViewCountUp(int booksId) {
 		return bookMapper.updateBookViewCountUp(booksId);
 	}
-    
-    // 7) 책 리뷰 개수 증가
-	@Override
-	public int updateBookReviewCountUp(int booksId) {
-		return bookMapper.updateBookReviewCountUp(booksId);
-	}
-	
-	// 8) 책 리뷰 개수 감소
-	@Override
-	public int updateBookReviewCountDown(int booksId) {
-		return bookMapper.updateBookReviewCountDown(booksId);
-	}
 	
 	// 9) 대출 누적수 증가
 	@Override
@@ -407,40 +383,52 @@ public class BookServiceImpl implements BookService {
     // 대출 처리
     @Transactional(rollbackFor = Exception.class)
     @Override
- 	public void loanBook(int booksId, int membersId) {
-    	// 대출 가능한 지 확인
-    	Member member = memberService.getMemberById(membersId);
+ 	public void loanBook(int booksId, String cardNum) {
+    	Member member = memberService.getMemberByCardNum(cardNum.trim());
     	
+    	// 대출 가능한 지 확인
     	// 준회원, 대출정지 회원, 대출권수가 10권을 넘는 회원은 불가능
-    	if (member != null) {
-    		int status = member.getStatus();
-    		if (status == MemberStatus.JUNIOR.getCode()) {
-    			throw new LoanNotAllowedException("준회원은 대출이 불가능 합니다.");
-    		} else if (status == MemberStatus.LOAN_HOLD.getCode()) {
-    			throw new LoanNotAllowedException("대출 정지되어 대출이 불가능 합니다.");
-    		} else if (member.getLoanCount() == MAX_LOAN_COUNT) {
-    			throw new LoanNotAllowedException("합계 10권 이상은 대출이 불가능 합니다.");
-    		}
+    	if (member == null) {
+    		throw new LoanNotAllowedException("게스트 또는 준회원는 대출이 불가능 합니다.");
+    	} 
+    	
+    	int status = member.getStatus();
+    	if (status == MemberStatus.JUNIOR.getCode()) {
+    		throw new LoanNotAllowedException("준회원은 대출이 불가능 합니다.");
+    	} else if (status == MemberStatus.LOAN_HOLD.getCode()) {
+    		throw new LoanNotAllowedException("대출 정지되어 대출이 불가능 합니다.");
+    	} else if (member.getLoanCount() == MAX_LOAN_COUNT) {
+    		throw new LoanNotAllowedException("합계 10권 이상은 대출이 불가능 합니다.");
     	}
 		
+    	int membersId = member.getMembersId();
+    	
 		// 1) 도서 : 대출중으로 처리
 		updateBookLoaned(booksId);
 		// 2) 회원 : 대출권수 증가
         memberService.updateMemberLoanCountUp(membersId);
         // 3) 회원 : 도서 이용 정보에 추가
-        memberBookHistoryService.insertBookHistory(membersId, booksId, BookHistoryStatus.LOANING.getCode());
+        memberBookHistoryService.insertBookHistory(membersId, booksId);
  	}
  	
  	// 반납 처리
     @Transactional(rollbackFor = Exception.class)
     @Override
- 	public void returnBook(int booksId, int membersId) {
+ 	public void returnBook(int booksId, String cardNum) {
+    	Member member = memberService.getMemberByCardNum(cardNum.trim());
+    	
+    	if (member == null) {
+    		throw new LoanNotAllowedException("게스트 또는 준회원는 반납이 불가능 합니다.");
+    	}
+    	
+    	int membersId = member.getMembersId();
+    	
     	// 1) 도서 : 정상(대출가능)으로 처리
 		updateBookLoanable(booksId);
 		// 2) 회원 : 대출권수 감소
         memberService.updateMemberLoanCountDown(membersId);
-        // 3) 회원 : 도서 이용 정보에 추가
-        memberBookHistoryService.insertBookHistory(membersId, booksId, BookHistoryStatus.RETURNED.getCode());
+        // 3) 회원 : 도서 이용 정보에 수정
+        memberBookHistoryService.updateBookHistoryReturned(membersId, booksId);
  	}
 	
 }

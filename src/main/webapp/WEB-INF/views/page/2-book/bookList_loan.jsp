@@ -51,14 +51,13 @@
     <!-- 도서 목록 -->
     <div class="overflow-x-auto" >
 	    <table class="table mt-3 table-hover bookList">
-	    	<thead>
+	    	<thead class="table-primary">
 	        	<tr>
 	        		<th>NO</th>
 	        		<th>도서 표지</th>
 	        		<th>도서 정보</th>
 	        		<th>도서 상태</th>
 	        		<th>조회수</th>
-	        		<th>리뷰수</th>
 	        	</tr>
 	        </thead>
 	        <tbody>
@@ -76,7 +75,19 @@
 				                </td>
 				                <td>
 				                    <div class="text-secondary mb-1">
-				                    	총류 > 총류
+				                    	<c:choose>
+											<c:when test="${bookList[i].category eq '000'}">총류</c:when>
+											<c:when test="${bookList[i].category eq '100'}">철학</c:when>
+											<c:when test="${bookList[i].category eq '200'}">종교</c:when>
+											<c:when test="${bookList[i].category eq '300'}">사회과학</c:when>
+											<c:when test="${bookList[i].category eq '400'}">자연과학</c:when>
+											<c:when test="${bookList[i].category eq '500'}">기술과학</c:when>
+											<c:when test="${bookList[i].category eq '600'}">예술</c:when>
+											<c:when test="${bookList[i].category eq '700'}">언어</c:when>
+											<c:when test="${bookList[i].category eq '800'}">문학</c:when>
+											<c:when test="${bookList[i].category eq '900'}">역사</c:when>
+											<c:otherwise>기타</c:otherwise>
+				                    	</c:choose>
 				                    </div>
 				                    <div class="fw-bold fs-4 mb-2">${bookList[i].title}</div>
 				                    <div class="d-flex flex-wrap mb-2 gap-3">
@@ -92,16 +103,28 @@
 				                    </div>
 				                </td>
 				                <td>
-				                    <div class="d-flex flex-column gap-2">
-				                        <div class="mb-2 text-danger fw-semibold">
-				                        	${bookList[i].status}
-				                        </div>
-				                        <button class="btn btn-secondary btn-sm" disabled>도서예약불가</button>
-				                        <button class="btn btn-outline-success btn-sm">관심도서담기</button>
+				                    <div class="d-flex flex-column justify-center">
+			                        	<c:set var="status">${bookList[i].status}</c:set>
+		                        		<c:choose>
+			                        		<c:when test="${status eq 0}">
+			                        			<div class="text-success">대출가능</div>
+			                        		</c:when>
+			                        		<c:when test="${status eq 1}">
+			                        			<div class="text-secondary">비공개</div>
+			                        		</c:when>
+			                        		<c:when test="${status eq 2}">
+			                        			<div class="text-info">대출 중(예약 가능)</div>
+			                        		</c:when>
+			                        		<c:when test="${status eq 3}">
+			                        			<div class="text-danger">대출 예약 중</div>
+			                        		</c:when>
+			                        		<c:otherwise>
+			                        			알 수 없음
+			                        		</c:otherwise>
+			                        	</c:choose>
 				                    </div>
 				                </td>
 			                    <td>${bookList[i].viewCount}</td>
-			                    <td>${bookList[i].reviewCount}</td>
 			                </tr>
 			            </c:forEach>
 			        </c:when>

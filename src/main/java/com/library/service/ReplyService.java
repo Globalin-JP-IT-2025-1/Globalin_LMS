@@ -6,11 +6,17 @@ import com.library.model.article.ReplyListResponse;
 public interface ReplyService {
 	
 	// 조회
+	// 관리자용 댓글 전체 목록 조회
+	public ReplyListResponse getReplyList(int replyCurrentPage);
+	
+	// 관리자용 댓글 수 (전체)
+	public int getReplyListCount();
+	
 	// 1) 댓글 목록 조회 (게시글 ID 기반)
 	public ReplyListResponse getReplyListByArticlesId(int articlesId, int replyCurrentPage);
 	
 	// 1) 댓글 수 (게시글 ID 기반)
-	public int getReplyListCount(int articlesId);
+	public int getReplyListCountByArticlesId(int articlesId);
     
     // 수정
     // 1) 비공개 (soft delete)

@@ -1,11 +1,11 @@
 -- 테이블 생성
 CREATE TABLE BOOK_HISTORY (
   BOOK_HISTORY_ID  NUMBER,              -- 관심 도서 ID
-  MEMBERS_ID       NUMBER,              -- 대상 회원: MEMBERS.MEMBERS_ID
-  BOOKS_ID         NUMBER,              -- 대상 도서: BOOKS.BOOKS_ID
+  MEMBERS_ID       NUMBER       NOT NULL, -- 대상 회원: MEMBERS.MEMBERS_ID
+  BOOKS_ID         NUMBER       NOT NULL, -- 대상 도서: BOOKS.BOOKS_ID
   LOAN_DATE        DATE       NOT NULL, -- 대출일자
   DUE_DATE         DATE		  NOT NULL, -- 반납예정일자
-  RETURNED_DATE    DATE		  NOT NULL,	-- 반납완료일자
+  RETURNED_DATE    DATE,				-- 반납완료일자
   STATUS      NUMBER(1)   		NOT NULL, -- 연체여부: 0(정상), 1(연체)
 
   -- 제약조건

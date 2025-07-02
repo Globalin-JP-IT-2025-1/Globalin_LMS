@@ -146,7 +146,6 @@ public class PublicMemberController {
 		return "redirect:/public/auth/login"; // 성공: 로그인 페이지로
     }
     
-    
     // 비밀번호 재발급 + 임시 비밀번호 알림 띄우기
     @PostMapping("/repass")
     public String resetPassword(@ModelAttribute Member member,

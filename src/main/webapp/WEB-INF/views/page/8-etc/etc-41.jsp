@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <!-- 도서관 소개 > 도서관 정보 -->
 
@@ -101,13 +102,13 @@
 
 		<!-- 1. 도서관 전경 -->
 		<div class="img card">
-			<h5><i class="bi bi-bank"></i>&nbsp;도서관 전경</h5>
+			<h5><i class="bi bi-bank"></i>&nbsp;<spring:message code="etc41.heading1"/></h5>
 			<img src="${pageContext.request.contextPath}/resources/images/library.png"/>
 		</div>
 
 		<!-- 2. 도서관 위치 -->
 		<div class="map card">
-			<h5><i class="bi bi-geo-alt"></i>&nbsp;도서관 위치</h5>
+			<h5><i class="bi bi-geo-alt"></i>&nbsp;<spring:message code="etc41.heading2"/></h5>
 			<iframe
 				src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3164.811279708046!2d126.90326121530884!3d37.52094883425388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c9efba69e5a99%3A0x4e7d5d6e53c3df67!2z7ISc7Jq47Yq567OE7IucIOuPmeq1rCDslYTsubTrj5kgMQ!5e0!3m2!1sko!2skr!4v1717588943233!5m2!1sko!2skr"
 				allowfullscreen=""
@@ -118,27 +119,27 @@
 
 		<!-- 3. 도서관 정보 -->
 		<div class="info card">
-			<h5><i class="bi bi-book"></i>&nbsp;도서관 안내</h5>
+			<h5><i class="bi bi-book"></i>&nbsp;<spring:message code="etc41.heading3"/></h5>
 			<table>
 				<tr>
-					<th>도서관명</th>
-					<td>글로벌인 도서관</td>
+					<th><spring:message code="etc41.th1"/></th>
+					<td><spring:message code="etc41.td1"/></td>
 				</tr>
 				<tr>
-					<th>주소</th>
-					<td>서울특별시 영등포구 가나다로 1</td>
+					<th><spring:message code="etc41.th2"/></th>
+					<td><spring:message code="etc41.td2"/></td>
 				</tr>
 				<tr>
-					<th>운영시간</th>
-					<td>평일 10:00 ~ 21:00<br>휴일 10:00 ~ 17:00</td>
+					<th><spring:message code="etc41.th3"/></th>
+					<td><spring:message code="etc41.td3" htmlEscape="false"/></td>
 				</tr>
 				<tr>
-					<th>정기 휴관일</th>
-					<td>매주 월요일</td>
+					<th><spring:message code="etc41.th4"/></th>
+					<td><spring:message code="etc41.td4"/></td>
 				</tr>
 				<tr>
-					<th>개관일</th>
-					<td>2025-06-01</td>
+					<th><spring:message code="etc41.th5"/></th>
+					<td><spring:message code="etc41.td5"/></td>
 				</tr>
 			</table>
 		</div>

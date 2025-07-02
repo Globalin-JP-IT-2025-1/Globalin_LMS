@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// 도서 대출 이력
 @Getter
 @Setter
 @NoArgsConstructor

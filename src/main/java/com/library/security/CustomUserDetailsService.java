@@ -10,7 +10,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.library.exception.LeaveMemberException;
 import com.library.model.member.Member;
+import com.library.model.status.MemberStatus;
 import com.library.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     		throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username);
     	}
     	
-    	System.out.println("CustomUserDetailsService - " + member.getUsername() + " : " + member.getPassword());
+    	if (member.getStatus() == MemberStatus.LEAVE.getCode()) {
+    		throw new LeaveMemberException("탈퇴된 회원 입니다.");
+    	}
+    	
+    	log.debug("인증된 사용자: {} / {}", member.getUsername(), member.getPassword());
     	
     	List<SimpleGrantedAuthority> authorities = 
     		    username.equals("admin") ? 

@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
-<c:set var="articleList" value="${articleListWithAuthor}" />
+<c:set var="articleList" value="${articleList}" />
 
 <c:set var="totalCount" value="${totalCount}" />
 <c:set var="totalPages" value="${totalPages}" />
@@ -76,7 +76,21 @@
 	        		</c:when>
 		        	<c:when test="${not empty articleList}">
 			            <c:forEach var="i" begin="0" end="${fn:length(articleList) - 1}" step="1">
-			                <tr onclick="location.href='/private/articles/req/${articleList[i].articlesId}'">
+			            
+			            <sec:authorize access="isAuthenticated()">
+	                       	<c:choose>
+	                          	<c:when test="${articleList[i].status eq 2 and (articleList[i].authorId ne userDetails.membersId or userDetails.membersId ne 0)}"> 
+			                		<tr>
+			                	</c:when>
+			                	<c:otherwise>
+			                		<tr onclick="location.href='/private/articles/req/${articleList[i].articlesId}'">
+			                	</c:otherwise>
+		                	</c:choose>
+	                	</sec:authorize>
+	                	<sec:authorize access="isAnonymous()">
+	                		<tr> 
+	                	</sec:authorize>
+			                
 			                    <td>${i + (currentPage * 7) - 6}</td>
 			                    <td class="text-truncate">${articleList[i].title}</td>
 			                    <td>

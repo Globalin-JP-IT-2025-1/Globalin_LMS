@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.model.PageInfo;
-import com.library.model.status.BookHistoryStatus;
 import com.library.model.status.MemberStatus;
 import com.library.security.CustomUserDetails;
 import com.library.service.BookService;
-import com.library.service.MemberBookHistoryService;
 import com.library.service.MemberBookLikeService;
 
 import lombok.AllArgsConstructor;
@@ -28,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class PrivateBookController {
 	private final BookService bookService; // 도서 처리
-    private final MemberBookHistoryService memberBookHistoryService; // 회원별 도서 이용 정보 처리
     private final MemberBookLikeService memberBookLikeService;       // 회원별 희망 도서 처리
     private PageInfo pageInfo;
 
@@ -57,7 +54,6 @@ public class PrivateBookController {
     	
     	// 인증 객체에서 회원 id 추출
     	CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-    	int membersId = userDetails.getMembersId();
     	
     	// 대출 정지 회원 or 준회원 : 대출 불가
     	int status = userDetails.getStatus();
@@ -74,15 +70,11 @@ public class PrivateBookController {
     	}
     	
     	// 대출 예약, 취소 처리
-    	// 1) 도서 대출 예약, 취소(원상복구) 처리 (bookService --> books 테이블)
-    	// 2) 회원별 도서 이용 정보에 추가 (memberBookHistoryService --> BookHistory 테이블)
     	try {
     		if (isTrue) {
     			bookService.updateBookLoanReserved(booksId);
-    			memberBookHistoryService.insertBookHistory(membersId, booksId, BookHistoryStatus.LOAN_RESERVING.getCode());
     		} else {
     			bookService.updateBookLoanable(booksId);
-    			memberBookHistoryService.insertBookHistory(membersId, booksId, BookHistoryStatus.LOAN_RESERVE_CANCEL.getCode());
     		}
     	} catch (Exception e) {
     		if (isTrue) {
@@ -133,15 +125,12 @@ public class PrivateBookController {
     	// 찜 등록, 취소 처리
     	// 1) 찜 등록 시, 도서 Like Count 증가 처리 (bookService --> books 테이블)
     	// 2) 회원별 도서 찜 목록에 추가, 삭제 (memberBookLikeService --> BookLike 테이블)
-    	// 3) 회원별 도서 이용 정보에 추가 (memberBookHistoryService --> BookHistory 테이블)
     	try {
     		if (isTrue) {
     			bookService.updateBookLikeCountUp(booksId);
     			memberBookLikeService.insertBookLike(membersId, booksId);
-    			memberBookHistoryService.insertBookHistory(membersId, booksId, BookHistoryStatus.LIKE.getCode());
     		} else {
     			memberBookLikeService.deleteBookLike(membersId, booksId);
-    			memberBookHistoryService.insertBookHistory(membersId, booksId, BookHistoryStatus.LIKE_CANCEL.getCode());
     		}
     		
     	} catch (Exception e) {

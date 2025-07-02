@@ -69,20 +69,20 @@
 			<ul>
 				<li>
        				<a href="/public/books/total" 
-       					class="m_submenu_active_target" 
-       					data-submenu="mSubmenu1"><spring:message code="menu.1.con1" /></a>
+       					data-menu-id="mSubmenu1" 
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.1.con1" /></a>
        			</li>
 				<li><a href="/public/books/class" 
-	          			class="m_submenu_active_target" 
-	          			data-submenu="mSubmenu2"><spring:message code="menu.1.con2" /></a>
+						data-menu-id="mSubmenu2" 
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.1.con2" /></a>
 	          	</li>
 	          	<li><a href="/public/books/loan" 
-	          			class="m_submenu_active_target" 
-	          			data-submenu="mSubmenu3"><spring:message code="menu.1.con3" /></a>
+	          			data-menu-id="mSubmenu3" 
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.1.con3" /></a>
 	          	</li>
 	          	<li><a href="/public/books/like" 
-	          			class="m_submenu_active_target" 
-	          			data-submenu="mSubmenu4"><spring:message code="menu.1.con4" /></a>
+	          			data-menu-id="mSubmenu4"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.1.con4" /></a>
 	          	</li>
 			</ul>
 		</div>
@@ -93,20 +93,20 @@
 		<div class="sitemap_content">
 			<ul>
 				<li><a href="/public/articles/not" 
-	        			class="m_submenu_active_target" 
-	        			data-submenu="mSubmenu1"><spring:message code="menu.2.con1" /></a>
+						data-menu-id="mSubmenu1"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.2.con1" /></a>
 	        	</li>
-	          	<li><a href="/public/articles/faq" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu2"><spring:message code="menu.2.con2" /></a>
+	          	<li><a href="/public/articles/faq"
+	          			data-menu-id="mSubmenu2"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.2.con2" /></a>
 		        </li>
-	          	<li><a href="/public/articles/qna" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu3"><spring:message code="menu.2.con3" /></a>
+	          	<li><a href="/public/articles/qna"
+	          			data-menu-id="mSubmenu3"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.2.con3" /></a>
 		        </li>
-	          	<li><a href="/private/articles/req" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu4"><spring:message code="menu.2.con4" /></a>
+	          	<li><a href="/private/articles/req"
+	          			data-menu-id="mSubmenu4"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.2.con4" /></a>
 		        </li>
 			</ul>
 		</div>
@@ -116,21 +116,25 @@
 		<div class="sitemap_title"><spring:message code="menu.3.title" /></div>
 		<div class="sitemap_content">
 			<ul>
-				<li><a href="/private/members/${h_membersId}" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu1"><spring:message code="menu.3.con1" /></a>
+				<li>
+					<a href="/private/members/${h_membersId}"
+						data-menu-id="mSubmenu1"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.3.con1" /></a>
 	          	</li>
-	          	<li><a href="/private/members/${h_membersId}/book-history" 
-	          			class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu2"><spring:message code="menu.3.con2" /></a>
+	          	<li>
+	          		<a href="/private/members/${h_membersId}/book-history"
+	          			data-menu-id="mSubmenu2"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.3.con2" /></a>
 			    </li>
-	          	<li><a href="/private/members/${h_membersId}/book-like" 
-	          			class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu3"><spring:message code="menu.3.con3" /></a>
+	          	<li>
+	          		<a href="/private/members/${h_membersId}/book-like"
+	          			data-menu-id="mSubmenu3"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.3.con3" /></a>
 			    </li>
-	          	<li><a href="/private/members/${h_membersId}/book-req"  
-	          			class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu4"><spring:message code="menu.3.con4" /></a>
+	          	<li>
+	          		<a href="/private/members/${h_membersId}/book-req"
+	          			data-menu-id="mSubmenu4"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.3.con4" /></a>
 			    </li>
 			</ul>
 		</div>
@@ -140,17 +144,20 @@
 		<div class="sitemap_title"><spring:message code="menu.4.title" /></div>
 		<div class="sitemap_content">
 			<ul>
-				<li><a href="/public/etc/41" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu1"><spring:message code="menu.4.con1" /></a>
+				<li>
+					<a href="/public/etc/41"
+						data-menu-id="mSubmenu1"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.4.con1" /></a>
 	          	</li>
-	          	<li><a href="/public/etc/42" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu2"><spring:message code="menu.4.con2" /></a>
+	          	<li>
+	          		<a href="/public/etc/42"
+	          			data-menu-id="mSubmenu2"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.4.con2" /></a>
 	          	</li>
-	          	<li><a href="/public/etc/43" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu3"><spring:message code="menu.4.con3" /></a>
+	          	<li>
+	          		<a href="/public/etc/43"
+	          			data-menu-id="mSubmenu3"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.4.con3" /></a>
 	          	</li>
 			</ul>
 		</div>
@@ -160,17 +167,20 @@
 		<div class="sitemap_title"><spring:message code="menu.5.title" /></div>
 		<div class="sitemap_content">
 			<ul>
-				<li><a href="/public/etc/51" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu1"><spring:message code="menu.5.con1" /></a>
+				<li>
+					<a href="/public/etc/51"
+						data-menu-id="mSubmenu1"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.5.con1" /></a>
 	          	</li>
-	          	<li><a href="/public/etc/52" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu2"><spring:message code="menu.5.con2" /></a>
+	          	<li>
+	          		<a href="/public/etc/52"
+	          			data-menu-id="mSubmenu2"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.5.con2" /></a>
 	          	</li>
-	          	<li><a href="/public/etc/53" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu3"><spring:message code="menu.5.con3" /></a>
+	          	<li>
+	          		<a href="/public/etc/53"
+	          			data-menu-id="mSubmenu3"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.5.con3" /></a>
 	          	</li>
 			</ul>
 		</div>
@@ -180,17 +190,20 @@
 		<div class="sitemap_title"><spring:message code="menu.7.title" /></div>
 		<div class="sitemap_content">
 			<ul>
-				<li><a href="/public/etc/71" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu1"><spring:message code="menu.7.con1" /></a>
+				<li>
+					<a href="/public/etc/71"
+						data-menu-id="mSubmenu1"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.7.con1" /></a>
 	          	</li>
-	          	<li><a href="/public/etc/72" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu2"><spring:message code="menu.7.con2" /></a>
+	          	<li>
+	          		<a href="/public/etc/72"
+	          			data-menu-id="mSubmenu2"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.7.con2" /></a>
 	          	</li>
-	          	<li><a href="/public/etc/73" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu3"><spring:message code="menu.7.con3" /></a>
+	          	<li>
+	          		<a href="/public/etc/73"
+	          			data-menu-id="mSubmenu3"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.7.con3" /></a>
 	          	</li>
 			</ul>
 		</div>
@@ -200,21 +213,25 @@
 		<div class="sitemap_title"><spring:message code="menu.6.title" /></div>
 		<div class="sitemap_content">
 			<ul>
-				<li><a href="/public/auth/login" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu1"><spring:message code="menu.6.con1" /></a>
+				<li>
+					<a href="/public/auth/login"
+						data-menu-id="mSubmenu1"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.6.con1" /></a>
 	          	</li>
-	          	<li><a href="/public/members/check" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu2"><spring:message code="menu.6.con2" /></a>
+	          	<li>
+	          		<a href="/public/members/check"
+	          			data-menu-id="mSubmenu2"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.6.con2" /></a>
 	          	</li>
-	          	<li><a href="/public/members/repass" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu3"><spring:message code="menu.6.con3" /></a>
+	          	<li>
+	          		<a href="/public/members/repass"
+	          			data-menu-id="mSubmenu3"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.6.con3" /></a>
 	          	</li>
-	          	<li><a href="/public/members/register" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu4"><spring:message code="menu.6.con4" /></a>
+	          	<li>
+	          		<a href="/public/members/register"
+	          			data-menu-id="mSubmenu4"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.6.con4" /></a>
 	          	</li>
 			</ul>
 		</div>
@@ -225,21 +242,25 @@
 		<div class="sitemap_title"><spring:message code="menu.9.title" /></div>
 		<div class="sitemap_content">
 			<ul>
-				<li><a href="/admin/books" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu1"><spring:message code="menu.9.con1" /></a>
+				<li>
+					<a href="/admin/books"
+						data-menu-id="mSubmenu1"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.9.con1" /></a>
 	          	</li>
-	          	<li><a href="/admin/articles" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu2"><spring:message code="menu.9.con2" /></a>
+	          	<li>
+	          		<a href="/admin/articles"
+	          			data-menu-id="mSubmenu2"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.9.con2" /></a>
 	          	</li>
-	          	<li><a href="/admin/members" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu3"><spring:message code="menu.9.con3" /></a>
+	          	<li>
+	          		<a href="/admin/replies"
+	          			data-menu-id="mSubmenu3"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.9.con3" /></a>
 	          	</li>
-	          	<li><a href="/admin/tokens" 
-			          	class="m_submenu_active_target" 
-			          	data-submenu="mSubmenu4"><spring:message code="menu.9.con4" /></a>
+	          	<li>
+	          		<a href="/admin/members"
+	          			data-menu-id="mSubmenu4"
+   						onclick="handleNavigation(event, this)"><spring:message code="menu.9.con4" /></a>
 	          	</li>
 			</ul>
 		</div>
@@ -247,3 +268,22 @@
 </sec:authorize>
 
 </div>
+
+
+<script>
+// etc71 --> 메인 소메뉴 css (a태그)
+function handleNavigation(event, element) {
+    const menuId = element.getAttribute("data-menu-id");
+    const url = element.getAttribute("href");
+
+    if (menuId) {
+        sessionStorage.setItem("activeMenuId", menuId);
+    }
+
+    // 기본 링크 이동 막고 수동으로 이동
+    event.preventDefault();
+    if (url) {
+        window.location.href = url;
+    }
+}
+</script>

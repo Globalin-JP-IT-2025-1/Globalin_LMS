@@ -32,11 +32,11 @@ public class PublicArticleQnaController {
     @GetMapping
     public String getListQna(@RequestParam(defaultValue = "1") int page, 
 							 Model model) {
-		ArticleListResponse articleListWithAuthor = articleService.getArticleListByCategory("qna", page);
+		ArticleListResponse articleListResponse = articleService.getArticleListByCategory("qna", page);
 		
-		model.addAttribute("articleListWithAuthor", articleListWithAuthor.getArticleWithAuthorList());
-		model.addAttribute("totalCount", articleListWithAuthor.getTotalCount());
-    	model.addAttribute("totalPages", articleListWithAuthor.getTotalPages());
+		model.addAttribute("articleList", articleListResponse.getArticleList());
+		model.addAttribute("totalCount", articleListResponse.getTotalCount());
+    	model.addAttribute("totalPages", articleListResponse.getTotalPages());
     	model.addAttribute("currentPage", page);
     	
     	pageInfo = PageInfo.builder()

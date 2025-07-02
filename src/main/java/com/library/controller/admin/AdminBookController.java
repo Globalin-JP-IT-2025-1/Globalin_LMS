@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.library.exception.LoanNotAllowedException;
 import com.library.model.PageInfo;
 import com.library.model.book.Book;
+import com.library.model.book.BookListResponse;
 import com.library.model.status.BookStatus;
 import com.library.service.BookService;
 
@@ -37,11 +38,28 @@ public class AdminBookController {
     
     // 도서 관리 목록 조회
     @GetMapping
-    public String getAllBooksTotal(HttpServletRequest request, 
-    							   Model model) {
+    public String getBookListTotal(@RequestParam(value = "searchType", required = false, defaultValue = "title") String type,
+						           @RequestParam(value = "searchKeyword", required = false, defaultValue = "") String keyword,
+				            	   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+						           Model model) {
 	
-//		List<Book> bookList = bookService.getAllBooks();
-//		model.addAttribute("bookList", bookList);
+		BookListResponse bookListResponse = null;
+    	
+    	if (keyword != null && !keyword.trim().isEmpty()) { // 키워드 검색
+    		bookListResponse = bookService.getBookListByKeywordByDB(type, keyword, page);
+    	} else { // 전체 목록
+    		bookListResponse = bookService.getBookList(page);
+    	}
+    	
+    	model.addAttribute("totalCount", bookListResponse.getTotalCount());
+    	model.addAttribute("totalPage", bookListResponse.getTotalPages());
+    	model.addAttribute("currentPage", page);
+    	
+    	if (bookListResponse.getTotalCount() > 0) {
+    		model.addAttribute("bookList", bookListResponse.getBookList());
+    	} else {
+    		model.addAttribute("bookList", null);
+    	}
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("91")
@@ -199,65 +217,4 @@ public class AdminBookController {
     	
     }
 
-    // 회원 도서 대출 처리
-    @PutMapping("/{booksId}/loan/{membersId}")
-    public String loanBookProc(@PathVariable("booksId") int booksId,
-                               @PathVariable("membersId") int membersId,
-                               HttpServletRequest request,
-                               RedirectAttributes redirectAttributes) {
-        try {
-            // 도서 대출 처리 서비스 호출
-        	// 1) 도서 : 대출중으로 처리 -> 2) 회원 : 대출권수 증가 -> 3) 회원 : 도서 이용 정보에 추가
-           bookService.loanBook(booksId, membersId);
-            
-           redirectAttributes.addFlashAttribute("alertType", "success");
-           redirectAttributes.addFlashAttribute("alertMessage", "도서 대출 처리 성공");
-
-        } catch (LoanNotAllowedException  e) {
-            log.error("도서 대출 처리 실패 : " + e);
-
-            redirectAttributes.addFlashAttribute("alertType", "fail");
-            redirectAttributes.addFlashAttribute("alertMessage", "도서 대출 처리 실패 : " + e.getMessage());
-
-            return "redirect:/admin/books"; // 실패 시 목록으로 이동
-        } catch (Exception e) {
-            log.error("도서 대출 처리 실패 : " + e);
-
-            redirectAttributes.addFlashAttribute("alertType", "fail");
-            redirectAttributes.addFlashAttribute("alertMessage", "도서 대출 처리 실패 : " + e);
-
-            return "redirect:/admin/books"; // 실패 시 목록으로 이동
-        }
-
-        return "redirect:/admin/books"; // 성공 시 목록으로 이동
-    }
-
-    
-    // 회원 도서 반납 처리
-    @PutMapping("/{booksId}/return/{membersId}")
-    public String returnBookProc(@PathVariable("booksId") int booksId,
-                               @PathVariable("membersId") int membersId,
-                               HttpServletRequest request,
-                               RedirectAttributes redirectAttributes) {
-        try {
-            // 도서 대출 처리 서비스 호출
-        	// 1) 도서 : 대출중으로 처리 -> 2) 회원 : 대출권수 증가 -> 3) 회원 : 도서 이용 정보에 추가
-           bookService.loanBook(booksId, membersId);
-            
-           redirectAttributes.addFlashAttribute("alertType", "success");
-           redirectAttributes.addFlashAttribute("alertMessage", "도서 반납 처리 성공");
-
-        } catch (Exception e) {
-            log.error("도서 대출 처리 실패 : " + e);
-
-            redirectAttributes.addFlashAttribute("alertType", "fail");
-            redirectAttributes.addFlashAttribute("alertMessage", "도서 반납 처리 실패 : " + e);
-
-            return "redirect:/admin/books"; // 실패 시 목록으로 이동
-        }
-
-        return "redirect:/admin/books"; // 성공 시 목록으로 이동
-    }
-	
-    
 }

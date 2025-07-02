@@ -1,5 +1,7 @@
 package com.library.service;
 
+import java.util.List;
+
 import com.library.model.SearchRequest;
 import com.library.model.article.Article;
 import com.library.model.article.ArticleDetailResponse;
@@ -22,6 +24,9 @@ public interface ArticleService {
 	
 	// 4-2) 키워드 검색 (카테고리별)
 	public ArticleListResponse getArticleListByCategoryByKeyword(String category, String type, String keyword, int currentPage);
+	
+	// 5) 메인 전용 공지사항 최신 5건
+	public List<Article> getNoticeListForHome();
 	
 	
 	// 목록 개수

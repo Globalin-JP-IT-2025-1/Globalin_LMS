@@ -12,11 +12,17 @@ import com.library.model.article.ReplyWithAuthor;
 public interface ReplyMapper {
 	
 	// 조회
+	// 1) 관리자용 댓글 조회 (전체)
+	public List<ReplyWithAuthor> getReplyList(ReplyListRequest replyListRequest);
+	
+	// 2) 댓글 수 (전체)
+	public int getReplyListCount();
+	
 	// 1) 목록 조회 (게시글 ID 기반)
 	public List<ReplyWithAuthor> getReplyListByArticlesId(ReplyListRequest replyListRequest);
 	
 	// 2) 댓글 수 (게시글 ID 기반)
-	public int getReplyListCount(int articlesId);
+	public int getReplyListCountByArticlesId(int articlesId);
 
 	// 댓글 수정
 	// 1) 비공개 (soft delete)

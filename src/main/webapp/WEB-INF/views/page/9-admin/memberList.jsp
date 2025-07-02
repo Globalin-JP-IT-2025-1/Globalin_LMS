@@ -13,6 +13,8 @@
 <c:set var="startPage" value="${(currentPage - 1) / blockSize * blockSize + 1}" />
 <c:set var="endPage" value="${startPage + blockSize - 1 > totalPages ? totalPages : startPage + blockSize - 1}" />
 
+<meta name="csrf-token" content="${_csrf.token}">
+
 <style>
 .membersList tr {
 	cursor: pointer !important;
@@ -138,7 +140,8 @@
 			                    <td><fmt:formatDate value="${memberList[i].joinDate}" pattern="yyyy-MM-dd" /></td>
 			                    <td><fmt:formatDate value="${memberList[i].leaveDate}" pattern="yyyy-MM-dd" /></td>
 			                    <td>
-			                    	<button class="btn btn-warning btn-sm" onclick="addCardNumber(${member.membersId})">
+			                    	<!-- 회원 등급 갱신 버튼 -->
+			                    	<button class="btn btn-warning btn-sm" onclick="openCardModal(${member.membersId})">
 			                    		<i class="bi bi-box-arrow-in-down-left"></i>
 			                    	</button>
 			                    </td>
@@ -154,6 +157,27 @@
 	        </tbody>
 	    </table>
     </div>
+    
+    <!-- Bootstrap 모달 -->
+	<div class="modal fade" id="cardModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		  	<div class="modal-content">
+		    	<div class="modal-header">
+		      		<h5 class="modal-title" id="cardModalLabel">회원 카드 발급</h5>
+		      		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+	    		</div>
+		    	<div class="modal-body">
+		      		<p>발급된 카드번호:</p>
+		      		<input type="text" id="generatedCardNumber" class="form-control" readonly>
+		      		<input type="hidden" id="targetMembersId">
+		    	</div>
+		    	<div class="modal-footer">
+		      		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+		      		<button type="button" class="btn btn-success" onclick="submitCard()">등록</button>
+		    	</div>
+		  	</div>
+		</div>
+	</div>
     
     <!-- 페이징 -->
     <div class="d-flex justify-content-center mt-4">
@@ -185,83 +209,55 @@
 </div>
 
 <script type="text/javascript">
-function deleteMember(membersId) {
-	
+
+//csrf 토큰 가져오기
+function getCsrfToken() {
+	return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 }
 
-function upgradeMember(membersId) {
-    Swal.fire({
-        title: "회원 등급 수정",
-        text: "해당 회원을 정회원으로 변경하시겠습니까?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "변경",
-        cancelButtonText: "취소"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            generateCardNumber(membersId); // 카드번호 생성 함수 호출
-        }
-    });
+function openCardModal(membersId) {
+	document.getElementById('targetMembersId').value = membersId;
+
+	// 카드번호 발급 요청
+	fetch('/admin/members/cardnumber')
+	.then(response => {
+		if (!response.ok) throw new Error("카드번호 발급 실패");
+		return response.text(); // 카드번호 문자열 받기
+	})
+    .then(cardNumber => {
+		document.getElementById('generatedCardNumber').value = cardNumber;
+		const modal = new bootstrap.Modal(document.getElementById('cardModal'));
+		modal.show();
+	})
+	.catch(error => {
+		alert("오류: " + error.message);
+	});
 }
 
-function generateCardNumber(membersId) {
-    Swal.fire({
-        title: "회원카드 번호 입력",
-        input: "text",
-        inputPlaceholder: "카드번호를 입력하거나 생성하세요",
-        showCancelButton: true,
-        confirmButtonText: "카드번호 생성",
-        cancelButtonText: "취소",
-        preConfirm: () => {
-            return fetch(`/admin/members/cardnumber`)
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.cardNumber) {
-                        throw new Error("카드번호 생성 실패");
-                    }
-                    return data.cardNumber; // 입력창에 자동 반영
-                })
-                .catch(error => {
-                    Swal.showValidationMessage(`에러 발생: ${error}`);
-                });
-        }
-    }).then((cardResult) => {
-        if (cardResult.isDismissed) {
-            Swal.fire("취소됨", "회원 등급 변경이 취소되었습니다.", "info");
-            return;
-        }
-        
-        // 회원 정보 수정 버튼 추가
-        Swal.fire({
-            title: "회원정보 수정하기",
-            text: "회원정보를 수정하시겠습니까?",
-            icon: "info",
-            showCancelButton: true,
-            confirmButtonText: "수정하기",
-            cancelButtonText: "취소"
-        }).then((editResult) => {
-            if (editResult.isConfirmed) {
-                fetch(`/admin/members/${membersId}/upgrade`, { 
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ cardNumber: cardResult.value }) 
-                })
-                .then(response => {
-                    if (response.ok) {
-                        Swal.fire("변경 완료", "회원 등급이 정회원으로 변경되었습니다.", "success");
-                    } else {
-                        Swal.fire("오류 발생", "회원 정보 수정에 실패했습니다.", "error");
-                    }
-                })
-                .catch(error => {
-                    Swal.fire("서버 오류", "회원 정보 수정 중 문제가 발생했습니다.", "error");
-                    console.error("Error:", error);
-                });
-            }
-        });
-    });
+// 회원카드 번호 등록 (회원 정보 수정) 처리 요청
+function submitCard() {
+	const membersId = document.getElementById('targetMembersId').value;
+	const cardNumber = document.getElementById('generatedCardNumber').value;
+
+	fetch(`/admin/members/${membersId}/upgrade`, {
+		method: 'PUT'
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRF-TOKEN': getCsrfToken()
+		},
+		body: JSON.stringify({ cardNum: cardNumber })
+	})
+	.then(response => {
+		if (response.ok) {
+			alert("회원 카드 등록 및 등급 갱신 완료");
+			location.reload();
+	    } else {
+	      	throw new Error("회원 정보 갱신 실패");
+	    }
+	})
+	.catch(error => {
+		alert("오류: " + error.message);
+	});
 }
 
 </script>

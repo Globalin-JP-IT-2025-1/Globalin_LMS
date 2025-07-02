@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<c:set var="articleList" value="${articleListWithAuthor}" />
+<c:set var="articleList" value="${articleList}" />
 <c:set var="totalCount" value="${totalCount}" />
 <c:set var="totalPages" value="${totalPages}" />
 <c:set var="currentPage" value="${currentPage}" />
@@ -27,6 +27,16 @@
 }
 
 /* 각 열 너비 */
+.articleList td:nth-child(1), .articleList th:nth-child(1) { min-width: 4% !important; }
+.articleList td:nth-child(2), .articleList th:nth-child(2) { min-width: 32% !important; }
+.articleList td:nth-child(3), .articleList th:nth-child(3) { min-width: 14% !important; }
+.articleList td:nth-child(4), .articleList th:nth-child(4) { min-width: 14% !important; }
+.articleList td:nth-child(5), .articleList th:nth-child(5) { min-width: 8% !important; }
+.articleList td:nth-child(6), .articleList th:nth-child(6) { min-width: 8% !important; }
+.articleList td:nth-child(7), .articleList th:nth-child(7) { min-width: 8% !important; }
+.articleList td:nth-child(8), .articleList th:nth-child(8) { min-width: 8% !important; }
+.articleList td:nth-child(9), .articleList th:nth-child(9) { min-width: 4% !important; }
+
 .articleList td:nth-child(1), .articleList th:nth-child(1) { max-width: 4% !important; }
 .articleList td:nth-child(2), .articleList th:nth-child(2) { max-width: 32% !important; }
 .articleList td:nth-child(3), .articleList th:nth-child(3) { max-width: 14% !important; }
@@ -45,12 +55,16 @@
     <div class="d-flex justify-content-between align-items-center">
         <div>전체 <strong>${totalCount}</strong> 건</div>
         <div>
-	        <select class="form-select form-select-sm d-inline-block w-auto" id="searchType">
-	            <option id="st_title">제목</option>
-	            <option id="st_content">내용</option>
-	        </select>
-	        <input type="text" class="form-control form-control-sm d-inline-block w-auto" id="searchKeyword">
-	        <button class="btn btn-primary btn-sm" id="search">검색</button>
+        	<form action="/public/books/total" method="get" class="d-flex align-items-center gap-2">
+				<select class="form-select form-select-sm w-auto" name="searchType">
+				    <option value="all">전체</option>
+				    <option value="title">제목</option>
+				    <option value="content">내용</option>
+				    <option value="author">작성자</option>
+			  	</select>
+				<input type="text" class="form-control form-control-sm w-auto" name="searchKeyword" placeholder="검색어 입력">
+				<button type="submit" class="btn btn-primary btn-sm">검색</button>
+			</form>
 	    </div>
     </div>
     

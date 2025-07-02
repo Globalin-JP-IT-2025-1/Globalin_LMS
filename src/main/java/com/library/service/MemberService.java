@@ -21,6 +21,9 @@ public interface MemberService {
 
 	// email 기반
 	public Member getMemberByEmail(String email);
+	
+	// 회원카드 기반
+	public Member getMemberByCardNum(String cardNum);
 
 	// 회원 정보 수정
 	// 1) 회원 - 내 정보 수정 (password, email, mobile, zipcode, address, addressDetail)
@@ -33,7 +36,7 @@ public interface MemberService {
 	public int updateMemberCardnum(int membersId, String cardNum);
 
 	// 4) 도서 시스템 - 도서 연체 (status)
-	public int updateMemberOverdue(Member member);
+	public int updateMemberOverdue(int membersId);
 
 	// 5) 도서 시스템 - 도서 대출 (loanCount)
 	public int updateMemberLoanCountUp(int membersId);
@@ -49,5 +52,9 @@ public interface MemberService {
 
 	// 비밀번호 초기화
 	public String resetPassword(Member member);
+	
+	// 아이디 & 이메일 중복확인
+	public boolean isUsernameDuplicate(String username);
+	public boolean isEmailDuplicate(String email);
 
 }

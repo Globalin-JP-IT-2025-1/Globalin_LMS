@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <!-- 이용 안내 > 도서 이용 안내 -->
 
@@ -120,70 +120,63 @@
 	<div class="card">
 		<div class="etc_t3_div">
 			<ul>
-				<li>대출/반납 안내</li>
+				<li><spring:message code="etc53.section1"/></li>
 			</ul>
 		</div>
 		<table class="etc_53_table1">
 			<tr>
-				<th class="e53_th1">구분</th>
-				<th class="e53_th2">내용</th>
+				<th class="e53_th1"><spring:message code="etc53.th.type"/></th>
+				<th class="e53_th2"><spring:message code="etc53.th.content"/></th>
 			</tr>
-			
 			<tr>
-				<th class="e53_th3">대상</th>
+				<th class="e53_th3"><spring:message code="etc53.th.target"/></th>
 				<td class="e53_td1">
 					<ul>
-						<li>글로벌인 도서관 정회원(회원증 발급자)</li>
+						<li><spring:message code="etc53.td1.li1"/></li>
 					</ul>
 				</td>
 			</tr>
-			
 			<tr>
-				<th>대출방법</th>
+				<th><spring:message code="etc53.th.method"/></th>
 				<td>
 					<ul>
-						<li>각 자료열람실에서 원하는 자료를 찾아 대출반납 데스크에 회원증 또는 모바일회원증 제시 후 대출.</li>
+						<li><spring:message code="etc53.td2.li1"/></li>
 					</ul>
 				</td>
 			</tr>
-			
 			<tr>
-				<th>권수/기간</th>
+				<th><spring:message code="etc53.th.count_period"/></th>
 				<td>
 					<ul>
-						<li>1인당 5권이며 대출기간은14일간(연장 1회 가능)</li>
+						<li><spring:message code="etc53.td3.li1"/></li>
 					</ul>
 				</td>
 			</tr>
-			
 			<tr>
-				<th>반납 방법</th>
-				<td class="e53_td2">&nbsp;&nbsp;도서관 운영시간 내에는 대출한 데스크에서 반납하실 수 있습니다.
-					<ul>
-						<li>야외 도서반납함 이용 안내</li>
-						<li class="e53_td2_li">도서관 휴관(매주 월요일, 법정 공휴일) 또는 자료실 운영이 끝났을 때 이용하시면 됩니다.</li>
-						<li class="e53_td2_li">반납된 자료는 다음 업무 개시일에 처리됩니다.</li>
-						<li class="e53_td2_li">반납 후에는 자료실(정상 근무시간)에 전화 등으로 확인바랍니다.</li>
+				<th><spring:message code="etc53.th.return"/></th>
+				<td class="e53_td2">
+					&nbsp;&nbsp;<spring:message code="etc53.td4.txt1"/><ul>
+						<li><spring:message code="etc53.td4.li1"/></li>
+						<li class="e53_td2_li"><spring:message code="etc53.td4.li2"/></li>
+						<li class="e53_td2_li"><spring:message code="etc53.td4.li3"/></li>
+						<li class="e53_td2_li"><spring:message code="etc53.td4.li4"/></li>
 					</ul>
 				</td>
 			</tr>
-			
 			<tr>
-				<th>대출 제한</th>
+				<th><spring:message code="etc53.th.limit"/></th>
 				<td>
 					<ul>
-						<li>대출도서를 연체하였을 경우, 연체일 수 만큼 대출정지.</li>
-						<li>반납하신 도서는 당일 재대출 불가.</li>
+						<li><spring:message code="etc53.td5.li1"/></li>
+						<li><spring:message code="etc53.td5.li2"/></li>
 					</ul>
 				</td>
 			</tr>
-			
 			<tr>
-				<th>도서 분실</th>
+				<th><spring:message code="etc53.th.lost"/></th>
 				<td>
 					<ul>
-						<li>자료를 잃어버리거나 훼손하면 동일한 자료로 변상하여야 하며,<br>
-							동일한 자료로 변상이 불가능할 시 자료실 담당자에게 문의하시길 바랍니다.</li>
+						<li><spring:message code="etc53.td6.li1" htmlEscape="false"/></li>
 					</ul>
 				</td>
 			</tr>
@@ -192,58 +185,49 @@
 	<div class="card2">
 		<div class="etc_t3_div">
 			<ul>
-				<li>도서 예약 안내</li>
+				<li><spring:message code="etc53.section2"/></li>
 			</ul>
 		</div>
 		<table class="etc_53_table2">
-		<tr>
-				<th class="e53_th1">구분</th>
-				<th class="e53_th2">내용</th>
-			</tr>
-			
 			<tr>
-				<th class="e53_th3">이용안내</th>
+				<th class="e53_th1"><spring:message code="etc53.th.type"/></th>
+				<th class="e53_th2"><spring:message code="etc53.th.content"/></th>
+			</tr>
+			<tr>
+				<th class="e53_th3"><spring:message code="etc53.th.use_guide"/></th>
 				<td>
-				
 					<ul>
-						<li>
-							필요한 자료가 대출되어 이용이 불가능할 때 도서대출 예약을 이용하시면<br>
-							해당 도서가 반납되는 즉시 예약 순서에 따라 우선적으로 자료를 보실 수 있습니다.
-						</li>
+						<li><spring:message code="etc53.td7.li1" htmlEscape="false"/></li>
 					</ul>
 				</td>
 			</tr>
-			
 			<tr>
-				<th>예약 대상 도서</th>
+				<th><spring:message code="etc53.th.reserve_target"/></th>
 				<td>
 					<ul>
-						<li>현재 대출중인 도서(대출 가능한 도서는 예약 불가)</li>
+						<li><spring:message code="etc53.td8.li1"/></li>
 					</ul>
 				</td>
 			</tr>
-			
 			<tr>
-				<th>예약방법</th>
+				<th><spring:message code="etc53.th.reserve_method"/></th>
 				<td>
 					<ul>
-						<li>홈페이지 로그인 후 예약가능한 자료를 찾은 후 도서예약신청 버튼을 눌러서 예약합니다.</li>
-						<li>예약은 1회 최대 3권까지만 가능합니다.</li>
+						<li><spring:message code="etc53.td9.li1"/></li>
+						<li><spring:message code="etc53.td9.li2"/></li>
 					</ul>
 				</td>
 			</tr>
-			
 			<tr>
-				<th>유의사항</th>
+				<th><spring:message code="etc53.th.caution"/></th>
 				<td>
 					<ul>
-						<li>반납과 동시에 예약대출 안내 SMS가 발송됩니다.</li>
-						<li>반납된 도서는 3일간 별도로 비치하며 3일이 지나면 예약이 취소됩니다.</li>
-						<li>예약하고자 하는 도서를 이미 세 명이상 예약했을 경우에는 예약이 불가능합니다.</li>
+						<li><spring:message code="etc53.td10.li1"/></li>
+						<li><spring:message code="etc53.td10.li2"/></li>
+						<li><spring:message code="etc53.td10.li3"/></li>
 					</ul>
 				</td>
 			</tr>
-			
 		</table>
 	</div>
 </div>

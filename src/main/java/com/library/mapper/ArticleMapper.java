@@ -20,6 +20,7 @@ public interface ArticleMapper {
 	List<ArticleWithAuthor> getArticleListByNotByKeyword(ArticleListRequest articleListRequest); // 4-2) 키워드 검색 (공지사항)
 	List<ArticleWithAuthor> getArticleListByQnaByKeyword(ArticleListRequest articleListRequest); // 4-3) 키워드 검색 (qna)
 	List<ArticleWithAuthor> getArticleListByReqByKeyword(ArticleListRequest articleListRequest); // 4-4) 키워드 검색 (req)
+	List<Article> getNoticeListForHome(); // 5) 메인 전용 공지사항 최신 5건
 	
 	// 목록 개수
 	int getArticleListCount(); // 1) 전체 게시글 수
@@ -48,7 +49,5 @@ public interface ArticleMapper {
     
     // 게시글 삭제
     int deleteArticleById(int articleId);
-
-
     
 }

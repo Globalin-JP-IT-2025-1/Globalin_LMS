@@ -39,11 +39,11 @@ public class PublicArticleFaqController {
 				request.getRequestURI(),
 				request.getMethod());
     	
-    	ArticleListResponse articleListWithAuthor = articleService.getArticleListByCategory("faq", page);
+    	ArticleListResponse articleListResponse = articleService.getArticleListByCategory("faq", page);
     	
-    	model.addAttribute("articleListWithAuthor", articleListWithAuthor.getArticleWithAuthorList());
-		model.addAttribute("totalCount", articleListWithAuthor.getTotalCount());
-    	model.addAttribute("totalPages", articleListWithAuthor.getTotalPages());
+    	model.addAttribute("articleList", articleListResponse.getArticleList());
+		model.addAttribute("totalCount", articleListResponse.getTotalCount());
+    	model.addAttribute("totalPages", articleListResponse.getTotalPages());
     	model.addAttribute("currentPage", page);
     	
     	pageInfo = PageInfo.builder()

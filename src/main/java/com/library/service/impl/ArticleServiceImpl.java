@@ -47,7 +47,7 @@ public class ArticleServiceImpl implements ArticleService {
 		List<ArticleWithAuthor> articleList = articleMapper.getArticleList(articlesListRequest);
 		
 		return ArticleListResponse.builder()
-				.articleWithAuthorList(articleList)
+				.articleList(articleList)
 				.totalCount(totalCount) // 전체 게시글 수
 				.totalPages(totalPages) // 전체 페이지 수
 				.build();
@@ -72,7 +72,7 @@ public class ArticleServiceImpl implements ArticleService {
 		List<ArticleWithAuthor> articleList = articleMapper.getArticleListByCategory(articlesListRequest);
 		
 		return ArticleListResponse.builder()
-				.articleWithAuthorList(articleList)
+				.articleList(articleList)
 				.totalCount(totalCount) // 전체 게시글 수
 				.totalPages(totalPages) // 전체 페이지 수
 				.build();
@@ -97,7 +97,7 @@ public class ArticleServiceImpl implements ArticleService {
 		List<ArticleWithAuthor> articleList = articleMapper.getArticleListByReqByMembersId(articlesListRequest);
 		
 		return ArticleListResponse.builder()
-				.articleWithAuthorList(articleList)
+				.articleList(articleList)
 				.totalCount(totalCount) // 전체 게시글 수
 				.totalPages(totalPages) // 전체 페이지 수
 				.build();
@@ -127,7 +127,7 @@ public class ArticleServiceImpl implements ArticleService {
     	List<ArticleWithAuthor> articleList = articleMapper.getArticleListByKeyword(articleListRequest);
 		
 		return ArticleListResponse.builder()
-				.articleWithAuthorList(articleList)
+				.articleList(articleList)
 				.totalCount(totalCount)
 				.totalPages(totalPages)
 				.build();
@@ -172,10 +172,16 @@ public class ArticleServiceImpl implements ArticleService {
     	}
 		
 		return ArticleListResponse.builder()
-				.articleWithAuthorList(articleList)
+				.articleList(articleList)
 				.totalCount(totalCount)
 				.totalPages(totalPages)
 				.build();
+	}
+	
+	// 5) 메인 전용 공지사항 최신 5건
+	@Override
+	public List<Article> getNoticeListForHome() {
+		return articleMapper.getNoticeListForHome();
 	}
 
 	

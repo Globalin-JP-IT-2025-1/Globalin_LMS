@@ -19,16 +19,16 @@
 		</div>
 
 		<div class="f1_3">
-			<a href="/public/etc/73" 
-				class="m_submenu_active_target" 
-				data-submenu="mSubmenu3"><spring:message code="main.h4.3" /></a>
+			<a href="/public/etc/73"
+				data-menu-id="mSubmenu3" 
+				onclick="handleNavigation(event, this)"><spring:message code="main.h4.3" /></a>
 				
             <!-- 관리자만 보임 -->
             <sec:authorize access="hasRole('ROLE_ADMIN')">
 				&nbsp;
-				<a href="/admin/books" 
-					class="m_submenu_active_target" 
-					data-submenu="mSubmenu1">Admin Page</a>
+				<a href="/admin/books"
+					data-menu-id="mSubmenu1" 
+					onclick="handleNavigation(event, this)">Admin Page</a>
             </sec:authorize>
 		</div>
 	</div>
@@ -37,9 +37,21 @@
 	</div>
 </div>
 
+<script>
+// 푸터 --> 메인 소메뉴 css (a태그)
+function handleNavigation(event, element) {
+    const menuId = element.getAttribute("data-menu-id");
+    const url = element.getAttribute("href");
 
-<script
-	src="${pageContext.request.contextPath}/resources/static/js/footer.js"></script>
+    if (menuId) {
+        sessionStorage.setItem("activeMenuId", menuId);
+    }
 
-
+    // 기본 링크 이동 막고 수동으로 이동
+    event.preventDefault();
+    if (url) {
+        window.location.href = url;
+    }
+}
+</script>
 

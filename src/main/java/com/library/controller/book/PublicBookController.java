@@ -1,5 +1,7 @@
 package com.library.controller.book;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.model.PageInfo;
-import com.library.model.book.BookDetailResponse;
+import com.library.model.book.Book;
 import com.library.model.book.BookListResponse;
 import com.library.model.status.BookStatus;
 import com.library.service.BookService;
@@ -32,66 +34,85 @@ public class PublicBookController {
 
     // 1) 통합검색 전체 목록 + 키워드 검색 목록
     @GetMapping("/total")
-    public String getBookListByTotal(@RequestParam(value = "searchType", required = false, defaultValue = "title") String type,
-							         @RequestParam(value = "searchKeyword", required = false, defaultValue = "") String keyword,
-							         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-							         Model model) {
-        
-    	BookListResponse bookListResponse = null;
-    	
-    	if (keyword != null && !keyword.trim().isEmpty()) { // 키워드 검색
-    		bookListResponse = bookService.getBookListByKeywordByDB(type, keyword, page);
-    	} else { // 전체 목록
-    		bookListResponse = bookService.getBookList(page);
-    	}
-    	
-    	model.addAttribute("totalCount", bookListResponse.getTotalCount());
-    	model.addAttribute("totalPage", bookListResponse.getTotalPages());
-    	model.addAttribute("currentPage", page);
-    	
-    	if (bookListResponse.getTotalCount() > 0) {
-    		model.addAttribute("bookList", bookListResponse.getBookList());
-    	} else {
-    		model.addAttribute("bookList", null);
-    	}
+    public String getBookListByTotal(
+            @RequestParam(value = "searchType", required = false, defaultValue = "title") String type,
+            @RequestParam(value = "searchKeyword", required = false, defaultValue = "") String keyword,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            Model model) {
 
+        BookListResponse bookListResponse;
+
+        // 검색 여부 판단
+        boolean isSearching = keyword != null && !keyword.trim().isEmpty();
+
+        if (isSearching) {
+            bookListResponse = bookService.getBookListByKeywordByDB(type, keyword, page);
+        } else {
+            bookListResponse = bookService.getBookList(page);
+        }
+
+        // ✅ 검색 조건은 무조건 model에 넣어줘야 JSP에서 유지됨
+        model.addAttribute("searchType", type);
+        model.addAttribute("searchKeyword", keyword);
+
+        // 페이징 관련 정보
+        model.addAttribute("totalCount", bookListResponse.getTotalCount());
+        model.addAttribute("totalPages", bookListResponse.getTotalPages());
+        model.addAttribute("currentPage", page);
+
+        if (bookListResponse.getTotalCount() > 0) {
+            model.addAttribute("bookList", bookListResponse.getBookList());
+        } else {
+            model.addAttribute("bookList", null);
+        }
+
+        // 페이지 정보 설정
         pageInfo = PageInfo.builder()
                 .pageTitleCode("11")
                 .pagePath("page/2-book/bookList_total.jsp")
                 .build();
-        
+
         setPageInfo(model);
 
         return "layout";
     }
 
+
     // 2) 주제별(카테고리별) 전체 목록
     @GetMapping("/class")
-    public String getBookListByClassNo(@RequestParam(value = "class_no", required = false, defaultValue = "000") String classNo,
-					          		   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-					          		   Model model) {
-    	
-    	BookListResponse bookListResponse = bookService.getBookListByClassNo(classNo, page);
-    	
-    	model.addAttribute("totalCount", bookListResponse.getTotalCount());
-    	model.addAttribute("totalPage", bookListResponse.getTotalPages());
-    	model.addAttribute("currentPage", page);
-    	
-    	if (bookListResponse.getTotalCount() > 0) {
-    		model.addAttribute("bookList", bookListResponse.getBookList());
-    	} else {
-    		model.addAttribute("bookList", null);
-    	}
+    public String getBookListByClassNo(
+            @RequestParam(value = "class_no", required = false, defaultValue = "0") String classNo,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            Model model) {
 
+        BookListResponse bookListResponse = bookService.getBookListByCategory(classNo, page);
+
+        // 페이징 링크 유지를 위해
+        model.addAttribute("classNo", classNo);
+
+        // 페이징 정보
+        model.addAttribute("totalCount", bookListResponse.getTotalCount());
+        model.addAttribute("totalPages", bookListResponse.getTotalPages());
+        model.addAttribute("currentPage", page);
+
+        // 도서 목록
+        if (bookListResponse.getTotalCount() > 0) {
+            model.addAttribute("bookList", bookListResponse.getBookList());
+        } else {
+            model.addAttribute("bookList", null);
+        }
+
+        // 페이지 정보 설정
         pageInfo = PageInfo.builder()
                 .pageTitleCode("12")
                 .pagePath("page/2-book/bookList_class.jsp")
                 .build();
-        
+
         setPageInfo(model);
 
         return "layout";
     }
+
 
     // 3) 대출 베스트 100 도서 목록
     @GetMapping("/loan")
@@ -101,7 +122,7 @@ public class PublicBookController {
     	BookListResponse bookListResponse = bookService.getBookListByLoanCount(page);
     	
     	model.addAttribute("totalCount", bookListResponse.getTotalCount());
-    	model.addAttribute("totalPage", bookListResponse.getTotalPages());
+    	model.addAttribute("totalPages", bookListResponse.getTotalPages());
     	model.addAttribute("currentPage", page);
     	
     	if (bookListResponse.getTotalCount() > 0) {
@@ -128,7 +149,7 @@ public class PublicBookController {
     	BookListResponse bookListResponse = bookService.getBookListByLikeCount(page);
     	
     	model.addAttribute("totalCount", bookListResponse.getTotalCount());
-    	model.addAttribute("totalPage", bookListResponse.getTotalPages());
+    	model.addAttribute("totalPages", bookListResponse.getTotalPages());
     	model.addAttribute("currentPage", page);
     	
     	if (bookListResponse.getTotalCount() > 0) {
@@ -148,44 +169,34 @@ public class PublicBookController {
     }
 
     // 도서 상세 조회 페이지
-    @GetMapping("/{category}/{booksId}")
-    public String getBookDetail(@PathVariable("category") int category, 
-    							@PathVariable("booksId") int booksId, 
-					 		    @RequestParam(defaultValue = "1") int page,
+    @GetMapping("/{booksId}")
+    public String getBookDetail(@PathVariable("booksId") int booksId, 
+					 		    HttpServletRequest request,
 							    RedirectAttributes redirectAttributes,
 							    Model model) {
     	
     	try {
-			BookDetailResponse bookDetailResponse = bookService.getBookWithReviewListById(booksId, page);
+			Book book = bookService.getBookById(booksId);
 			
 			// 비활성화된 도서인 경우 실패 처리
-			if (bookDetailResponse.getBook().getStatus() == BookStatus.DISABLE.getCode()) {
+			if (book.getStatus() == BookStatus.DISABLE.getCode()) {
 				redirectAttributes.addFlashAttribute("alertType", "fail");
 				redirectAttributes.addFlashAttribute("alertMesssage", "도서 상세 조회에 실패하였습니다.");
 				
-				return "redirect:/public/books/" + category;
+				String referer = request.getHeader("Referer");
+				return "redirect:" + (referer != null ? referer : "/public/books/total");
 			}
 			
-			model.addAttribute("book", bookDetailResponse.getBook()); // 도서 상세 정보
-	    	model.addAttribute("currentPage", page); // 북 리뷰 페이징
+			model.addAttribute("book", book); // 도서 상세 정보
 	    	
-	    	if (bookDetailResponse.getReviewListResponse() != null) {
-				model.addAttribute("replyList", bookDetailResponse.getReviewListResponse().getReviewList()); // 북 리뷰 리스트
-				model.addAttribute("totalCount", bookDetailResponse.getReviewListResponse().getTotalCount());
-				model.addAttribute("totalPages", bookDetailResponse.getReviewListResponse().getTotalPages());
-			} else {
-				model.addAttribute("replyList", null);
-				model.addAttribute("totalCount", 0);
-				model.addAttribute("totalPages", 0);
-			}
-			
 		} catch (Exception e) {
 			log.error("도서 상세 조회 실패 : " + e);
 			
 			redirectAttributes.addFlashAttribute("alertType", "fail");
 			redirectAttributes.addFlashAttribute("alertMesssage", "도서 상세 조회에 실패하였습니다.");
 			
-			return "redirect:/public/books/" + category;
+			String referer = request.getHeader("Referer");
+			return "redirect:" + (referer != null ? referer : "/public/books/total");
 		}
 		
     	pageInfo = PageInfo.builder()

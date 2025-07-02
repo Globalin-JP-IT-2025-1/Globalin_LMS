@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<c:set var="articleList" value="${articleListWithAuthor}" />
+<c:set var="articleList" value="${articleList}" />
 
 <c:set var="totalCount" value="${totalCount}" />
 <c:set var="totalPages" value="${totalPages}" />
@@ -14,6 +14,10 @@
 <c:set var="blockSize" value="5" />
 <c:set var="startPage" value="${(currentPage - 1) / blockSize * blockSize + 1}" />
 <c:set var="endPage" value="${startPage + blockSize - 1 > totalPages ? totalPages : startPage + blockSize - 1}" />
+
+<sec:authorize access="hasRole('ROLE_USER')">
+    <sec:authentication property="principal" var="userDetails" />
+</sec:authorize>
 
 <style>
 .articleList tr {
@@ -72,9 +76,27 @@
 	        		</c:when>
 		        	<c:when test="${not empty articleList}">
 			            <c:forEach var="i" begin="0" end="${fn:length(articleList) - 1}" step="1">
-			                <tr onclick="location.href='/public/articles/qna/${articleList[i].articlesId}'">
+		            		<sec:authorize access="isAuthenticated()">
+		                       	<c:choose>
+		                          	<c:when test="${articleList[i].status eq 2 and (articleList[i].authorId ne userDetails.membersId or userDetails.membersId ne 0)}"> 
+				                		<tr>
+				                	</c:when>
+				                	<c:otherwise>
+				                		<tr onclick="location.href='/public/articles/qna/${articleList[i].articlesId}'">
+				                	</c:otherwise>
+			                	</c:choose>
+		                	</sec:authorize>
+		                	<sec:authorize access="isAnonymous()">
+		                		<tr> 
+		                	</sec:authorize>
+			                	
 			                    <td>${i + (currentPage * 7) - 6}</td>
-			                    <td>${articleList[i].title}</td>         
+			                    <td>
+			                    	<c:if test="${articleList[i].status eq 2}">
+			                    		<i class="bi bi-lock"></i>
+			                    	</c:if>
+			                    	${articleList[i].title}
+			                    </td>         
 			                    <td>
 			                    	<c:set var="a_fullname" value="${articleList[i].authorFullname}" />
 			                    	<c:set var="a_username" value="${articleList[i].authorUsername}" />

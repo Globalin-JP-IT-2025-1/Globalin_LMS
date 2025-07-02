@@ -40,14 +40,14 @@
 		    <div class="mb-3 col-6 d-flex gap-2">
 		    	<div class="col-3 d-flex align-items-center">비밀번호</div>
 		        <div class="input-group d-flex align-items-center">
-		            <input class="form-control" type="text" id="passwordBox" value="" placeholder="비밀번호 입력" maxlength="20"><!-- 테스트 후 password로 변경하기 -->
+		            <input class="form-control" type="password" id="passwordBox" value="" placeholder="비밀번호 입력" maxlength="20">
 		        </div>
 		    </div>
 		    
 		    <div class="mb-3 col-6 d-flex gap-2">
 		    	<div class="col-3 d-flex align-items-center">비밀번호 확인</div>
 		        <div class="input-group d-flex align-items-center">
-		            <input class="form-control" type="text" id="confirmPasswordBox" value="" placeholder="비밀번호 입력" maxlength="20"><!-- 테스트 후 password로 변경하기 -->
+		            <input class="form-control" type="password" id="confirmPasswordBox" value="" placeholder="비밀번호 입력" maxlength="20">
 		        </div>
 		    </div>
 			<div class="mb-3 col-6 d-flex justify-content-end gap-2">

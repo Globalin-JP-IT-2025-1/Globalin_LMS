@@ -102,7 +102,8 @@ all: unset;
     right: 2px;
 }
 
-#searchBtn:hover {
+#searchBtn:hover,
+#loginBtn:hover {
 	background: linear-gradient(45deg, #0059b3, #0073e6);
 }
 
@@ -226,9 +227,14 @@ all: unset;
 	cursor: pointer;	
 }
 
-.logoutbtn:hover {
+.logoutbtn:hover,
+.loginbtn:hover {
 	background: linear-gradient(45deg, #0059b3, #0073e6);
 	
+}
+
+.overdueInfo:hover {
+	text-decoration: underline !important;
 }
 
 .home_2_1 .h2_1_div3{
@@ -254,68 +260,81 @@ all: unset;
 
 /* 상단 탭 메뉴 줄 */
 .h2_2_top {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 }
 
 .h2_2_left {
-  font-size: 1.5em;
-  font-weight: bold;
-  color: var(--main-color);
+	font-size: 1.5em;
+	font-weight: bold;
+	color: var(--main-color);
 }
 
 .h2_2_left a {
-  margin-right: 15px;
-  color: var(--main-color);
-  text-decoration: none;
+	margin-right: 15px;
+	color: var(--main-color);
+	text-decoration: none;
 }
 
 .h2_2_left a.active {
-  background-color: var(--main-color);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 8px;
+	background-color: var(--main-color);
+	color: white;
+	padding: 5px 10px;
+	border-radius: 8px;
 }
 
 .h2_2_right {
-  font-size: 1.4em;
-  color: var(--main-color);
+	font-size: 1.4em;
+	color: var(--main-color);
 }
 
 /* 도서 카드 리스트 */
 .book_list {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: nowrap;
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	gap: 30px;
+	flex-wrap: nowrap;
 }
 
 .book_card {
-  width: 180px;
-  text-align: center;
-  flex-shrink: 0;
-  
+	width: 180px;
+	text-align: center;
+	flex-shrink: 0;
 }
 
 .book_img {
-  width: 100%;
-  height: 230px;
-  object-fit: fill;
-  border: 1.5px solid #333;
-  box-shadow: 7px 7px 15px rgba(0, 0, 0, 0.3);
-  
+	width: 100%;
+	height: 230px;
+	object-fit: fill;
+	border: 1.5px solid #333;
+	box-shadow: 7px 7px 15px rgba(0, 0, 0, 0.3);
 }
 
 .book_title {
-  margin-top: 10px;
-  font-size: 1em;
-  font-weight: 500;
+	margin-top: 10px;
+	font-size: 1em;
+	font-weight: 500;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-content: center;
 }
 
-.book_title span {
-  font-size: 0.9em;
-  color: gray;
+.book_title_1 {
+	max-width: inherit;
+}
+
+.book_title_2 {
+	font-size: 0.9em;
+	color: gray;
+	max-width: inherit;
+}
+
+.book_title_1 a:hover {
+	text-decoration: underline !important;
 }
 
 
@@ -323,6 +342,10 @@ all: unset;
 .home_2_3 {
 	width: 30%;
 	padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
 }
 
 .border {
@@ -353,6 +376,56 @@ all: unset;
 	align-items: center;
 	font-weight: bold;
 	color: var(--main-color);
+}
+
+.home_2_3 .h2_3_div2 {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-start;
+	font-weight: bold;
+	color: var(--main-color);
+	/* gap: 10px; */
+	
+	height: 294px;
+}
+
+.h2_3_div2_item {
+	width: 100%;
+	height: 20%;
+	display: flex;
+	justify-content: space-between;
+}
+
+.h2_3_div2_item_item1 {
+	width: 70%;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.h2_3_div2_item_item2 {
+	width: 30%;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-end;
+}
+
+.article_title {
+	max-width: 250px;
+}
+
+.article_title a {
+	width: inherit;
+}
+
+.article_title a:hover {
+	text-decoration: underline !important;
 }
 
 

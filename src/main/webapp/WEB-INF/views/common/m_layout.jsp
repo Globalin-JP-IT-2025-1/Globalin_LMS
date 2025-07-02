@@ -26,11 +26,11 @@
 		<div class="m_content">
 			<div class="m_submenu_content">
 				<div class="m_submenu_content_tx">
-					<div class="m_submenu_item" id="mSubmenu1" data-submenu="mSubmenu1" data-uri="${pageSubTitle1Uri}">${pageSubTitle1}</div>
-					<div class="m_submenu_item" id="mSubmenu2" data-submenu="mSubmenu2" data-uri="${pageSubTitle2Uri}">${pageSubTitle2}</div>
-					<div class="m_submenu_item" id="mSubmenu3" data-submenu="mSubmenu3" data-uri="${pageSubTitle3Uri}">${pageSubTitle3}</div>
+					<div class="m_submenu_item" id="mSubmenu1" onclick="setActiveMenu(this)" data-url="${pageSubTitle1Uri}">${pageSubTitle1}</div>
+					<div class="m_submenu_item" id="mSubmenu2" onclick="setActiveMenu(this)" data-url="${pageSubTitle2Uri}">${pageSubTitle2}</div>
+					<div class="m_submenu_item" id="mSubmenu3" onclick="setActiveMenu(this)" data-url="${pageSubTitle3Uri}">${pageSubTitle3}</div>
 					<c:if test="${not empty pageSubTitle4}">
-					    <div class="m_submenu_item" id="mSubmenu4" data-submenu="mSubmenu4" data-uri="${pageSubTitle4Uri}">
+					    <div class="m_submenu_item" id="mSubmenu4" onclick="setActiveMenu(this)" data-url="${pageSubTitle4Uri}">
 					        ${pageSubTitle4}
 					    </div>
 					</c:if>
@@ -42,7 +42,29 @@
 	</div>
 </div>
 
-<script src="${pageContext.request.contextPath}/resources/static/js/main.js"></script>
 
+<script>
+function setActiveMenu(element) {
+	const id = element.id;
+	const url = element.getAttribute("data-url");
+
+	// 브라우저 세션에 클릭한 메뉴 ID 저장
+	sessionStorage.setItem("activeMenuId", id);
+
+	// 해당 URL로 이동
+	window.location.href = url;
+}
+
+// 페이지 로드 시 저장된 메뉴 ID로 active 클래스 적용
+window.addEventListener("DOMContentLoaded", function() {
+	const activeId = sessionStorage.getItem("activeMenuId");
+	if (activeId) {
+		const activeElement = document.getElementById(activeId);
+		if (activeElement) {
+			activeElement.classList.add("active_menu");
+		}
+	}
+});
+</script>
 
 

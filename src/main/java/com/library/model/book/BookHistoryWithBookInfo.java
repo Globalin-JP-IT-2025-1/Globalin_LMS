@@ -1,0 +1,30 @@
+package com.library.model.book;
+
+import java.sql.Timestamp;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+// 도서 대출 이력
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class BookHistoryWithBookInfo {
+	
+	private int bookHistoryId; // 도서 이용 이력 ID
+	private int membersId; // 회원 ID
+	private int booksId; // 대상 도서 ID (도서 이미지, 도서명, 저자, 출판사)
+	private Timestamp loanDate; // 대출 날짜
+	private Timestamp dueDate; // 반납 예정 날짜
+	private Timestamp returnedDate; // 반납 완료 날짜
+	private int status; // 상태: 연체 여부-0:정상, 1:연체
+	
+	private String title; // 책 제목
+	private String imageLink; // 책 이미지
+
+}

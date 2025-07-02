@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
-<c:set var="articleList" value="${articleListWithAuthor}" />
+<c:set var="articleList" value="${articleList}" />
 
 <c:set var="totalCount" value="${totalCount}" />
 <c:set var="totalPages" value="${totalPages}" />
@@ -78,7 +78,9 @@
 			            <c:forEach var="i" begin="0" end="${fn:length(articleList) - 1}" step="1">
 			                <tr onclick="location.href='/public/articles/not/${articleList[i].articlesId}'">
 			                    <td>${i + (currentPage * 7) - 6}</td>
-			                    <td>${articleList[i].title}</td>         
+			                    <td>
+			                    	${articleList[i].title}
+			                    </td>         
 			                    <td>
 			                    	<c:set var="a_fullname" value="${articleList[i].authorFullname}" />
 			                    	<c:set var="a_username" value="${articleList[i].authorUsername}" />

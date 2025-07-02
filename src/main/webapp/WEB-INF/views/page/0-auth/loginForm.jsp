@@ -1,104 +1,92 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
-<style>
-</style>
 <!-- 로그인 폼 -->
+<form action="/public/auth/login" method="post" class="w-100">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+    <input type="hidden" name="username" id="username" value="" readonly>
+    <input type="hidden" name="password" id="password" value="" readonly>
+    <input type="hidden" name="remember-me" id="rememberMeHidden" value="true" />
 
-<div class="d-none"> <!-- 테스트시 d-none 해제 -->
-	<button onclick="vailFormData()">빈 값 검사</button>
-	<button onclick="testLogin()">로그인 테스트</button>
-</div>
+        <div class="card shadow-sm w-60 pt-5 my-3">
+            <div class="container d-flex flex-column justify-content-center align-items-center loginForm">
+                
+                <div class="mb-3 col-4 d-flex gap-2">
+                    <div class="col-3 d-flex align-items-center">아이디</div>
+                    <div class="input-group d-flex align-items-center">
+                        <input class="form-control" type="text" id="usernameBox" value="" placeholder="<spring:message code="main.h2.2" />" maxlength="20">
+                    </div>
+                </div>
+                
+                <div class="mb-3 col-4 d-flex gap-2">
+                    <div class="col-3 d-flex align-items-center">비밀번호</div>
+                    <div class="input-group d-flex align-items-center">
+                        <input class="form-control" type="password" id="passwordBox" value="" placeholder="<spring:message code="main.h2.3" />" maxlength="20">
+                    </div>
+                </div>
+                
+                <div class="mb-3 col-4 d-flex justify-content-center align-items-center gap-2">
+                    <input class="form-check-input" type="checkbox" id="autoLoginBox" checked>
+                    <label class="form-check-label" for="autoLoginBox"><spring:message code="main.h2.4" /></label>
+                </div>
+                
+                <div class="mb-3 col-4 d-flex justify-content-center align-items-center gap-2">
+                    <input class="mb-3 btn btn-primary" type="submit" value="<spring:message code="main.h2.14" />">
+                </div>
+            </div>
+        </div>
+</form>
 
-<div class="w-100">
-	<div class="card shadow-sm w-60 pt-5 my-3">
-		<div class="container d-flex flex-column justify-content-center align-items-center loginForm">
-			<div class="mb-3 col-6 d-flex gap-2">
-		        <div class="col-3 d-flex align-items-center">아이디</div>
-		        <div class="input-group d-flex align-items-center">
-		            <input class="form-control" type="text" id="usernameBox" value="" placeholder="아이디 입력" maxlength="20">
-		        </div>
-		    </div>
-		    
-		    <div class="mb-3 col-6 d-flex gap-2">
-		    	<div class="col-3 d-flex align-items-center">비밀번호</div>
-		        <div class="input-group d-flex align-items-center">
-		            <input class="form-control" type="password" id="passwordBox" value="" placeholder="비밀번호 입력" maxlength="20"><!-- 테스트 후 password로 변경하기 -->
-		        </div>
-		    </div>
-		    
-		    <div class="mb-3 col-6 d-flex gap-2">
-				<input class="form-check-input" type="checkbox" value="" id="autoLoginBox" checked>
-				<label class="form-check-label" for="checkChecked">
-				 	자동 로그인
-				</label>
-		    </div>
-		
-		    
-		    <div class="mb-3 col-6 d-flex justify-content-center align-items-center gap-2">
-		        <form action="/public/auth/login" method="post">
-		        	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-		        	<input type="hidden" name="username" id="username" value="" readonly><!-- 서버 송신용1 -->
-		        	<input type="hidden" name="password" id="password" value="" readonly><!-- 서버 송신용2 -->
-		        	<input type="hidden" name="autoLogin" id="autoLogin" value="1" disabled><!-- 서버 송신용3 : 자동 로그인 기능 구현 후 disabled 에서 readonly로 변경하기 -->
-		        	<input class="mb-3 btn btn-primary" type="submit" value="로그인">
-		        </form>
-		    </div>
-		</div>
-	</div>
-</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+(function () {
+	// CDN 방식이 로드되지 않는 경우
+    if (typeof jQuery === "undefined") {
+        var script = document.createElement("script");
+        script.src = "/js/jquery-3.6.0.min.js";
+        script.onload = initLoginScript;
+        document.head.appendChild(script);
+    } else {
+        initLoginScript();
+    }
 
+    function initLoginScript() {
+        $(function () {
+            const $form = $("form");
+            const $usernameBox = $("#usernameBox");
+            const $passwordBox = $("#passwordBox");
+            const $autoLoginBox = $("#autoLoginBox");
 
-<script type="text/javascript">
+            const $usernameHidden = $("#username");
+            const $passwordHidden = $("#password");
+            const $rememberMeHidden = $("#rememberMeHidden");
 
-function testLogin() {
-	// 빈 값
-	vailFormData();
-	
-	var username = document.getElementById("username").value;
-	var password = document.getElementById("password").value;
-	var authLogin = document.getElementById("autoLogin").value;
-	
-	alert(" username: " + username + " password: " + password + " authLogin: " + authLogin);
-	
-	alert("로그인 요청데이터 테스트 완료");
-}
+            $autoLoginBox.on("change", function () {
+                $rememberMeHidden.prop("disabled", !this.checked);
+            });
 
-// 빈 칸 검사
-function vailFormData() {
-	
-	if (document.getElementById("usernameBox").value.trim() === "") {
-	    alert("아이디가 비어있습니다");
-	    document.getElementById("usernameBox").focus();
-	    return;
-	}
-	
-	if (document.getElementById("passwordBox").value.trim() === "") {
-	    alert("비밀번호가 비어있습니다");
-	    document.getElementById("passwordBox").focus();
-	    return;
-	}
+            $form.on("submit", function (e) {
+                if ($.trim($usernameBox.val()) === "") {
+                    alert("아이디가 비어있습니다");
+                    $usernameBox.focus();
+                    e.preventDefault();
+                    return;
+                }
 
-}
+                if ($.trim($passwordBox.val()) === "") {
+                    alert("비밀번호가 비어있습니다");
+                    $passwordBox.focus();
+                    e.preventDefault();
+                    return;
+                }
 
-
-// 서버 송신용 input 채우기
-document.getElementById("usernameBox").addEventListener("blur", function () {
-	document.getElementById("username").value = this.value;
-});
-
-document.getElementById("passwordBox").addEventListener("blur", function () {
-	document.getElementById("password").value = this.value;
-});
-
-document.getElementById("autoLoginBox").addEventListener("change", function () {
-    const isChecked = this.checked ? "1" : "0";
-
-    // 값을 반영할 input 요소가 있다면 여기 넣어줘
-    document.getElementById("autoLogin").value = isChecked;
-});
-
-
+                $usernameHidden.val($usernameBox.val());
+                $passwordHidden.val($passwordBox.val());
+            });
+        });
+    }
+})();
 
 </script>
+
