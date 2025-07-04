@@ -80,20 +80,20 @@ public class ReplyServiceImpl implements ReplyService {
     // 댓글 수정
     // 1) 비공개 (soft delete)
 	@Override
-    public int updateReplyDisable(int replyId) {
-        return replyMapper.updateReplyDisable(replyId);
+    public int updateReplyDisable(int repliesId) {
+        return replyMapper.updateReplyDisable(repliesId);
     }
 
     // 2) 공개
 	@Override
-    public int updateReplyEnable(int replyId) {
-        return replyMapper.updateReplyEnable(replyId);
+    public int updateReplyEnable(int repliesId) {
+        return replyMapper.updateReplyEnable(repliesId);
     }
     
     // 3) 비밀
 	@Override
-    public int updateReplySecret(int replyId) {
-    	return replyMapper.updateReplySecret(replyId);
+    public int updateReplySecret(int repliesId) {
+    	return replyMapper.updateReplySecret(repliesId);
     }
 	
 	// 댓글 등록
@@ -113,8 +113,14 @@ public class ReplyServiceImpl implements ReplyService {
     // 댓글 삭제 (hard delete)
 	// aop를 위해 파라미터에 articlesId 추가. 실제로 사용은 안 함.
 	@Override
-    public int deleteReply(int articlesId, int replyId) {
-        return replyMapper.deleteReply(replyId);
+    public int deleteReply(int articlesId, int repliesId) {
+        return replyMapper.deleteReply(repliesId);
     }
+	
+	// 댓글 가져오기
+	@Override
+	public Reply getReplyById(int repliesId) {
+		return replyMapper.getReplyById(repliesId);
+	}
     
 }

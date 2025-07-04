@@ -23,11 +23,16 @@
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resources/static/css/home.css">
 
-<!-- <style>
-* {
-	border: 1px solid red;
-}
-</style> -->
+<style>
+	/* 팝업창 설정 */
+	#page-1 {
+	    position: fixed;
+	    top: 50%;
+	    left: 20%;
+	    transform: translate(-50%, -50%);
+	    z-index: 1050; /* Bootstrap 모달보다 낮지 않게 */
+	}
+</style>
 
 <div class="home">
 	<div class="home_1_bg">
@@ -35,10 +40,12 @@
 			<div class="home1_item1">
 				<label id="searchType"><spring:message code="main.h1.1" /></label>
 			</div>
-			<div class="home1_item2">
-				<input type="text" id="searchInput" placeholder="<spring:message code="main.h1.2" />" maxlength="20">
-				<button id="searchBtn"><spring:message code="main.h1.3" /></button>
-			</div>
+			<form action="/public/books/total" method="get" class="home1_item2">
+			    <input type="hidden" name="searchType" value="title">
+			    <input type="text" name="searchKeyword" id="searchInput" 
+			           placeholder="<spring:message code='main.h1.2' />" maxlength="20">
+			    <button id="searchBtn"><spring:message code="main.h1.3" /></button>
+			</form>
 		</div>
 	</div>
 
@@ -51,7 +58,7 @@
 						<form action="/public/auth/login" method="post">
 							<div class="h2_1_div1" id="loginForm">
 								<div class="w-100"><input type="text" name="username" id="username" placeholder="<spring:message code="main.h2.2" />" maxlength="10"/></div>
-								<div class="w-100"><input type="text" name="password" id="password" placeholder="<spring:message code="main.h2.3" />" maxlength="20"/></div>
+								<div class="w-100"><input type="password" name="password" id="password" placeholder="<spring:message code="main.h2.3" />" maxlength="20"/></div>
 								<div class="w-100">
 									<input class="form-check-input" type="checkbox" name="remember-me" id="autoLoginBox" checked>
                    					<label class="form-check-label" for="autoLoginBox">
@@ -293,6 +300,9 @@
 				onclick="handleNavigationDiv(event, this)">
 		    	<i class="bi bi-graph-up-arrow"></i><spring:message code="main.h2.12" />
 	    	</div>
+	    	<c:if test="${empty h_membersId}">
+      			<c:set var="h_membersId" value="-1" />
+      		</c:if>
 		    <div class="home_3_item" 
 		    	data-url="/private/members/${h_membersId}/book-like"
 		    	data-menu-id="mSubmenu3" 
@@ -338,25 +348,61 @@
 			</div>
 		</div>
 	</div>
+	
 	<div class="home_5_bg">
 	  	<div class="home_5">
 			<div class="banner_wrapper">
-			  <div class="banner_track" id="bannerTrack">
-			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner1.jpg" alt="배너1"></div>
-			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner2.jpg" alt="배너2"></div>
-			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner3.jpg" alt="배너3"></div>
-			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner4.jpg" alt="배너4"></div>
-			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner5.jpg" alt="배너5"></div>
-			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner6.jpg" alt="배너6"></div>
-			    <div class="banner_card"><img src="${pageContext.request.contextPath}/resources/static/images/banner7.jpg" alt="배너7"></div>
-			  </div>
+			  	<div class="banner_track" id="bannerTrack">
+			    	<div class="banner_card">
+			    		<img src="${pageContext.request.contextPath}/resources/static/images/banner1.jpg" alt="배너1">
+			    	</div>
+			    	<div class="banner_card">
+			    		<img src="${pageContext.request.contextPath}/resources/static/images/banner2.jpg" alt="배너2">
+			    	</div>
+			    	<div class="banner_card">
+			    		<img src="${pageContext.request.contextPath}/resources/static/images/banner3.jpg" alt="배너3">
+			    	</div>
+			    	<div class="banner_card">
+			    		<img src="${pageContext.request.contextPath}/resources/static/images/banner4.jpg" alt="배너4">
+			    	</div>
+			    	<div class="banner_card">
+			    		<img src="${pageContext.request.contextPath}/resources/static/images/banner5.jpg" alt="배너5">
+			    	</div>
+			    	<div class="banner_card">
+			    		<img src="${pageContext.request.contextPath}/resources/static/images/banner6.jpg" alt="배너6">
+			    	</div>
+			    	<div class="banner_card">
+			    		<img src="${pageContext.request.contextPath}/resources/static/images/banner7.jpg" alt="배너7">
+			    	</div>
+			  	</div>
 			</div>
-
 		</div>
 	</div>
-
 </div>
 
+<!-- 팝업창 -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow" id="page-1">
+                <div class="card-body">
+                	<img src="${pageContext.request.contextPath}/resources/images/promotion.png"
+                		 class="img-fluid w-100" style="object-fit: cover; height: 700px;">  
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="noShowToday">
+                        <label class="form-check-label" for="noShowToday">
+                            <spring:message code="main.h5.1" />
+                        </label>
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="closeBtn">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+	
 
 <script
 	src="${pageContext.request.contextPath}/resources/static/js/home.js"></script>
@@ -377,7 +423,8 @@ function handleNavigation(event, element) {
         window.location.href = url;
     }
 }
-//홈 --> 메인 소메뉴 css (div, button태그)
+
+// 홈 --> 메인 소메뉴 css (div, button태그)
 function handleNavigationDiv(event, element) {
     const menuId = element.getAttribute("data-menu-id");
     const url = element.getAttribute("data-url");
@@ -390,4 +437,49 @@ function handleNavigationDiv(event, element) {
         window.location.href = url;
     }
 }
+
+// 팝업창 쿠키
+document.addEventListener('DOMContentLoaded', function() {
+    function getCookie(name) {
+        const value = "; " + document.cookie;
+        const parts = value.split("; " + name + "=");
+        if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+    function setNoShowCookie() {
+        const expires = new Date();
+        expires.setHours(23, 59, 59, 999);
+        document.cookie = "noShowToday=1; expires=" + expires.toUTCString() + "; path=/";
+    }
+    function removeNoShowCookie() {
+        document.cookie = "noShowToday=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    }
+
+    const promoCard = document.getElementById('page-1');
+    const checkbox = document.getElementById('noShowToday');
+    const closeBtn = document.getElementById('closeBtn');
+
+    if (getCookie('noShowToday')) {
+        promoCard.style.display = 'none';
+        checkbox.checked = true;
+    } else {
+        promoCard.style.display = '';
+        checkbox.checked = false;
+    }
+
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            setNoShowCookie();
+        } else {
+            removeNoShowCookie();
+        }
+    });
+
+    closeBtn.addEventListener('click', function() {
+        if (checkbox.checked) {
+            setNoShowCookie();
+        }
+        promoCard.style.display = 'none';
+    });
+});
+
 </script>

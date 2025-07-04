@@ -51,7 +51,7 @@
     <!-- 도서 목록 -->
     <div class="overflow-x-auto" >
 	    <table class="table mt-3 table-hover bookList">
-	    	<thead class="table-primary">
+	    	<thead>
 	        	<tr>
 	        		<th>NO</th>
 	        		<th>도서 표지</th>
@@ -113,11 +113,11 @@
 			                        			<div class="text-secondary">비공개</div>
 			                        		</c:when>
 			                        		<c:when test="${status eq 2}">
-			                        			<div class="text-info">대출 중(예약 가능)</div>
+			                        			<div class="text-info">대출 중</div>
 			                        		</c:when>
-			                        		<c:when test="${status eq 3}">
+			                        		<%-- <c:when test="${status eq 3}">
 			                        			<div class="text-danger">대출 예약 중</div>
-			                        		</c:when>
+			                        		</c:when> --%>
 			                        		<c:otherwise>
 			                        			알 수 없음
 			                        		</c:otherwise>

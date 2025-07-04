@@ -19,9 +19,6 @@
     <sec:authentication property="principal" var="userDetails" />
 </sec:authorize>
 
-<meta name="_csrf" content="${_csrf.token}" />
-<meta name="_csrf_header" content="${_csrf.headerName}" />
-
 <style>
 .bookList tr {
 	cursor: pointer !important;
@@ -35,25 +32,25 @@
 }
 
 /* 각 열 너비 */
-.bookList td:nth-child(1), .bookList th:nth-child(1) { min-width: 30px !important; }
+.bookList td:nth-child(1), .bookList th:nth-child(1) { min-width: 50px !important; }
 .bookList td:nth-child(2), .bookList th:nth-child(2) { min-width: 50px !important; }
 .bookList td:nth-child(3), .bookList th:nth-child(3) { min-width: 100px !important; }
 .bookList td:nth-child(4), .bookList th:nth-child(4) { min-width: 100px !important; }
 .bookList td:nth-child(5), .bookList th:nth-child(5) { min-width: 50px !important; }
 .bookList td:nth-child(6), .bookList th:nth-child(6) { min-width: 50px !important; }
-.bookList td:nth-child(7), .bookList th:nth-child(7) { min-width: 80px !important; }
+.bookList td:nth-child(7), .bookList th:nth-child(7) { min-width: 100px !important; }
 .bookList td:nth-child(8), .bookList th:nth-child(8) { min-width: 50px !important; }
 .bookList td:nth-child(9), .bookList th:nth-child(9) { min-width: 50px !important; }
 .bookList td:nth-child(10), .bookList th:nth-child(10) { min-width: 50px !important; }
 .bookList td:nth-child(11), .bookList th:nth-child(11) { min-width: 50px !important; }
 
-.bookList td:nth-child(1), .bookList th:nth-child(1) { max-width: 30px !important; }
+.bookList td:nth-child(1), .bookList th:nth-child(1) { max-width: 50px !important; }
 .bookList td:nth-child(2), .bookList th:nth-child(2) { max-width: 50px !important; }
 .bookList td:nth-child(3), .bookList th:nth-child(3) { max-width: 100px !important; }
 .bookList td:nth-child(4), .bookList th:nth-child(4) { max-width: 100px !important; }
 .bookList td:nth-child(5), .bookList th:nth-child(5) { max-width: 50px !important; }
 .bookList td:nth-child(6), .bookList th:nth-child(6) { max-width: 50px !important; }
-.bookList td:nth-child(7), .bookList th:nth-child(7) { max-width: 80px !important; }
+.bookList td:nth-child(7), .bookList th:nth-child(7) { max-width: 100px !important; }
 .bookList td:nth-child(8), .bookList th:nth-child(8) { max-width: 50px !important; }
 .bookList td:nth-child(9), .bookList th:nth-child(9) { max-width: 50px !important; }
 .bookList td:nth-child(10), .bookList th:nth-child(10) { max-width: 50px !important; }
@@ -83,19 +80,20 @@
     <!-- 도서 목록 -->
     <div class="overflow-x-auto" >
 	    <table class="table mt-3 table-hover bookList">
-	    	<thead class="table-primary">
+	    	<thead>
 	        	<tr>
 	        		<th>NO</th>
+	        		<th>ID</th>
 	        		<th>도서 표지</th>
 	        		<th>책제목</th>
 	        		<th>저자</th>
 	        		<th>발행자</th>
-	        		<th>발행연도</th>
 	        		<th>ISBN</th>
 	        		<th>분류기호</th>
 	        		<th>도서 상태</th>
-	        		<th>조회수</th>
 	        		<th>대출/반납</th>
+	        		<!-- <th>공개/비공개</th> -->
+	        		<th>삭제</th>
 	        	</tr>
 	        </thead>
 	        <tbody>
@@ -107,6 +105,7 @@
 			            <c:forEach var="i" begin="0" end="${fn:length(bookList) - 1}" step="1">
 			                <tr>
 			                    <td>${i + (currentPage * 7) - 6}</td>
+			                    <td>${bookList[i].booksId}</td>
 			                    <td>
 				                    <img src="${bookList[i].imageLink}"
 				                        alt="${bookList[i].title} 책 표지" width="50">
@@ -114,7 +113,6 @@
 				                <td><div class="fw-bold col-10 text-truncate" onclick="location.href='/public/books/${bookList[i].booksId}'">${bookList[i].title}</div></td>
 				                <td><div class="col-10 text-truncate">${bookList[i].author}</div></td>
 		                       	<td><div>${bookList[i].publisher}</div></td>
-		                        <td><div><fmt:formatDate value="${bookList[i].publishDate}" pattern="yyyy" /></div></td>
 		                        <td><div>${bookList[i].isbn}</div></td>
 		                        <td><div>${bookList[i].category}</div></td>
 				                
@@ -123,28 +121,68 @@
 			                        	<c:set var="status">${bookList[i].status}</c:set>
 			                        	<c:choose>
 			                        		<c:when test="${status eq 0}">
-			                        			<div class="text-success">대출가능</div>
+			                        			<div class="badge text-bg-success">대출가능</div>
 			                        		</c:when>
 			                        		<c:when test="${status eq 1}">
-			                        			<div class="text-secondary">비공개</div>
+			                        			<div class="badge text-bg-secondary">비공개</div>
 			                        		</c:when>
 			                        		<c:when test="${status eq 2}">
-			                        			<div class="text-info">대출 중(예약 가능)</div>
+			                        			<div class="badge text-bg-warning">대출중</div>
 			                        		</c:when>
-			                        		<c:when test="${status eq 3}">
+			                        		<%-- <c:when test="${status eq 3}">
 			                        			<div class="text-danger">대출 예약 중</div>
-			                        		</c:when>
+			                        		</c:when> --%>
 			                        		<c:otherwise>
 			                        			알 수 없음
 			                        		</c:otherwise>
 			                        	</c:choose>
-			                        	
 			                        </div>
 				                </td>
-			                    <td>${bookList[i].viewCount}</td>
 			                    <td>
-			                    	<button class="btn btn-primary mb-2" onclick="openLoanModal(${bookList[i].booksId})">대출</button><br>
-			                    	<button class="btn btn-success" onclick="openReturnModal(${bookList[i].booksId})">반납</button>
+			                    	<c:set var="status">${bookList[i].status}</c:set>
+		                        	<c:choose>
+		                        		<c:when test="${status eq 0}">
+		                        			<!-- 대출가능 -->
+											<button class="btn btn-sm btn-primary"
+											        data-bs-toggle="modal"
+											        data-bs-target="#loanModal"
+											        onclick="setLoanFormAction(${bookList[i].booksId})">대출</button>
+		                        		</c:when>
+		                        		<c:when test="${status eq 1}">
+		                        			<div class="text-secondary">비공개</div>
+		                        		</c:when>
+		                        		<c:when test="${status eq 2}">
+		                        			<!-- 대출 중 -->
+											<button class="btn btn-sm btn-success"
+											        data-bs-toggle="modal"
+											        data-bs-target="#returnModal"
+											        onclick="setReturnFormAction(${bookList[i].booksId})">반납</button>
+		                        		</c:when>
+		                        		<c:otherwise>
+		                        			알 수 없음
+		                        		</c:otherwise>
+		                        	</c:choose>
+			                    </td>
+			                    <%-- <td>
+			                    	<!-- 비공개(1) ↔ 공개 전환 스위치 -->
+									<form id="statusForm-${bookList[i].booksId}" method="post">
+					                    <input type="hidden" name="_method" value="PUT" />
+					                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					                    <div class="form-check form-switch">
+					                       	<input class="form-check-input" type="checkbox"  id="statusSwitch-${bookList[i].booksId}"
+					                               ${bookList[i].status == 1 ? "" : "checked"}
+						                           onchange="submitStatus('${article.articlesId}', '${bookList[i].booksId}')">
+				                        </div>
+				                  	</form>
+			                    </td> --%>
+			                    <td>
+			                    	<form action="/admin/books/${bookList[i].booksId}" method="post" class="d-inline">
+									  	<input type="hidden" name="_method" value="DELETE" />
+									  	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+										<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('정말 삭제하시겠습니까?');">
+											<i class="bi bi-trash"></i>
+										</button>
+									</form>
 			                    </td>
 			                </tr>
 			            </c:forEach>
@@ -152,6 +190,56 @@
 		        </c:choose>
 	        </tbody>
 	    </table>
+	    
+	    <!-- loan 모달 -->
+		<div class="modal fade" id="loanModal" tabindex="-1" aria-labelledby="loanModalLabel" aria-hidden="true">
+		  	<div class="modal-dialog">
+		    	<div class="modal-content">
+		      		<form method="post">
+		        		<div class="modal-header">
+		          			<h5 class="modal-title" id="loanModalLabel">도서 대출</h5>
+		          			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+		        		</div>
+		        		<div class="modal-body">
+		          			<div class="mb-3">
+		            			<label for="memberCard" class="form-label">회원카드 번호</label>
+		            			<input type="text" class="form-control" name="cardNo" id="memberCard" required>
+		          			</div>
+		          			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+		        		</div>
+		        		<div class="modal-footer">
+				          	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+				          	<button type="submit" class="btn btn-primary">대출하기</button>
+		        		</div>
+		      		</form>
+		    	</div>
+		  	</div>
+		</div>
+	    
+	    <!-- return 모달 -->
+		<div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
+		  	<div class="modal-dialog">
+		    	<div class="modal-content">
+		      		<form method="post">
+		        		<div class="modal-header">
+		          			<h5 class="modal-title" id="returnModalLabel">도서 반납</h5>
+		          			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+		        		</div>
+		        		<div class="modal-body">
+		          			<div class="mb-3">
+		            			<label for="memberCard" class="form-label">회원카드 번호</label>
+		            			<input type="text" class="form-control" name="cardNo" id="memberCard" required>
+		          			</div>
+		          			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+		        		</div>
+		        		<div class="modal-footer">
+				          	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+				          	<button type="submit" class="btn btn-primary">반납하기</button>
+		        		</div>
+		      		</form>
+		    	</div>
+		  	</div>
+		</div>
 	    
 	    <!-- 도서 추가하기 버튼 -->
 	    <div class="d-flex justify-content-end">
@@ -161,27 +249,63 @@
 	  	<c:choose>
         	<c:when test="${not empty bookList}">
 			    <!-- 페이징 -->
+			    <c:set var="hasSearch" value="${not empty searchType and not empty searchKeyword}" />
+			    
 			    <div class="d-flex justify-content-center mt-4">
 				    <nav aria-label="Page navigation">
 				        <ul class="pagination">
 				
+				            <!-- 이전 페이지 -->
 				            <c:if test="${currentPage > 1}">
 				                <li class="page-item">
-				                    <a class="page-link" href="?page=${currentPage - 1}">이전</a>
+				                    <c:choose>
+				                        <c:when test="${hasSearch}">
+				                            <a class="page-link"
+				                               href="?searchType=${searchType}&searchKeyword=${searchKeyword}&page=${currentPage - 1}">
+				                                이전
+				                            </a>
+				                        </c:when>
+				                        <c:otherwise>
+				                            <a class="page-link" href="?page=${currentPage - 1}">이전</a>
+				                        </c:otherwise>
+				                    </c:choose>
 				                </li>
 				            </c:if>
 				
+				            <!-- 페이지 번호 -->
 				            <c:forEach var="i" begin="${startPage}" end="${endPage}">
-							    <li class="page-item ${i == currentPage ? 'active' : ''}">
-							        <a class="page-link" href="?page=${i}">${i}</a>
-							    </li>
-							</c:forEach>
+				                <li class="page-item ${i == currentPage ? 'active' : ''}">
+				                    <c:choose>
+				                        <c:when test="${hasSearch}">
+				                            <a class="page-link"
+				                               href="?searchType=${searchType}&searchKeyword=${searchKeyword}&page=${i}">
+				                                ${i}
+				                            </a>
+				                        </c:when>
+				                        <c:otherwise>
+				                            <a class="page-link" href="?page=${i}">${i}</a>
+				                        </c:otherwise>
+				                    </c:choose>
+				                </li>
+				            </c:forEach>
 				
+				            <!-- 다음 페이지 -->
 				            <c:if test="${currentPage < totalPages}">
 				                <li class="page-item">
-				                    <a class="page-link" href="?page=${currentPage + 1}">다음</a>
+				                    <c:choose>
+				                        <c:when test="${hasSearch}">
+				                            <a class="page-link"
+				                               href="?searchType=${searchType}&searchKeyword=${searchKeyword}&page=${currentPage + 1}">
+				                                다음
+				                            </a>
+				                        </c:when>
+				                        <c:otherwise>
+				                            <a class="page-link" href="?page=${currentPage + 1}">다음</a>
+				                        </c:otherwise>
+				                    </c:choose>
 				                </li>
 				            </c:if>
+				            
 				        </ul>
 				    </nav>
 				</div>
@@ -189,3 +313,35 @@
 		</c:choose>
     </div>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>  
+<script>
+	// 대출 처리
+	function setLoanFormAction(bookId) {
+	  	const form = document.querySelector('#loanModal form');
+	  	form.action = '/admin/books/' + bookId + '/loan';
+	}
+	
+	// 반납 처리
+	function setReturnFormAction(bookId) {
+	  	const form = document.querySelector('#returnModal form');
+	  	form.action = '/admin/books/' + bookId + '/return';
+	}
+	
+	// 공개 비공개
+   	function submitStatus(bookId) {
+      	const isChecked = document.getElementById("statusSwitch-" + bookId).checked;
+      	const status = isChecked ? 0 : 1;
+     
+      	if (!bookId) {
+	        alert("경로 생성 실패: bookId가 비어있습니다.");
+	        return;
+     	}
+   
+       	const form = document.getElementById("statusForm-" + bookId);
+        form.action = '/admin/books/' + bookId + '/' + status;
+        form.submit();
+   	}
+</script>
+

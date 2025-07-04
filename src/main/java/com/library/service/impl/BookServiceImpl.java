@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.library.exception.DBException;
 import com.library.exception.LoanNotAllowedException;
 import com.library.mapper.BookMapper;
 import com.library.model.SearchRequest;
@@ -314,6 +315,7 @@ public class BookServiceImpl implements BookService {
     // 1) 수정용 상세 조회 (북 리뷰 제외)
 	@Override
 	public Book getBookById(int booksId) {
+		updateBookViewCountUp(booksId);
 		return bookMapper.getBookById(booksId);
 	}
     
@@ -381,8 +383,8 @@ public class BookServiceImpl implements BookService {
     
     // 기타 처리
     // 대출 처리
-    @Transactional(rollbackFor = Exception.class)
     @Override
+    @Transactional
  	public void loanBook(int booksId, String cardNum) {
     	Member member = memberService.getMemberByCardNum(cardNum.trim());
     	
@@ -403,17 +405,24 @@ public class BookServiceImpl implements BookService {
 		
     	int membersId = member.getMembersId();
     	
-		// 1) 도서 : 대출중으로 처리
-		updateBookLoaned(booksId);
-		// 2) 회원 : 대출권수 증가
-        memberService.updateMemberLoanCountUp(membersId);
-        // 3) 회원 : 도서 이용 정보에 추가
-        memberBookHistoryService.insertBookHistory(membersId, booksId);
+    	try {
+			// 1) 도서 : 대출중으로 처리
+			updateBookLoaned(booksId);
+			// 2) 회원 : 대출권수 증가
+	        memberService.updateMemberLoanCountUp(membersId);
+	        // 3) 회원 : 도서 이용 정보에 추가
+	        memberBookHistoryService.insertBookHistory(membersId, booksId);
+	        
+    	} catch (DBException e) {
+    		log.error("DB문제로 대출 처리 실패 :", e);
+    		throw e; // 트랜잭션 롤백을 위해
+    	}
+    	
  	}
  	
  	// 반납 처리
-    @Transactional(rollbackFor = Exception.class)
     @Override
+    @Transactional
  	public void returnBook(int booksId, String cardNum) {
     	Member member = memberService.getMemberByCardNum(cardNum.trim());
     	
@@ -423,12 +432,18 @@ public class BookServiceImpl implements BookService {
     	
     	int membersId = member.getMembersId();
     	
-    	// 1) 도서 : 정상(대출가능)으로 처리
-		updateBookLoanable(booksId);
-		// 2) 회원 : 대출권수 감소
-        memberService.updateMemberLoanCountDown(membersId);
-        // 3) 회원 : 도서 이용 정보에 수정
-        memberBookHistoryService.updateBookHistoryReturned(membersId, booksId);
+    	try {
+    		// 1) 도서 : 정상(대출가능)으로 처리
+    		updateBookLoanable(booksId);
+    		// 2) 회원 : 대출권수 감소
+    		memberService.updateMemberLoanCountDown(membersId);
+    		// 3) 회원 : 도서 이용 정보에 수정
+    		memberBookHistoryService.updateBookHistoryReturned(membersId, booksId);
+    		
+    	} catch (DBException e) {
+    		log.error("DB문제로 반납 처리 실패 :", e);
+    		throw e; // 트랜잭션 롤백을 위해
+    	}
  	}
 	
 }

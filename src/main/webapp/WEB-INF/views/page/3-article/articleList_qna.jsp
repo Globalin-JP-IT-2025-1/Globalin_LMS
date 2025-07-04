@@ -59,7 +59,7 @@
     <!-- 글 목록 -->
     <div class="overflow-x-auto" >
 	    <table class="table mt-3 table-hover articleList">
-	        <thead class="table-primary">
+	        <thead>
 	            <tr>
 	                <th>NO</th>
 	                <th>제목</th>
@@ -76,9 +76,10 @@
 	        		</c:when>
 		        	<c:when test="${not empty articleList}">
 			            <c:forEach var="i" begin="0" end="${fn:length(articleList) - 1}" step="1">
+		            		<!-- 비밀글의 경우, 관리자와 작성자면 게시글 상세 조회가 가능함. -->
 		            		<sec:authorize access="isAuthenticated()">
 		                       	<c:choose>
-		                          	<c:when test="${articleList[i].status eq 2 and (articleList[i].authorId ne userDetails.membersId or userDetails.membersId ne 0)}"> 
+		                          	<c:when test="${articleList[i].status eq 2 and not (articleList[i].authorId eq userDetails.membersId or userDetails.membersId eq 0)}">
 				                		<tr>
 				                	</c:when>
 				                	<c:otherwise>
@@ -87,16 +88,34 @@
 			                	</c:choose>
 		                	</sec:authorize>
 		                	<sec:authorize access="isAnonymous()">
-		                		<tr> 
+		                		<c:choose>
+		                          	<c:when test="${articleList[i].status eq 2}"> 
+				                		<tr>
+				                	</c:when>
+				                	<c:otherwise>
+				                		<tr onclick="location.href='/public/articles/qna/${articleList[i].articlesId}'">
+				                	</c:otherwise>
+			                	</c:choose> 
 		                	</sec:authorize>
 			                	
 			                    <td>${i + (currentPage * 7) - 6}</td>
 			                    <td>
-			                    	<c:if test="${articleList[i].status eq 2}">
-			                    		<i class="bi bi-lock"></i>
-			                    	</c:if>
-			                    	${articleList[i].title}
-			                    </td>         
+								  	<div class="d-flex align-items-center">
+								    	<jsp:useBean id="now" class="java.util.Date" />
+								    	<c:set var="threeDaysAgo" value="${now.time - (3 * 24 * 60 * 60 * 1000)}" />
+								    	<c:if test="${articleList[i].updateDate.time >= threeDaysAgo}">
+								      		<span class="badge text-bg-primary">NEW</span>
+									    	&nbsp;
+								    	</c:if>
+								  		<c:if test="${articleList[i].status eq 2}">
+								  			<i class="bi bi-lock-fill"></i>
+									  		&nbsp;
+								  		</c:if>
+								    	<div class="text-truncate flex-grow-1 me-2" style="min-width: 0;">
+								      		${articleList[i].title}
+							    		</div>
+								  	</div>
+								</td>       
 			                    <td>
 			                    	<c:set var="a_fullname" value="${articleList[i].authorFullname}" />
 			                    	<c:set var="a_username" value="${articleList[i].authorUsername}" />

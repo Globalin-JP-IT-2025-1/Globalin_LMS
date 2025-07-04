@@ -68,7 +68,7 @@ public class PublicMemberController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		redirectAttributes.addFlashAttribute("alertMessage", "회원가입 실패");
     		redirectAttributes.addFlashAttribute("member", member); // 입력 내용 반환
     		
@@ -134,7 +134,7 @@ public class PublicMemberController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		redirectAttributes.addFlashAttribute("alertMessage", errorMessage);
     		
     		return "redirect:/public/members/check"; // 실패: 아이디 찾기 페이지로
@@ -177,7 +177,7 @@ public class PublicMemberController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		redirectAttributes.addFlashAttribute("alertMessage", "비밀번호 재설정을 실패 하였습니다 : " + errorMessage);
     		
     		return "redirect:/public/members/repass"; // 실패: 비밀번호 재발급 페이지로

@@ -55,16 +55,38 @@ function setActiveMenu(element) {
 	window.location.href = url;
 }
 
-// 페이지 로드 시 저장된 메뉴 ID로 active 클래스 적용
-window.addEventListener("DOMContentLoaded", function() {
-	const activeId = sessionStorage.getItem("activeMenuId");
-	if (activeId) {
-		const activeElement = document.getElementById(activeId);
-		if (activeElement) {
-			activeElement.classList.add("active_menu");
-		}
-	}
+// 페이지 로드 시 저장된 메뉴 ID 또는 URI 조건으로 active 클래스 적용
+window.addEventListener("DOMContentLoaded", function () {
+    const path = window.location.pathname;
+    const search = window.location.search;
+
+    // 1. URI 조건 기반 강제 적용
+    let activeId = null;
+
+    if (path === "/public/auth/login" && search.includes("status=0")) {
+        activeId = "mSubmenu1";
+    } else if (path.endsWith("/book-history")) {
+        activeId = "mSubmenu2";
+    } else if (path.endsWith("/book-like")) {
+        activeId = "mSubmenu3";
+    } else if (path.endsWith("/book-req")) {
+        activeId = "mSubmenu4";
+    }
+
+    // 2. 세션스토리지 기반 적용 (URI 조건이 없을 때만)
+    if (!activeId) {
+        activeId = sessionStorage.getItem("activeMenuId");
+    }
+
+    // 최종 active 클래스 적용
+    if (activeId) {
+        const activeElement = document.getElementById(activeId);
+        if (activeElement) {
+            activeElement.classList.add("active_menu");
+        }
+    }
 });
+
 </script>
 
 

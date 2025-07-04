@@ -1,5 +1,7 @@
 package com.library.controller.article;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +40,7 @@ public class PublicArticleQnaController {
 		model.addAttribute("totalCount", articleListResponse.getTotalCount());
     	model.addAttribute("totalPages", articleListResponse.getTotalPages());
     	model.addAttribute("currentPage", page);
+    	model.addAttribute("now", new Date());
     	
     	pageInfo = PageInfo.builder()
     			.pageTitleCode("23")
@@ -74,7 +77,7 @@ public class PublicArticleQnaController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			
-			redirectAttributes.addFlashAttribute("alertType", "fail");
+			redirectAttributes.addFlashAttribute("alertType", "error");
 			redirectAttributes.addFlashAttribute("alertMesssage", "게시글 상세 조회에 실패하였습니다.");
 			
 			return "redirect:/public/articles/qna";

@@ -40,4 +40,8 @@ public interface ReplyMapper {
 	// 댓글 삭제
 	public int deleteReply(int repliesId);
 	
+	
+	// 댓글 가져오기 (삭제용)
+	public Reply getReplyById(int repliesId);
+	
 }

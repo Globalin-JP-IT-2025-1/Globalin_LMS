@@ -48,7 +48,7 @@ public class PrivateReplyController {
      	} catch (Exception e) {
      		e.printStackTrace();
      		
-     		redirectAttributes.addFlashAttribute("alertType", "fail");
+     		redirectAttributes.addFlashAttribute("alertType", "error");
      		redirectAttributes.addFlashAttribute("alertMessage", "댓글 등록에 실패하였습니다.");
      		redirectAttributes.addFlashAttribute("reply", reply); // 입력 내용 반환
          	
@@ -89,7 +89,7 @@ public class PrivateReplyController {
      	} catch (Exception e) {
      		e.printStackTrace();
      		
-     		redirectAttributes.addFlashAttribute("alertType", "fail");
+     		redirectAttributes.addFlashAttribute("alertType", "error");
      		if (status == 1) {
      			redirectAttributes.addFlashAttribute("alertMessage", "댓글 삭제에 실패하였습니다. 다시 시도해주세요.");
      		} else if (status == 0) {
@@ -132,7 +132,7 @@ public class PrivateReplyController {
      	} catch (Exception e) {
      		e.printStackTrace();
      		
-     		redirectAttributes.addFlashAttribute("alertType", "fail");
+     		redirectAttributes.addFlashAttribute("alertType", "error");
  			redirectAttributes.addFlashAttribute("alertMessage", "댓글이 삭제되지않았습니다. 다시 시도해주세요.");
      		
  			if (originCat.equals("req")) {

@@ -213,6 +213,9 @@
 					        </ul>
 				      	</div>
 				      	<div class="col">
+				      		<c:if test="${empty h_membersId}">
+				      			<c:set var="h_membersId" value="-1" />
+				      		</c:if>
 					        <ul class="list-unstyled">
 					          	<li>
 					          		<a href="/private/members/${h_membersId}"
@@ -251,6 +254,8 @@
 function handleNavigation(event, element) {
     const menuId = element.getAttribute("data-menu-id");
     const url = element.getAttribute("href");
+    
+    console.log(url);
 
     if (menuId) {
         sessionStorage.setItem("activeMenuId", menuId);

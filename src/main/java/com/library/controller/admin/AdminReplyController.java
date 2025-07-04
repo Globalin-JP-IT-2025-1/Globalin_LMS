@@ -2,11 +2,15 @@ package com.library.controller.admin;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.model.PageInfo;
+import com.library.model.article.Reply;
 import com.library.model.article.ReplyListResponse;
 import com.library.service.ReplyService;
 
@@ -45,6 +49,23 @@ public class AdminReplyController {
         setPageInfo(model);
     	
         return "layout";
+    }
+    
+    // 관리용 댓글 삭제
+    @DeleteMapping("/{repliesId}")
+    public String deleteReply(@PathVariable int repliesId, 
+    						  RedirectAttributes redirectAttributes) {
+    	
+    	// 댓글 삭제 로직 수행
+    	Reply reply = replyService.getReplyById(repliesId);
+    	int originArticleId = reply.getOriginArticleId();
+        replyService.deleteReply(originArticleId, repliesId);
+
+        // 리디렉션 시 메시지 전달 (선택)
+        redirectAttributes.addFlashAttribute("message", "댓글이 삭제되었습니다.");
+
+        // 예: 게시글 상세 페이지로 이동
+        return "redirect:/admin/articles";
     }
 
     

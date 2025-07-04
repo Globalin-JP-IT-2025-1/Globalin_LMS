@@ -59,7 +59,7 @@
     <!-- 글 목록 -->
     <div class="overflow-x-auto" >
 	    <table class="table mt-3 table-hover articleList">
-	        <thead class="table-primary">
+	        <thead>
 	            <tr>
 	                <th>NO</th>
 	                <th>제목</th>

@@ -56,7 +56,7 @@ public class AdminArticleNotController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		redirectAttributes.addFlashAttribute("alertMessage", "공지사항이 등록되지않았습니다. 다시 시도해주세요.");
     		redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
     		
@@ -82,7 +82,7 @@ public class AdminArticleNotController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
 			redirectAttributes.addFlashAttribute("alertMessage", "공지사항 내용이 수정되지않았습니다. 다시 시도해주세요.");
 			redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
     		
@@ -115,7 +115,7 @@ public class AdminArticleNotController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		if (type == 1) {
     			redirectAttributes.addFlashAttribute("alertMessage", "[공지사항] 삭제 실패");
     		} else if (type == 0) {
@@ -150,7 +150,7 @@ public class AdminArticleNotController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
 			redirectAttributes.addFlashAttribute("alertMessage", "공지사항 삭제되지않았습니다. 다시 시도해주세요.");
     		
 			return "redirect:/public/articles/not/" + articlesId; // 실패: 상세 조회로 이동

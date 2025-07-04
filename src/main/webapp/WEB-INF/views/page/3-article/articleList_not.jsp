@@ -59,7 +59,7 @@
     <!-- 글 목록 -->
     <div class="overflow-x-auto" >
 	    <table class="table mt-3 table-hover articleList">
-	        <thead class="table-primary">
+	        <thead>
 	            <tr>
 	                <th>NO</th>
 	                <th>제목</th>
@@ -79,8 +79,18 @@
 			                <tr onclick="location.href='/public/articles/not/${articleList[i].articlesId}'">
 			                    <td>${i + (currentPage * 7) - 6}</td>
 			                    <td>
-			                    	${articleList[i].title}
-			                    </td>         
+								  	<div class="d-flex align-items-center">
+								    	<jsp:useBean id="now" class="java.util.Date" />
+								    	<c:set var="threeDaysAgo" value="${now.time - (3 * 24 * 60 * 60 * 1000)}" />
+								    	<c:if test="${articleList[i].updateDate.time >= threeDaysAgo}">
+								      		<span class="badge text-bg-primary">NEW</span>
+									    	&nbsp;
+								    	</c:if>
+								    	<div class="text-truncate flex-grow-1 me-2" style="min-width: 0;">
+								      		${articleList[i].title}
+							    		</div>
+								  	</div>
+								</td>    
 			                    <td>
 			                    	<c:set var="a_fullname" value="${articleList[i].authorFullname}" />
 			                    	<c:set var="a_username" value="${articleList[i].authorUsername}" />

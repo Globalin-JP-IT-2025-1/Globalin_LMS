@@ -51,7 +51,7 @@
 	</div>
 </div>
 
-<div class=""> <!-- 테스트시 d-none 해제 -->
+<div class="d-none"> <!-- 테스트시 d-none 해제 -->
 	<button onclick="vailFormData()">빈 값 검사</button>
 	<button onclick="testAdd()">등록 테스트</button>
 </div>

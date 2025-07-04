@@ -22,14 +22,10 @@
 			<a href="/public/etc/73"
 				data-menu-id="mSubmenu3" 
 				onclick="handleNavigation(event, this)"><spring:message code="main.h4.3" /></a>
-				
-            <!-- 관리자만 보임 -->
-            <sec:authorize access="hasRole('ROLE_ADMIN')">
-				&nbsp;
-				<a href="/admin/books"
-					data-menu-id="mSubmenu1" 
-					onclick="handleNavigation(event, this)">Admin Page</a>
-            </sec:authorize>
+			&nbsp;
+			<a href="/admin/books"
+				data-menu-id="mSubmenu1" 
+				onclick="handleNavigation(event, this)">Admin Page</a>
 		</div>
 	</div>
 	<div class="f_2">

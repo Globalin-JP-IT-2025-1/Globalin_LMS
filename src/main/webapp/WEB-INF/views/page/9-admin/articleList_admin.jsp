@@ -27,25 +27,27 @@
 }
 
 /* 각 열 너비 */
-.articleList td:nth-child(1), .articleList th:nth-child(1) { min-width: 4% !important; }
-.articleList td:nth-child(2), .articleList th:nth-child(2) { min-width: 32% !important; }
-.articleList td:nth-child(3), .articleList th:nth-child(3) { min-width: 14% !important; }
-.articleList td:nth-child(4), .articleList th:nth-child(4) { min-width: 14% !important; }
-.articleList td:nth-child(5), .articleList th:nth-child(5) { min-width: 8% !important; }
-.articleList td:nth-child(6), .articleList th:nth-child(6) { min-width: 8% !important; }
-.articleList td:nth-child(7), .articleList th:nth-child(7) { min-width: 8% !important; }
-.articleList td:nth-child(8), .articleList th:nth-child(8) { min-width: 8% !important; }
-.articleList td:nth-child(9), .articleList th:nth-child(9) { min-width: 4% !important; }
+.articleList td:nth-child(1), .articleList th:nth-child(1) { min-width: 50px !important; }
+.articleList td:nth-child(2), .articleList th:nth-child(2) { min-width: 50px !important; }
+.articleList td:nth-child(3), .articleList th:nth-child(3) { min-width: 80px !important; }
+.articleList td:nth-child(4), .articleList th:nth-child(4) { min-width: 120px !important; }
+.articleList td:nth-child(5), .articleList th:nth-child(5) { min-width: 80px !important; }
+.articleList td:nth-child(6), .articleList th:nth-child(6) { min-width: 100px !important; }
+.articleList td:nth-child(7), .articleList th:nth-child(7) { min-width: 50px !important; }
+.articleList td:nth-child(8), .articleList th:nth-child(8) { min-width: 50px !important; }
+.articleList td:nth-child(9), .articleList th:nth-child(9) { min-width: 50px !important; }
+.articleList td:nth-child(10), .articleList th:nth-child(10) { min-width: 50px !important; }
 
-.articleList td:nth-child(1), .articleList th:nth-child(1) { max-width: 4% !important; }
-.articleList td:nth-child(2), .articleList th:nth-child(2) { max-width: 32% !important; }
-.articleList td:nth-child(3), .articleList th:nth-child(3) { max-width: 14% !important; }
-.articleList td:nth-child(4), .articleList th:nth-child(4) { max-width: 14% !important; }
-.articleList td:nth-child(5), .articleList th:nth-child(5) { max-width: 8% !important; }
-.articleList td:nth-child(6), .articleList th:nth-child(6) { max-width: 8% !important; }
-.articleList td:nth-child(7), .articleList th:nth-child(7) { max-width: 8% !important; }
-.articleList td:nth-child(8), .articleList th:nth-child(8) { max-width: 8% !important; }
-.articleList td:nth-child(9), .articleList th:nth-child(9) { max-width: 4% !important; }
+.articleList td:nth-child(1), .articleList th:nth-child(1) { max-width: 50px !important; }
+.articleList td:nth-child(2), .articleList th:nth-child(2) { max-width: 50px !important; }
+.articleList td:nth-child(3), .articleList th:nth-child(3) { max-width: 80px !important; }
+.articleList td:nth-child(4), .articleList th:nth-child(4) { max-width: 120px !important; }
+.articleList td:nth-child(5), .articleList th:nth-child(5) { max-width: 80px !important; }
+.articleList td:nth-child(6), .articleList th:nth-child(6) { max-width: 100px !important; }
+.articleList td:nth-child(7), .articleList th:nth-child(7) { max-width: 50px !important; }
+.articleList td:nth-child(8), .articleList th:nth-child(8) { max-width: 50px !important; }
+.articleList td:nth-child(9), .articleList th:nth-child(9) { max-width: 50px !important; }
+.articleList td:nth-child(10), .articleList th:nth-child(10) { max-width: 50px !important; }
 
 </style>
 
@@ -71,17 +73,18 @@
     <!-- 글 목록 -->
     <div class="overflow-x-auto" >
 	    <table class="table mt-3 table-hover articleList">
-	        <thead class="table-primary">
+	        <thead>
 	            <tr>
 	                <th>NO</th>
-	                <th>게시글 ID</th>
+	                <th>ID</th>
 	                <th>카테고리</th>
 	                <th>제목</th>
 	                <th>작성자</th>
-	                <th>작성날짜(수정날짜)</th>
+	                <th>작성날짜<br>(수정날짜)</th>
 	                <th>조회수</th>
 	                <th>댓글수</th>
 	                <th>상태</th>
+	                <th>삭제</th>
 	            </tr>
 	        </thead>
 	        <tbody>
@@ -91,7 +94,7 @@
 	        		</c:when>
 		        	<c:when test="${not empty articleList}">
 			            <c:forEach var="i" begin="0" end="${fn:length(articleList) - 1}" step="1">
-			                <tr onclick="location.href='/public/articles/${articleList[i].category}/${articleList[i].articlesId}'">
+					        <tr>
 			                    <td>${i + (currentPage * 7) - 6}</td>
 			                    <td>${articleList[i].articlesId}</td>         
 			                    <td>
@@ -112,8 +115,27 @@
 			                    			알 수 없음
 			                    		</c:otherwise>
 			                    	</c:choose>
-			                    </td>         
-			                    <td>${articleList[i].title}</td>         
+			                    </td>    
+			                    
+			                    <c:choose>
+					            	<c:when test="${articleList[i].category eq 'req'}">
+						                <td>
+					            			<div class="fw-bold col-10 text-truncate" 
+					            				 onclick="location.href='/private/articles/req/${articleList[i].articlesId}'">
+					            				${articleList[i].title}
+					            			</div>
+					            		</td>
+					            	</c:when>
+					            	<c:otherwise>
+					            		<td>
+					            			<div class="fw-bold col-10 text-truncate" 
+					            				 onclick="location.href='/public/articles/${articleList[i].category}/${articleList[i].articlesId}'">
+					            				${articleList[i].title}
+					            			</div>
+					            		</td>
+					            	</c:otherwise>
+			            		</c:choose>
+			            		
 			                    <td>
 			                    	${articleList[i].authorFullname}
 			                    	(${articleList[i].authorUsername})
@@ -127,18 +149,28 @@
 			                    <td>
 			                    	<c:choose>
 			                    		<c:when test="${articleList[i].status eq 0}">
-			                    			공개글
+			                    			<div class="badge text-bg-success">공개</div>
 			                    		</c:when>
 			                    		<c:when test="${articleList[i].status eq 1}">
-			                    			비공개글
+			                    			<div class="badge text-bg-secondary">비공개</div>
 			                    		</c:when>
 			                    		<c:when test="${articleList[i].status eq 2}">
-			                    			비밀글
+			                    			<div class="badge text-bg-warning">비밀</div>
 			                    		</c:when>
 			                    		<c:otherwise>
 			                    			알 수 없음
 			                    		</c:otherwise>
 			                    	</c:choose>
+			                    </td>
+			                    
+			                    <td>
+			                    	<form action="/admin/articles/${articleList[i].articlesId}" method="post" class="d-inline">
+									  	<input type="hidden" name="_method" value="DELETE" />
+									  	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+										<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('정말 삭제하시겠습니까?');">
+											<i class="bi bi-trash"></i>
+										</button>
+									</form>
 			                    </td>
 			                </tr>
 			            </c:forEach>

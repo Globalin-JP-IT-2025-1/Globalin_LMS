@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -72,7 +71,7 @@ public class PrivateMemberController {
     	
     	// 인증된 사용자 정보의 회원 ID와 권한을 확인
     	CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-    	if (user.getMembersId() != membersId && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+    	if (user.getMembersId() != membersId && user.getMembersId() != 0) {
     		// 권한이 없는 경우 : 홈으로
     	    return "redirect:/?status=-1";
     	}
@@ -116,7 +115,7 @@ public class PrivateMemberController {
     	
     	// 인증된 사용자 정보의 회원 ID와 권한을 확인
     	CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-    	if (user.getMembersId() != membersId && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+    	if (user.getMembersId() != membersId && user.getMembersId() != 0) {
     		// 권한이 없는 경우 : 홈으로
     	    return "redirect:/?status=-1";
     	}
@@ -159,7 +158,7 @@ public class PrivateMemberController {
     	
     	// 인증된 사용자 정보의 회원 ID와 권한을 확인
     	CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-    	if (user.getMembersId() != membersId && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+    	if (user.getMembersId() != membersId && user.getMembersId() != 0) {
     		// 권한이 없는 경우 : 홈으로
     	    return "redirect:/?status=-1";
     	}
@@ -170,7 +169,7 @@ public class PrivateMemberController {
     		memberService.updateMemberInfo(member);
     		
     	} catch (Exception e) {
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		redirectAttributes.addFlashAttribute("alertMessage", "회원 정보 수정 실패");
     		
     		return "redirect:/private/members/" + membersId + "/edit"; // 실패: 회원 정보 수정 폼으로
@@ -182,7 +181,7 @@ public class PrivateMemberController {
     }
  
     // 회원 탈퇴 처리
-    // 리프레시 토큰 처리 -> 로그아웃 처리(액세스 토큰, 세션) -> 회원 정보 수정
+    // 로그아웃 처리(액세스 토큰, 세션) -> 회원 정보 수정
     @PutMapping("/{membersId}/leave")
     public String leaveMember(@PathVariable("membersId") int membersId, 
     						  Authentication authentication,
@@ -199,7 +198,7 @@ public class PrivateMemberController {
     	
     	// 인증된 사용자 정보의 회원 ID와 권한을 확인
     	CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-    	if (user.getMembersId() != membersId && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+    	if (user.getMembersId() != membersId && user.getMembersId() != 0) {
     		// 권한이 없는 경우 : 홈으로
     	    return "redirect:/?status=-1";
     	}
@@ -211,7 +210,7 @@ public class PrivateMemberController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
         	redirectAttributes.addFlashAttribute("alertMessage", "회원 탈퇴 실패");
         	
         	return "redirect:/private/members/" + membersId; // 실패: 회원 정보 조회로
@@ -245,7 +244,7 @@ public class PrivateMemberController {
     	
     	// 인증된 사용자 정보의 회원 ID와 권한을 확인
     	CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-    	if (user.getMembersId() != membersId && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+    	if (user.getMembersId() != membersId && user.getMembersId() != 0) {
     		// 권한이 없는 경우 : 홈으로
     	    return "redirect:/?status=-1";
     	}
@@ -290,7 +289,7 @@ public class PrivateMemberController {
     	
     	// 인증된 사용자 정보의 회원 ID와 권한을 확인
     	CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-    	if (user.getMembersId() != membersId && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+    	if (user.getMembersId() != membersId && user.getMembersId() != 0) {
     		// 권한이 없는 경우 : 홈으로
     	    return "redirect:/?status=-1";
     	}
@@ -332,7 +331,7 @@ public class PrivateMemberController {
     	
     	// 인증된 사용자 정보의 회원 ID와 권한을 확인
     	CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-    	if (user.getMembersId() != membersId && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+    	if (user.getMembersId() != membersId && user.getMembersId() != 0) {
     		// 권한이 없는 경우 : 홈으로
     	    return "redirect:/?status=-1";
     	}

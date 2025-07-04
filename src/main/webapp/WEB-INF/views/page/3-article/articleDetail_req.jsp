@@ -74,11 +74,24 @@
 			<textarea class="form-control mb-4" style="border: none; resize: none;" id="contentView" readonly rows="7">${article.content}</textarea>
 		</div>
 		<div class="btndiv">
-			<!-- 현재 로그인한 사용자가 관리자인 경우에만 보이기 -->
-			<sec:authorize access="hasRole('ROLE_ADMIN')">
-		        <button class="btn btn-primary updateBtn" type="button" id="editButton" onclick="enableEdit()">수정</button>
-		        <button type="submit" id="cancleButton" class="btn btn-light cancleBtn" style="display: none;" onclick="cancleEdit(${article.articlesId})">취소</button>
+			<!-- 현재 로그인한 사용자가 관리자나 작성자인 경우에만 보이기 -->
+			<sec:authorize access="isAuthenticated()">
+				<c:if test="${userDetails.membersId eq 0 or userDetails.membersId eq article.authorId}">
+			        <!-- 삭제 요청 -->
+			        <form action="/private/articles/req/${article.articlesId}/1" method="post" id="deleteForm" >
+			            <input type="hidden" name="_method" value="PUT">
+			            <input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
+			            <button type="submit" class="btn btn-danger softDelBtn" id="softDelButton">삭제</button>            
+					</form>
+			        &nbsp;
+			        <!-- 수정 폼 전환 -->
+			        <button class="btn btn-primary updateBtn" id="editButton" onclick="enableEdit()">수정</button>
+			        &nbsp;
+			        <button class="btn btn-light cancleBtn" id="cancleButton" onclick="cancleEdit(${article.articlesId})" style="display: none;">취소</button>
+			        &nbsp;
+				</c:if>
 			</sec:authorize>
+			<!-- 수정 요청 -->
 			<form action="/private/articles/req/${article.articlesId}" method="post" id="articleForm" >
 	            <input type="hidden" name="_method" value="PUT">
 	            <input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
@@ -168,12 +181,12 @@
 			                    	
 		                            <c:when test="${replyList[i].status == 2}">
 		                            	<sec:authorize access="isAnonymous()">
-				                            <span class="text-secondary"><i class="bi bi-lock"></i>&nbsp;비공개 댓글입니다.</span>
+				                            <span class="text-secondary"><i class="bi bi-lock-fill"></i>&nbsp;비공개 댓글입니다.</span>
 				                        </sec:authorize>
 				                        <sec:authorize access="isAuthenticated()">
 		                            		<c:choose>
 		                            			<c:when test="${replyList[i].authorId != userDetails.membersId}">
-						                            <span class="text-secondary"><i class="bi bi-lock"></i>&nbsp;비공개 댓글입니다.</span>
+						                            <span class="text-secondary"><i class="bi bi-lock-fill"></i>&nbsp;비공개 댓글입니다.</span>
 		                            			</c:when>
 		                            			<c:when test="${replyList[i].authorId == userDetails.membersId or userDetails.membersId == 0}">
 						                    		<span class="text-dark">${replyList[i].content}</span>
@@ -264,10 +277,10 @@
 
         document.getElementById("editButton").style.display = "none"; // 수정 버튼 숨김
         document.getElementById("saveButton").style.display = "inline-block"; // 저장 버튼 표시
-        document.getElementById("cancleButton").style.display = "inline-block"; // 수정 버튼 표시
+        document.getElementById("cancleButton").style.display = "inline-block"; // 취소 버튼 표시
+        document.getElementById("softDelButton").style.display = "none"; // 삭제 버튼 표시
         
     }
-    
     
     document.getElementById("titleView").addEventListener("blur", function () {
         document.getElementById("title").value = this.value;
@@ -278,66 +291,65 @@
     
     
     function cancleEdit(articlesId) {
-       const confirmCancel = confirm("정말 취소하겠습니까?");
-       if (confirmCancel) {
-            window.location.href = '/private/articles/req/'+articlesId;
-       }
+       	const confirmCancel = confirm("정말 취소하겠습니까?");
+       	if (confirmCancel) {
+			window.location.href = '/private/articles/req/'+articlesId;
+       	}
     }
     
+    // 수정 테스트
     function testUpdate() {
-          // 빈 값 여부
-          vailFormData();
+        // 빈 값 여부 확인
+        vailFormData();
           
-          var title = document.getElementById("title").value;
-          var content = document.getElementById("content").value;
+        var title = document.getElementById("title").value;
+        var content = document.getElementById("content").value;
        
-          alert(" title: " + title 
-                + " content: " + content);
+        alert(" title: " + title 
+            + " content: " + content);
           
-          alert("수정 요청데이터 테스트 완료");
-
-       }
+        alert("수정 요청데이터 테스트 완료");
+    }
     
     // 빈 칸 검사
     function vailFormData() {
        
-       if (document.getElementById("titleView").value.trim() === "") {
-           alert("제목을 작성해주세요.");
-           document.getElementById("titleView").focus();
-           return;
-       }
+       	if (document.getElementById("titleView").value.trim() === "") {
+           	alert("제목을 작성해주세요.");
+           	document.getElementById("titleView").focus();
+           	return;
+       	}
        
-       if (document.getElementById("contentView").value.trim() === "") {
-           alert("내용을 작성해주세요.");
-           document.getElementById("contentView").focus();
-           return;
-       }
-      
-        
+      	if (document.getElementById("contentView").value.trim() === "") {
+       	alert("내용을 작성해주세요.");
+        	document.getElementById("contentView").focus();
+           	return;
+       	}
     }
-    //공개 비공개
-   function submitStatus(articlesId, replyId) {
-      const isChecked = document.getElementById("statusSwitch-" + replyId).checked;
-      const status = isChecked ? 0 : 2;
+    
+    // 공개, 비공개 전환 요청
+   	function submitStatus(articlesId, replyId) {
+      	const isChecked = document.getElementById("statusSwitch-" + replyId).checked;
+      	const status = isChecked ? 0 : 2;
      
-      if (!articlesId || !replyId) {
-          alert("경로 생성 실패: articlesId 또는 repliesId가 비어있습니다.");
-          return;
-     }
-   
+      	if (!articlesId || !replyId) {
+          	alert("경로 생성 실패: articlesId 또는 repliesId가 비어있습니다.");
+          	return;
+     	}
         const form = document.getElementById("statusForm-" + replyId);
         form.action = '/private/replies/'+articlesId+'/req/'+replyId+'/'+status;
         form.submit();
-   }
+   	}
     
-   document.addEventListener("DOMContentLoaded", function () {
+    // 댓글 글자수 계산
+   	document.addEventListener("DOMContentLoaded", function () {
         var content = document.getElementById("replyContent");
         var charCount = document.getElementById("charCount");
 
         content.addEventListener("input", function () {
-          var length = content.value.length;
-          charCount.textContent = length + " / 500";
+          	var length = content.value.length;
+          	charCount.textContent = length + " / 500";
         });
-      });
+    });
 
 </script>

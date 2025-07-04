@@ -78,7 +78,7 @@ public class PrivateArticleReqController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			
-			redirectAttributes.addFlashAttribute("alertType", "fail");
+			redirectAttributes.addFlashAttribute("alertType", "error");
 			redirectAttributes.addFlashAttribute("alertMesssage", "게시글 상세 조회에 실패하였습니다.");
 			
 			return "redirect:/private/articles/qna";
@@ -119,7 +119,7 @@ public class PrivateArticleReqController {
      	} catch (Exception e) {
      		e.printStackTrace();
      		
-     		redirectAttributes.addFlashAttribute("alertType", "fail");
+     		redirectAttributes.addFlashAttribute("alertType", "error");
      		redirectAttributes.addFlashAttribute("alertMessage", "희망 도서가 신청되지 않았습니다. 다시 시도해주세요.");
      		redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
      		
@@ -144,7 +144,7 @@ public class PrivateArticleReqController {
      	} catch (Exception e) {
      		e.printStackTrace();
      		
-     		redirectAttributes.addFlashAttribute("alertType", "fail");
+     		redirectAttributes.addFlashAttribute("alertType", "error");
  			redirectAttributes.addFlashAttribute("alertMessage", "내용 수정되지 않았습니다. 다시 시도해주세요.");
  			redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
      		
@@ -176,7 +176,7 @@ public class PrivateArticleReqController {
      	} catch (Exception e) {
      		e.printStackTrace();
      		
-     		redirectAttributes.addFlashAttribute("alertType", "fail");
+     		redirectAttributes.addFlashAttribute("alertType", "error");
      		if (type == 1) {
      			redirectAttributes.addFlashAttribute("alertMessage", "[희망 도서 신청] 삭제 실패");
      		} else if (type == 0) {
@@ -211,7 +211,7 @@ public class PrivateArticleReqController {
      	} catch (Exception e) {
      		e.printStackTrace();
      		
-     		redirectAttributes.addFlashAttribute("alertType", "fail");
+     		redirectAttributes.addFlashAttribute("alertType", "error");
  			redirectAttributes.addFlashAttribute("alertMessage", "삭제되지않았습니다. 다시 시도해주세요.");
      		
  			return "redirect:/private/articles/req/" + articlesId; // 실패: 상세 조회로 이동

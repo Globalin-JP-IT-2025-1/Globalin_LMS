@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     	
     	log.info("handleLoanNotAllowedException 진입!! - GlobalExceptionHandler");
     	
-    	redirectAttributes.addFlashAttribute("alertType", "fail");
+    	redirectAttributes.addFlashAttribute("alertType", "error");
         redirectAttributes.addFlashAttribute("alertMessage", "대출이 불가능 합니다.");
         
         return "redirect:/";

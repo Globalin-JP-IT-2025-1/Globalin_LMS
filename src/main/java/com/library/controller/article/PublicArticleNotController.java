@@ -75,7 +75,7 @@ public class PublicArticleNotController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			
-			redirectAttributes.addFlashAttribute("alertType", "fail");
+			redirectAttributes.addFlashAttribute("alertType", "error");
 			redirectAttributes.addFlashAttribute("alertMesssage", "게시글 상세 조회에 실패하였습니다.");
 			
 			return "redirect:/public/articles/not";

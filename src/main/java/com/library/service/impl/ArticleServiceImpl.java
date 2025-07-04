@@ -89,6 +89,7 @@ public class ArticleServiceImpl implements ArticleService {
 		
 		ArticleListRequest articlesListRequest = ArticleListRequest.builder()
 				.category("req")
+				.membersId(membersId)
 				.searchRequest(null)
 				.startRow(startRow)
 				.endRow(endRow)

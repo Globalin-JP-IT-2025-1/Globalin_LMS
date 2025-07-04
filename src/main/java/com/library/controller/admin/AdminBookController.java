@@ -51,6 +51,10 @@ public class AdminBookController {
     		bookListResponse = bookService.getBookList(page);
     	}
     	
+    	// 검색 조건은 무조건 model에 넣어줘야 JSP에서 유지됨
+        model.addAttribute("searchType", type);
+        model.addAttribute("searchKeyword", keyword);
+    	
     	model.addAttribute("totalCount", bookListResponse.getTotalCount());
     	model.addAttribute("totalPage", bookListResponse.getTotalPages());
     	model.addAttribute("currentPage", page);
@@ -98,7 +102,7 @@ public class AdminBookController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		redirectAttributes.addFlashAttribute("alertMessage", "도서 추가 실패");
     		
     		return "redirect:/admin/books";
@@ -143,7 +147,7 @@ public class AdminBookController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		redirectAttributes.addFlashAttribute("alertMessage", "도서 추가 실패");
     		
     		return "redirect:/admin/books";
@@ -173,7 +177,7 @@ public class AdminBookController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		if (status == BookStatus.DISABLE.getCode()) { // 1
     			redirectAttributes.addFlashAttribute("alertMessage", "도서 비활성화 실패");
     		} else if (status == BookStatus.LOANABLE.getCode()) { // 0
@@ -204,7 +208,7 @@ public class AdminBookController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		redirectAttributes.addFlashAttribute("alertMessage", "도서 삭제 실패");
     		
     		return "redirect:/admin/books/" + booksId; // 실패 : 도서 상세 조회로

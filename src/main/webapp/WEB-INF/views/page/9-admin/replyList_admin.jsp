@@ -27,28 +27,21 @@
 }
 
 /* 각 열 너비 */
-.replyList td:nth-child(1), .replyList th:nth-child(1) { min-width: 4% !important; }
-.replyList td:nth-child(2), .replyList th:nth-child(2) { min-width: 4% !important; }
-.replyList td:nth-child(3), .replyList th:nth-child(3) { min-width: 8% !important; }
-.replyList td:nth-child(4), .replyList th:nth-child(4) { min-width: 8% !important; }
-.replyList td:nth-child(5), .replyList th:nth-child(5) { min-width: 30% !important; }
-.replyList td:nth-child(6), .replyList th:nth-child(6) { min-width: 14% !important; }
-.replyList td:nth-child(7), .replyList th:nth-child(7) { min-width: 8% !important; }
-.replyList td:nth-child(8), .replyList th:nth-child(8) { min-width: 8% !important; }
-.replyList td:nth-child(9), .replyList th:nth-child(9) { min-width: 8% !important; }
-.replyList td:nth-child(10), .replyList th:nth-child(10) { min-width: 8% !important; }
+.replyList td:nth-child(1), .replyList th:nth-child(1) { min-width: 50px !important; }
+.replyList td:nth-child(2), .replyList th:nth-child(2) { min-width: 50px !important; }
+.replyList td:nth-child(3), .replyList th:nth-child(3) { min-width: 100px !important; }
+.replyList td:nth-child(4), .replyList th:nth-child(4) { min-width: 80px !important; }
+.replyList td:nth-child(5), .replyList th:nth-child(5) { min-width: 80px !important; }
+.replyList td:nth-child(6), .replyList th:nth-child(6) { min-width: 50px !important; }
+.replyList td:nth-child(7), .replyList th:nth-child(7) { min-width: 50px !important; }
 
-.replyList td:nth-child(1), .replyList th:nth-child(1) { max-width: 4% !important; }
-.replyList td:nth-child(2), .replyList th:nth-child(2) { max-width: 4% !important; }
-.replyList td:nth-child(3), .replyList th:nth-child(3) { max-width: 8% !important; }
-.replyList td:nth-child(4), .replyList th:nth-child(4) { max-width: 8% !important; }
-.replyList td:nth-child(5), .replyList th:nth-child(5) { max-width: 30% !important; }
-.replyList td:nth-child(6), .replyList th:nth-child(6) { max-width: 14% !important; }
-.replyList td:nth-child(7), .replyList th:nth-child(7) { max-width: 8% !important; }
-.replyList td:nth-child(8), .replyList th:nth-child(8) { max-width: 8% !important; }
-.replyList td:nth-child(9), .replyList th:nth-child(9) { max-width: 8% !important; }
-.replyList td:nth-child(10), .replyList th:nth-child(10) { max-width: 8% !important; }
-
+.replyList td:nth-child(1), .replyList th:nth-child(1) { max-width: 50px !important; }
+.replyList td:nth-child(2), .replyList th:nth-child(2) { max-width: 50px !important; }
+.replyList td:nth-child(3), .replyList th:nth-child(3) { max-width: 100px !important; }
+.replyList td:nth-child(4), .replyList th:nth-child(4) { max-width: 80px !important; }
+.replyList td:nth-child(5), .replyList th:nth-child(5) { max-width: 80px !important; }
+.replyList td:nth-child(6), .replyList th:nth-child(6) { max-width: 50px !important; }
+.replyList td:nth-child(7), .replyList th:nth-child(7) { max-width: 50px !important; }
 </style>
 
 <!-- 댓글 & 북 리뷰 목록 조회 - 관리자 -->
@@ -71,13 +64,13 @@
     <!-- 글 목록 -->
     <div class="container" >
 	    <table class="table mt-3 table-hover overflow-x-auto replyList">
-	        <thead class="table-primary">
+	        <thead>
 	            <tr>
 	                <th>NO</th>
 	                <th>댓글 ID</th>
 	                <th>내용</th>
 	                <th>작성자</th>
-	                <th>작성날짜(수정날짜)</th>
+	                <th>작성날짜<br>(수정날짜)</th>
 	                <th>상태</th>
 	                <th>삭제</th>
 	            </tr>
@@ -92,7 +85,9 @@
 			                <tr>
 			                    <td>${i + (currentPage * 7) - 6}</td>
 			                    <td>${replyList[i].repliesId}</td>         
-			                    <td>${replyList[i].content}</td>         
+			                    <td>
+			                    	<div class="col-10 text-truncate">${replyList[i].content} </div>
+			                   	</td>         
 			                    <td>
 			                    	${replyList[i].authorFullname}
 			                    	(${replyList[i].authorUsername})
@@ -104,20 +99,28 @@
 			                    <td>
 			                    	<c:choose>
 			                    		<c:when test="${replyList[i].status eq 0}">
-			                    			공개글
+			                    			<div class="badge text-bg-success">공개</div>
 			                    		</c:when>
 			                    		<c:when test="${replyList[i].status eq 1}">
-			                    			비공개글
+			                    			<div class="badge text-bg-secondary">비공개</div>
 			                    		</c:when>
 			                    		<c:when test="${replyList[i].status eq 2}">
-			                    			비밀글
+			                    			<div class="badge text-bg-warning">비밀</div>
 			                    		</c:when>
 			                    		<c:otherwise>
 			                    			알 수 없음
 			                    		</c:otherwise>
 			                    	</c:choose>
 			                    </td>
-			                    <td><a href="#">삭제</a></td>
+			                    <td>
+			                    	<form action="/admin/articles/${replyList[i].repliesId}" method="post" class="d-inline">
+									  	<input type="hidden" name="_method" value="DELETE" />
+									  	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+										<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('정말 삭제하시겠습니까?');">
+											<i class="bi bi-trash"></i>
+										</button>
+									</form>
+								</td>
 			                </tr>
 			            </c:forEach>
 			        </c:when>

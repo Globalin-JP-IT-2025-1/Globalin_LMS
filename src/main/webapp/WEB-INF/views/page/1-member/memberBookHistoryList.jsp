@@ -93,9 +93,18 @@
 			                    <td><fmt:formatDate value="${bookHistoryList[i].returnedDate}" pattern="yyyy-MM-dd" /></td>
 				                <td>
 				                    <div class="d-flex flex-column gap-2">
-				                        <div class="mb-2 text-danger fw-semibold">
-				                        	${bookHistoryList[i].status}
-				                        </div>
+				                    	<c:set var="status">${bookHistoryList[i].status}</c:set>  
+				                    	<c:choose>
+				                    		<c:when test="${status eq 0}">
+				                    			<div class="badge text-bg-success">정상</div>
+				                    		</c:when>
+				                    		<c:when test="${status eq 1}">
+				                    			<div class="badge text-bg-danger">연체</div>
+				                    		</c:when>
+				                    		<c:otherwise>
+				                    			알 수 없음
+				                    		</c:otherwise>
+				                    	</c:choose>
 				                    </div>
 				                </td>
 			                </tr>

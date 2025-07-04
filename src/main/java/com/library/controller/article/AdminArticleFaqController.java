@@ -57,7 +57,7 @@ public class AdminArticleFaqController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		redirectAttributes.addFlashAttribute("alertMessage", "[자주 묻는 질문] 등록 실패");
     		//redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
     		
@@ -82,7 +82,7 @@ public class AdminArticleFaqController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
 			redirectAttributes.addFlashAttribute("alertMessage", "[자주 묻는 질문] 내용 수정 실패");
 			//redirectAttributes.addFlashAttribute("article", article); // 입력 내용 반환
     		
@@ -113,7 +113,7 @@ public class AdminArticleFaqController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		if (type == 1) {
     			redirectAttributes.addFlashAttribute("alertMessage", "[자주 묻는 질문] 비활성화 실패");
     		} else if (type == 0) {
@@ -144,7 +144,7 @@ public class AdminArticleFaqController {
     	} catch (Exception e) {
     		e.printStackTrace();
     		
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
 			redirectAttributes.addFlashAttribute("alertMessage", "[자주 묻는 질문] 삭제 실패");
     		
 			return "redirect:/public/articles/faq/" + articlesId; // 실패: 상세 조회로 이동

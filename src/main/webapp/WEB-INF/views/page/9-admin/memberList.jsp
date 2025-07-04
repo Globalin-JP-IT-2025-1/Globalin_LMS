@@ -77,7 +77,7 @@
     <!-- 글 목록 -->
     <div class="overflow-x-auto">
 	    <table class="table mt-3 table-hover membersList">
-	        <thead class="table-primary">
+	        <thead>
 	            <tr>
 	                <th>NO</th>
 	                <th>회원ID</th>
@@ -140,15 +140,23 @@
 			                    <td><fmt:formatDate value="${memberList[i].joinDate}" pattern="yyyy-MM-dd" /></td>
 			                    <td><fmt:formatDate value="${memberList[i].leaveDate}" pattern="yyyy-MM-dd" /></td>
 			                    <td>
-			                    	<!-- 회원 등급 갱신 버튼 -->
-			                    	<button class="btn btn-warning btn-sm" onclick="openCardModal(${member.membersId})">
-			                    		<i class="bi bi-box-arrow-in-down-left"></i>
-			                    	</button>
+									<c:if test="${memberList[i].status eq 0}">
+										<button class="btn btn-warning btn-sm"
+										        data-bs-toggle="modal"
+										        data-bs-target="#returnModal"
+										        onclick="setUpgradeFormAction(${memberList[i].membersId})">
+										    <i class="bi bi-box-arrow-in-down-left"></i>
+										</button>
+									</c:if>			                    	
 			                    </td>
 			                    <td>
-			                    	<button class="btn btn-danger btn-sm" onclick="deleteMember(${member.membersId})">
-			                    	<i class="bi bi-trash3"></i>
-			                    	</button>
+			                    	<form action="/admin/members/${memberList[i].membersId}" method="post" class="d-inline">
+									  	<input type="hidden" name="_method" value="DELETE" />
+									  	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+										<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('정말 삭제하시겠습니까?');">
+											<i class="bi bi-trash"></i>
+										</button>
+									</form>
 			                    </td>
 			                </tr>
 		            	</c:forEach>
@@ -158,26 +166,36 @@
 	    </table>
     </div>
     
-    <!-- Bootstrap 모달 -->
-	<div class="modal fade" id="cardModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-		  	<div class="modal-content">
-		    	<div class="modal-header">
-		      		<h5 class="modal-title" id="cardModalLabel">회원 카드 발급</h5>
-		      		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
-	    		</div>
-		    	<div class="modal-body">
-		      		<p>발급된 카드번호:</p>
-		      		<input type="text" id="generatedCardNumber" class="form-control" readonly>
-		      		<input type="hidden" id="targetMembersId">
-		    	</div>
-		    	<div class="modal-footer">
-		      		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-		      		<button type="button" class="btn btn-success" onclick="submitCard()">등록</button>
-		    	</div>
-		  	</div>
-		</div>
+    <!-- upgrade 모달 -->
+	<div class="modal fade" id="upgradeModal" tabindex="-1" aria-labelledby="upgradeModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+	      		<form id="upgradeForm" method="post">
+	        		<div class="modal-header">
+		          		<h5 class="modal-title" id="upgradeModalLabel">회원 등급 변경</h5>
+		         		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+	        		</div>
+	        		
+	        		<div class="modal-body">
+	          			<div class="mb-3">
+	            			<label for="memberCard" class="form-label">회원카드 번호</label>
+	            			<div class="input-group">
+	              				<input type="text" class="form-control" name="cardNo" id="memberCard" required>
+              					<button type="button" class="btn btn-outline-secondary" onclick="generateAndFillCardNo()">발급하기</button>
+            				</div>
+	         			</div>
+	          			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+	        		</div>
+	        		
+	        		<div class="modal-footer">
+	          			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+	          			<button type="submit" class="btn btn-primary">변경하기</button>
+        			</div>
+	      		</form>
+	    	</div>
+	  	</div>
 	</div>
+
     
     <!-- 페이징 -->
     <div class="d-flex justify-content-center mt-4">
@@ -210,54 +228,31 @@
 
 <script type="text/javascript">
 
-//csrf 토큰 가져오기
-function getCsrfToken() {
-	return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+// 회원 등급 업 처리
+function setUpgradeFormAction(memberId) {
+  	const form = document.querySelector('#upgradeModal form');
+  	form.action = '/admin/members/' + memberId + '/upgrade';
 }
 
-function openCardModal(membersId) {
-	document.getElementById('targetMembersId').value = membersId;
-
-	// 카드번호 발급 요청
-	fetch('/admin/members/cardnumber')
-	.then(response => {
-		if (!response.ok) throw new Error("카드번호 발급 실패");
-		return response.text(); // 카드번호 문자열 받기
-	})
-    .then(cardNumber => {
-		document.getElementById('generatedCardNumber').value = cardNumber;
-		const modal = new bootstrap.Modal(document.getElementById('cardModal'));
-		modal.show();
-	})
-	.catch(error => {
-		alert("오류: " + error.message);
-	});
+// 회원카드 랜덤 발급기 : 발행일8자리-랜덤일련번호(uuid)6자리 조합
+function generateCardNumber() {
+	// 1. 발행일 (오늘 날짜 기준)
+	const today = new Date();
+	const yyyy = today.getFullYear();
+	const mm = String(today.getMonth() + 1).padStart(2, '0');
+	const dd = String(today.getDate()).padStart(2, '0');
+	const datePart = `${yyyy}${mm}${dd}`;
+	
+	// 2. 랜덤 6자리 (UUID 일부)
+	const uuidPart = crypto.randomUUID().replace(/-/g, '').slice(0, 6);
+	
+	return datePart + '-' + uuidPart;
 }
 
-// 회원카드 번호 등록 (회원 정보 수정) 처리 요청
-function submitCard() {
-	const membersId = document.getElementById('targetMembersId').value;
-	const cardNumber = document.getElementById('generatedCardNumber').value;
-
-	fetch(`/admin/members/${membersId}/upgrade`, {
-		method: 'PUT'
-		headers: {
-			'Content-Type': 'application/json',
-			'X-CSRF-TOKEN': getCsrfToken()
-		},
-		body: JSON.stringify({ cardNum: cardNumber })
-	})
-	.then(response => {
-		if (response.ok) {
-			alert("회원 카드 등록 및 등급 갱신 완료");
-			location.reload();
-	    } else {
-	      	throw new Error("회원 정보 갱신 실패");
-	    }
-	})
-	.catch(error => {
-		alert("오류: " + error.message);
-	});
-}
+// 자동 채워지기
+//const upgradeModal = document.getElementById('upgradeModal');
+//upgradeModal.addEventListener('show.bs.modal', () => {
+//	generateCardNumber();
+//});
 
 </script>

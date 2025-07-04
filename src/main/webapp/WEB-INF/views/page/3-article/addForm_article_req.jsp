@@ -27,8 +27,34 @@
 	
 			<!-- 도서 찾기 링크 -->
 			<div class="w-100 text-start">
-				<a href="#"><i class="bi bi-book"></i>도서 찾기</a>
+				<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#bookListModal">
+  					도서 찾기
+  				</button>
 			</div>
+			
+			<!-- 외부 API 도서 찾기 모달 -->
+			<!-- 검색창 + 버튼 -->
+			<!-- <div class="input-group mb-3">
+			  	<input type="text" id="bookKeyword" class="form-control" placeholder="도서 제목, 저자 등 입력">
+			  	<button class="btn btn-primary" id="searchBookBtn">도서 검색</button>
+			</div> -->
+			
+			<!-- 도서 리스트 모달 -->
+			<!-- <div class="modal fade" id="bookListModal" tabindex="-1" aria-labelledby="bookListModalLabel" aria-hidden="true">
+			  	<div class="modal-dialog modal-lg">
+			    	<div class="modal-content">
+			      		<div class="modal-header">
+				        	<h5 class="modal-title" id="bookListModalLabel">📚 도서 검색 결과</h5>
+				        	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+			      		</div>
+				      	<div class="modal-body">
+				        	<div id="bookListContent" class="list-group">
+				          		<div class="text-center text-muted">검색어를 입력하세요.</div>
+				        	</div>
+				      	</div>
+			    	</div>
+			  	</div>
+			</div> -->
 			
 			<!-- 비밀글 여부 선택 -->
 			<div class="form-check align-self-start">
@@ -62,7 +88,7 @@
 </div>
 
 
-<div class=""> <!-- 테스트시 d-none 해제 -->
+<div class="d-none"> <!-- 테스트시 d-none 해제 -->
 	<button onclick="vailFormData()">빈 값 검사</button>
 	<button onclick="testAdd()">등록 테스트</button>
 </div>
@@ -115,4 +141,49 @@
       
         
     }
-</script>
+    
+    /* document.getElementById('searchBookBtn').addEventListener('click', function () {
+      const keyword = document.getElementById('bookKeyword').value.trim();
+      const content = document.getElementById('bookListContent');
+
+      if (!keyword) {
+        content.innerHTML = '<div class="text-center text-muted">검색어를 입력해주세요.</div>';
+        new bootstrap.Modal(document.getElementById('bookListModal')).show();
+        return;
+      }
+
+      content.innerHTML = '<div class="text-center text-muted">불러오는 중...</div>';
+      new bootstrap.Modal(document.getElementById('bookListModal')).show();
+
+      fetch(`/admin/books/api?type=keyword&keyword=${encodeURIComponent(keyword)}&currentPage=1`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.bookList || data.bookList.length === 0) {
+            content.innerHTML = '<div class="text-center text-muted">검색 결과가 없습니다.</div>';
+            return;
+          }
+
+          content.innerHTML = '';
+          data.bookList.forEach(book => {
+            const item = document.createElement('div');
+            item.className = 'list-group-item';
+            item.innerHTML = `
+              <div class="d-flex">
+                <img src="${book.imageLink}" alt="표지" style="height: 100px; margin-right: 15px;">
+                <div>
+                  <h5>${book.title}</h5>
+                  <p class="mb-1 text-muted">${book.author} | ${book.publisher}</p>
+                  <small>ISBN: ${book.isbn}</small><br>
+                  <a href="${book.description}" target="_blank" class="btn btn-sm btn-outline-secondary mt-2">상세보기</a>
+                </div>
+              </div>
+            `;
+            content.appendChild(item);
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          content.innerHTML = '<div class="text-danger text-center">도서 정보를 불러오는 데 실패했습니다.</div>';
+        });
+    }); */
+ </script>

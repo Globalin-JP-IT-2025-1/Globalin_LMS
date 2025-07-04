@@ -71,7 +71,7 @@
 					   ROWNUM AS rnum
 				FROM ARTICLES ar
 			    JOIN MEMBERS m ON m.MEMBERS_ID = ar.AUTHOR_ID 
-			    WHERE ar.CATEGORY = 'req' AND ar.STATUS <> 1
+			    WHERE ar.CATEGORY = 'req' AND ar.STATUS <> 1 AND ar.AUTHOR_ID = #{membersId}
 			    ORDER BY ar.UPDATE_DATE DESC
 		    ) a
 			WHERE a.rnum > #{startRow} AND a.rnum <= #{endRow}

@@ -51,7 +51,7 @@ public class PublicBookController {
             bookListResponse = bookService.getBookList(page);
         }
 
-        // ✅ 검색 조건은 무조건 model에 넣어줘야 JSP에서 유지됨
+        // 검색 조건은 무조건 model에 넣어줘야 JSP에서 유지됨
         model.addAttribute("searchType", type);
         model.addAttribute("searchKeyword", keyword);
 
@@ -180,7 +180,7 @@ public class PublicBookController {
 			
 			// 비활성화된 도서인 경우 실패 처리
 			if (book.getStatus() == BookStatus.DISABLE.getCode()) {
-				redirectAttributes.addFlashAttribute("alertType", "fail");
+				redirectAttributes.addFlashAttribute("alertType", "error");
 				redirectAttributes.addFlashAttribute("alertMesssage", "도서 상세 조회에 실패하였습니다.");
 				
 				String referer = request.getHeader("Referer");
@@ -192,7 +192,7 @@ public class PublicBookController {
 		} catch (Exception e) {
 			log.error("도서 상세 조회 실패 : " + e);
 			
-			redirectAttributes.addFlashAttribute("alertType", "fail");
+			redirectAttributes.addFlashAttribute("alertType", "error");
 			redirectAttributes.addFlashAttribute("alertMesssage", "도서 상세 조회에 실패하였습니다.");
 			
 			String referer = request.getHeader("Referer");

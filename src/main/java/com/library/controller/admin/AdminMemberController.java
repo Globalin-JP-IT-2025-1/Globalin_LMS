@@ -58,7 +58,7 @@ public class AdminMemberController {
     		
     	} catch (Exception e) {
     		e.printStackTrace();
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
     		redirectAttributes.addFlashAttribute("alertMessage", "[회원] 삭제 실패");
     		
     		return "redirect:/admin/members"; // 실패: 회원 목록으로

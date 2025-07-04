@@ -46,7 +46,7 @@ public class PrivateBookController {
     	// 인증되지 않은 경우 (비로그인 상태) : 로그인 페이지로
     	authentication = SecurityContextHolder.getContext().getAuthentication();
     	if (authentication == null || !authentication.isAuthenticated()) {
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
 			redirectAttributes.addFlashAttribute("alertMesssage", "대출 예약은 로그인 후 가능합니다.");
 			
     	    return "redirect:/public/auth/login?status=0";
@@ -58,12 +58,12 @@ public class PrivateBookController {
     	// 대출 정지 회원 or 준회원 : 대출 불가
     	int status = userDetails.getStatus();
     	if (status == MemberStatus.LOAN_HOLD.getCode()) {
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
 			redirectAttributes.addFlashAttribute("alertMesssage", "대출 정지 회원은 대출 예약이 불가능 합니다.");
 			
     	    return "redirect:/public/books/" + category + "/" + booksId;
     	} else if (status == MemberStatus.JUNIOR.getCode()) {
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
 			redirectAttributes.addFlashAttribute("alertMesssage", "준회원은 대출 예약이 불가능 합니다.");
 			
     	    return "redirect:/public/books/" + category + "/" + booksId;
@@ -79,11 +79,11 @@ public class PrivateBookController {
     	} catch (Exception e) {
     		if (isTrue) {
     			log.error("대출 예약 실패 : " + e);
-	    		redirectAttributes.addFlashAttribute("alertType", "fail");
+	    		redirectAttributes.addFlashAttribute("alertType", "error");
 	    		redirectAttributes.addFlashAttribute("alertMesssage", "대출 예약을 실패 하였습니다.");
     		} else {
     			log.error("대출 예약 취소 실패 : " + e);
-    			redirectAttributes.addFlashAttribute("alertType", "fail");
+    			redirectAttributes.addFlashAttribute("alertType", "error");
     			redirectAttributes.addFlashAttribute("alertMesssage", "대출 예약 취소를 실패 하였습니다.");
     		}
     		
@@ -112,7 +112,7 @@ public class PrivateBookController {
     	// 인증되지 않은 경우 (비로그인 상태) : 로그인 페이지로
     	authentication = SecurityContextHolder.getContext().getAuthentication();
     	if (authentication == null || !authentication.isAuthenticated()) {
-    		redirectAttributes.addFlashAttribute("alertType", "fail");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
 			redirectAttributes.addFlashAttribute("alertMesssage", "찜 등록은 로그인 후 가능합니다.");
 			
     	    return "redirect:/public/auth/login?status=0";
@@ -136,11 +136,11 @@ public class PrivateBookController {
     	} catch (Exception e) {
     		if (isTrue) {
     			log.error("찜 등록 실패 : " + e);
-	    		redirectAttributes.addFlashAttribute("alertType", "fail");
+	    		redirectAttributes.addFlashAttribute("alertType", "error");
 	    		redirectAttributes.addFlashAttribute("alertMesssage", "찜 등록을 실패 하였습니다.");
     		} else {
     			log.error("찜 취소 실패 : " + e);
-    			redirectAttributes.addFlashAttribute("alertType", "fail");
+    			redirectAttributes.addFlashAttribute("alertType", "error");
     			redirectAttributes.addFlashAttribute("alertMesssage", "찜 등록 취소를 실패 하였습니다.");
     		}
     		

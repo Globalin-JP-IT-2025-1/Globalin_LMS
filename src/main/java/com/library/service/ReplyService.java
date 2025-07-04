@@ -33,5 +33,7 @@ public interface ReplyService {
 
     // 삭제 (hard delete)
     public int deleteReply(int articlesId, int replyId);
+
+	public Reply getReplyById(int repliesId);
     
 }

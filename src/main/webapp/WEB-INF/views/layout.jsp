@@ -164,7 +164,7 @@
 	</div>
 
 	<button id="scrollUpBtn"><i class="bi bi-caret-up-fill"></i></button>
-
+	
 	<script
 		src="${pageContext.request.contextPath}/resources/static/js/layout.js"></script>
 	

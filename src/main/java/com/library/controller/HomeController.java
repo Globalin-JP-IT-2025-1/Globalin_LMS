@@ -109,10 +109,10 @@ public class HomeController {
 		
     	setPageInfo(model);
     	
-    	if (status == -1) {
-    		model.addAttribute("alertType", "fail");
-    		model.addAttribute("alertMessage", "접근 권한이 없습니다.");
-    	}
+//    	if (status == -1) {
+//    		model.addAttribute("alertType", "fail");
+//    		model.addAttribute("alertMessage", "접근 권한이 없습니다.");
+//    	}
     	
         return "layout";
     }

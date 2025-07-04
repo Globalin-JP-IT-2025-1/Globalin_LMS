@@ -74,18 +74,25 @@
 			<textarea class="form-control mb-4" style="border: none; resize: none;" id="contentView" readonly rows="7">${article.content}</textarea>
 		</div>
 		<div class="btndiv">
-			<!-- 현재 로그인한 사용자가 관리자인 경우에만 보이기 -->
-			<sec:authorize access="hasRole('ROLE_ADMIN')">
-			
-				<form action="/admin/articles/not/${article.articlesId}/1" method="post" id="articleForm" >
-					<input type="hidden" name="_method" value="PUT">
-	            	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
-	            	<button type="submit" class="btn btn-primary delBtn" id="delButton">삭제</button>   
-				</form>
-		        <button class="btn btn-primary updateBtn" type="button" id="editButton" onclick="enableEdit()">수정</button>
-		        <button type="submit" id="cancleButton" class="btn btn-light cancleBtn" style="display: none;" onclick="cancleEdit(${article.articlesId})">취소</button>
+			<!-- 현재 로그인한 사용자가 관리자나 작성자인 경우에만 보이기 -->
+			<sec:authorize access="isAuthenticated()">
+				<c:if test="${userDetails.membersId eq 0 or userDetails.membersId eq article.authorId}">
+			        <!-- 삭제 요청 -->
+			        <form action="/private/articles/req/${article.articlesId}/1" method="post" id="deleteForm" >
+			            <input type="hidden" name="_method" value="PUT">
+			            <input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
+			            <button type="submit" class="btn btn-danger softDelBtn" id="softDelButton">삭제</button>            
+					</form>
+			        &nbsp;
+			        <!-- 수정 폼 전환 -->
+			        <button class="btn btn-primary updateBtn" id="editButton" onclick="enableEdit()">수정</button>
+			        &nbsp;
+			        <button class="btn btn-light cancleBtn" id="cancleButton" onclick="cancleEdit(${article.articlesId})" style="display: none;">취소</button>
+			        &nbsp;
+				</c:if>
 			</sec:authorize>
-			<form action="/admin/articles/not/${article.articlesId}" method="post" id="articleForm" >
+			<!-- 수정 요청 -->
+			<form action="/private/articles/req/${article.articlesId}" method="post" id="articleForm" >
 	            <input type="hidden" name="_method" value="PUT">
 	            <input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" hidden="true"/>
 				<input type="hidden" id="title" name="title" readonly value="${article.title}"><!-- 게시글 수정 - 서버 송신1 -->
@@ -174,12 +181,12 @@
 			                    	
 		                            <c:when test="${replyList[i].status == 2}">
 		                            	<sec:authorize access="isAnonymous()">
-				                            <span class="text-secondary"><i class="bi bi-lock"></i>&nbsp;비공개 댓글입니다.</span>
+				                            <span class="text-secondary"><i class="bi bi-lock-fill"></i>&nbsp;비공개 댓글입니다.</span>
 				                        </sec:authorize>
 				                        <sec:authorize access="isAuthenticated()">
 		                            		<c:choose>
 		                            			<c:when test="${replyList[i].authorId != userDetails.membersId}">
-						                            <span class="text-secondary"><i class="bi bi-lock"></i>&nbsp;비공개 댓글입니다.</span>
+						                            <span class="text-secondary"><i class="bi bi-lock-fill"></i>&nbsp;비공개 댓글입니다.</span>
 		                            			</c:when>
 		                            			<c:when test="${replyList[i].authorId == userDetails.membersId or userDetails.membersId == 0}">
 						                    		<span class="text-dark">${replyList[i].content}</span>
@@ -271,6 +278,7 @@
         document.getElementById("editButton").style.display = "none"; // 수정 버튼 숨김
         document.getElementById("saveButton").style.display = "inline-block"; // 저장 버튼 표시
         document.getElementById("cancleButton").style.display = "inline-block"; // 수정 버튼 표시
+        document.getElementById("softDelButton").style.display = "none"; // 삭제 버튼 표시
         
     }
     
